@@ -5,6 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface FollowRelationDataSource extends JpaRepository<FollowRelation, Long> {
+public interface FollowRelationsDataSource extends JpaRepository<FollowRelation, Long> {
     List<FollowRelation> findByFollower(User owner);
 }

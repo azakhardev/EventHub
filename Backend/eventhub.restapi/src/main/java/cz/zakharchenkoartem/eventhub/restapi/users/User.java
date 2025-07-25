@@ -1,8 +1,6 @@
 package cz.zakharchenkoartem.eventhub.restapi.users;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import cz.zakharchenkoartem.eventhub.restapi.events.Event;
 import jakarta.persistence.*;
 
