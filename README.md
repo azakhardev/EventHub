@@ -1,4 +1,5 @@
 # EventHub
+EventHub je letní projekt, který umožňuje uživatelům vytvářet, sdílet a sledovat události s automatickými notifikacemi před jejich začátkem. Aplikace zároveň podporuje sledování uživatelů, opakování událostí, soukromé i veřejné eventy a reaktivní upozornění na změny v kalendáři.
 
 ## 🔧 Shrnutí celkových funkcí (kompletní)
 
