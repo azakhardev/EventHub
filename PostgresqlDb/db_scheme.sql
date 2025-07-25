@@ -1,9 +1,10 @@
 CREATE TABLE users (
-    id SERIAL PRIMARY KEY,
-    username VARCHAR(255) NOT NULL,
-    password VARCHAR(255) NOT NULL,
-    nickname VARCHAR(255),
-	profile_picture TEXT, 
+	id SERIAL PRIMARY KEY,
+	username VARCHAR(255) NOT NULL,
+	password VARCHAR(255) NOT NULL,
+	nickname VARCHAR(255),
+    email VARCHAR(255),
+	about TEXT,
 	follow_token UUID DEFAULT gen_random_uuid()
 );
 
@@ -15,10 +16,10 @@ CREATE TABLE followed_users (
     FOREIGN KEY (following_user_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (followed_user_id) REFERENCES users(id) ON DELETE CASCADE,
     PRIMARY KEY (following_user_id, followed_user_id)
-);
+);  
 
 -- RECURRENCE TYPE
-CREATE TYPE recurrence_type AS ENUM ('once', 'weekly', 'biweekly', 'monthly', 'quarterly', 'yearly');
+CREATE TYPE recurrence_type AS ENUM ('once', 'weekly', 'biweekly', 'monthly', 'quarterly', 'yearly');  
 
 -- EVENTS
 CREATE TABLE events (
@@ -29,12 +30,12 @@ CREATE TABLE events (
     creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     start_time TIMESTAMP NOT NULL,
     end_time TIMESTAMP NOT NULL,
-    place VARCHAR(255),
+    place VARCHAR(511),
     category VARCHAR(100),
-    color varchar(64),
+    color varchar(7),
     public boolean DEFAULT TRUE,
     link_token UUID DEFAULT gen_random_uuid(),
-    recurrence recurrence_type DEFAULT 'once' ,
+    recurrence recurrence_type DEFAULT 'once',
     FOREIGN KEY (owner_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
@@ -42,18 +43,19 @@ CREATE TABLE events (
 CREATE TABLE users_events (
     user_id INTEGER NOT NULL,
     event_id INTEGER NOT NULL,
-    invitation BOOLEAN DEFAULT FALSE,
+    invitation BOOLEAN DEFAULT TRUE,
+    important BOOLEAN DEFAULT FALSE,
     PRIMARY KEY (user_id, event_id),
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (event_id) REFERENCES events(id) ON DELETE CASCADE
-);
+);  
 
 -- NOTIFICATIONS
 CREATE TABLE notifications (
     id SERIAL PRIMARY KEY,
     user_id INTEGER NOT NULL REFERENCES users(id),
     event_id INTEGER REFERENCES events(id),
-    type VARCHAR(50) NOT NULL, 
+    type VARCHAR(50) NOT NULL,
     message TEXT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     is_read BOOLEAN DEFAULT FALSE
