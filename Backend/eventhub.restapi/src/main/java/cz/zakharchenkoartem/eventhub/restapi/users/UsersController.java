@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.Optional;
 
-@RestController()
+@RestController
 @RequestMapping("/users")
 public class UsersController {
     UsersDataSource usersDataSource;
