@@ -1,5 +1,8 @@
 package cz.zakharchenkoartem.eventhub.restapi.users;
 
+import cz.zakharchenkoartem.eventhub.restapi.events.Event;
+import cz.zakharchenkoartem.eventhub.restapi.events_participants.EventParticipantRelation;
+import cz.zakharchenkoartem.eventhub.restapi.events_participants.EventsParticipantsDataSource;
 import cz.zakharchenkoartem.eventhub.restapi.follows.FollowRelation;
 import cz.zakharchenkoartem.eventhub.restapi.follows.FollowRelationsDataSource;
 import cz.zakharchenkoartem.eventhub.restapi.notifications.Notification;
@@ -23,11 +26,14 @@ public class UsersController {
 
     NotificationsDataSource notificationsDataSource;
 
+    EventsParticipantsDataSource eventsParticipantsDataSource;
+
     @Autowired
-    public UsersController(UsersDataSource usersDataSource, FollowRelationsDataSource followersDataSource, NotificationsDataSource notificationsDataSource) {
+    public UsersController(UsersDataSource usersDataSource, FollowRelationsDataSource followersDataSource, NotificationsDataSource notificationsDataSource, EventsParticipantsDataSource eventsParticipantsDataSource) {
         this.usersDataSource = usersDataSource;
         this.followersDataSource = followersDataSource;
         this.notificationsDataSource = notificationsDataSource;
+        this.eventsParticipantsDataSource = eventsParticipantsDataSource;
     }
 
     @GetMapping
@@ -74,5 +80,23 @@ public class UsersController {
         }
 
         return notificationsDataSource.findByUser(user.get());
+    }
+
+    @GetMapping("{id}/foreignEvents")
+    public List<Event> getForeignEvents(@PathVariable Long id) {
+        Optional<User> user = usersDataSource.findById(id);
+
+        if (user.isEmpty()) {
+            throw new RuntimeException("User not found");
+        }
+
+        List<EventParticipantRelation> participantRelations = eventsParticipantsDataSource.findByUser(user.get());
+        List<Event> events = new ArrayList<>();
+
+        for (EventParticipantRelation relation : participantRelations) {
+            events.add(relation.getEvent());
+        }
+
+        return events;
     }
 }

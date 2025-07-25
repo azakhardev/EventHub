@@ -14,20 +14,6 @@ public class FollowRelationId implements Serializable {
     @Column(name = "followed_user_id")
     private Long followedUserId;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof FollowRelationId)) return false;
-        FollowRelationId that = (FollowRelationId) o;
-        return Objects.equals(followerId, that.followerId) &&
-                Objects.equals(followedUserId, that.followedUserId);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(followerId, followedUserId);
-    }
-
     public Long getFollowerId() {
         return followerId;
     }
@@ -42,5 +28,19 @@ public class FollowRelationId implements Serializable {
 
     public void setFollowedUserId(Long followedUserId) {
         this.followedUserId = followedUserId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof FollowRelationId)) return false;
+        FollowRelationId that = (FollowRelationId) o;
+        return Objects.equals(followerId, that.followerId) &&
+                Objects.equals(followedUserId, that.followedUserId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(followerId, followedUserId);
     }
 }

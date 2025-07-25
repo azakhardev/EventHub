@@ -8,7 +8,7 @@ CREATE TABLE users (
 	follow_token UUID DEFAULT gen_random_uuid()
 );
 
--- FOLLOWED USERS
+-- FOLLOWED USERS (m:n relation)
 CREATE TABLE followed_users (
     following_user_id INTEGER NOT NULL,
     followed_user_id INTEGER NOT NULL,
@@ -39,15 +39,16 @@ CREATE TABLE events (
     FOREIGN KEY (owner_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
--- USERS_EVENTS (m:n relace)
-CREATE TABLE users_events (
+-- EVENTS_PARTICIPANTS (m:n relation)
+CREATE TABLE events_participants (
     user_id INTEGER NOT NULL,
     event_id INTEGER NOT NULL,
-    invitation BOOLEAN DEFAULT TRUE,
+    accepted BOOLEAN DEFAULT TRUE,
     important BOOLEAN DEFAULT FALSE,
     PRIMARY KEY (user_id, event_id),
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-    FOREIGN KEY (event_id) REFERENCES events(id) ON DELETE CASCADE
+    FOREIGN KEY (event_id) REFERENCES events(id) ON DELETE CASCADE,
+    PRIMARY KEY (user_id, event_id)
 );  
 
 -- NOTIFICATIONS

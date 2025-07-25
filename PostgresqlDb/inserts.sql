@@ -25,7 +25,7 @@ VALUES
    '2025-08-01 20:00:00', '2025-08-01 23:00:00', 'Lucerna Music Bar, Prague', 'music', '#FF00FF', TRUE, 'once');
 
 -- ADD USER EVENTS
-INSERT INTO users_events (user_id, event_id, invitation)
+INSERT INTO events_participants (user_id, event_id, invitation)
 VALUES 
   (1, 1, TRUE),  -- Alice is invited to Bob’s run
   (3, 1, TRUE),  -- Carol is invited too
