@@ -2,64 +2,52 @@
 EventHub je letní projekt, který umožňuje uživatelům vytvářet, sdílet a sledovat události s automatickými notifikacemi před jejich začátkem. Aplikace zároveň podporuje sledování uživatelů, opakování událostí, soukromé i veřejné eventy a reaktivní upozornění na změny v kalendáři.
 
 ## 🔧 Shrnutí celkových funkcí (kompletní)
-
 ### 🧑‍🤝‍🧑 Uživatelé
-
 - Registrace / přihlášení (JWT)
 - Profil uživatele
 - Sledování jiných uživatelů
 - Přehled sledovaných událostí
-
 ### 📅 Události
-
 - Tvorba/editace/mazání události
 - Atributy: název, popis, čas, místo, odkaz, kategorie (ikonka), sdílený link
 - Automatické přidání události přes pozvánkový link
 - (Volitelně) obrázek události
-
 ### 🔔 Notifikace
-
-- Když někdo, koho sleduji, vytvoří novou událost
+- Když někdo, koho sleduji, vytvoří/smaže/urpaví událost
 - **15 a 5 minut před událostí**
 - Možno rozšířit o přehled "nadcházející události"
-
 ### 🌐 Sdílení
-
 - Pozvánka přes URL
 - Přidání do seznamu kliknutím
-
 ## 📁Struktura Projektu
-
 ```
 EventHub/
-├── FE/
+├── Frontend/
 │   ├── Dockerfile
 │   └── (React projekt)
-├── BE/
+├── Backend/
 │   ├── Dockerfile
 │   └── (backend kód - Spring, Node...)
-├── DB/
+├── PostgresqlDb/
 │   ├── init/
 │   │   └── 01-init.sql
 ├── docker-compose.yml
 └── README.md
 ```
-
 **Obsah `docker-compose.yml`**
-
 ```yaml
-version: "3.9"
+version: '3.9'
 
 services:
   frontend:
-    build: ./FE
+    build: ./Frontend
     ports:
       - "3000:3000"
     depends_on:
       - backend
 
   backend:
-    build: ./BE
+    build: ./Backend
     ports:
       - "8080:8080"
     environment:
@@ -78,37 +66,31 @@ services:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: secret
     volumes:
-      - ./DB/init:/docker-entrypoint-initdb.d/
+      - ./PostgresqlDb:/docker-entrypoint-initdb.d/
     ports:
       - "5432:5432"
 ```
+**Databázové napojení `application.properties`:**
+```properties
+spring.application.name=eventhub.restapi
+spring.datasource.url=jdbc:postgresql://localhost:5432/EventHub
+spring.datasource.username=postgres
+spring.datasource.password=123456Ab
+spring.datasource.driver-class-name=org.postgresql.Driver
 
-**Databázové napojení `application.yml`:**
-
-```yml
-spring:
-  datasource:
-    url: jdbc:postgresql://<host>:<port>/<dbname>
-    username: <your_username>
-    password: <your_password>
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
+spring.jpa.show-sql=true
 ```
-
 ### Databázové schéma:
-
 ```sql
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     username VARCHAR(255) NOT NULL,
     password VARCHAR(255) NOT NULL,
     nickname VARCHAR(255),
-    profile_picture TEXT,
+    email VARCHAR(255),
+    about TEXT,
     follow_token UUID DEFAULT gen_random_uuid()
 );
 
@@ -120,10 +102,10 @@ CREATE TABLE followed_users (
     FOREIGN KEY (following_user_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (followed_user_id) REFERENCES users(id) ON DELETE CASCADE,
     PRIMARY KEY (following_user_id, followed_user_id)
-);
+);  
 
 -- RECURRENCE TYPE
-CREATE TYPE recurrence_type AS ENUM ('once', 'weekly', 'biweekly', 'monthly', 'quarterly', 'yearly');
+CREATE TYPE recurrence_type AS ENUM ('once', 'weekly', 'biweekly', 'monthly', 'quarterly', 'yearly');  
 
 -- EVENTS
 CREATE TABLE events (
@@ -134,9 +116,9 @@ CREATE TABLE events (
     creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     start_time TIMESTAMP NOT NULL,
     end_time TIMESTAMP NOT NULL,
-    place VARCHAR(255),
+    place VARCHAR(511),
     category VARCHAR(100),
-    color varchar(64),
+    color varchar(7),
     public boolean DEFAULT TRUE,
     link_token UUID DEFAULT gen_random_uuid(),
     recurrence recurrence_type DEFAULT 'once',
@@ -147,11 +129,12 @@ CREATE TABLE events (
 CREATE TABLE users_events (
     user_id INTEGER NOT NULL,
     event_id INTEGER NOT NULL,
-    invitation BOOLEAN DEFAULT FALSE,
+    invitation BOOLEAN DEFAULT TRUE, -- User invited to an event
+    important BOOLEAN DEFAULT FALSE,
     PRIMARY KEY (user_id, event_id),
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (event_id) REFERENCES events(id) ON DELETE CASCADE
-);
+);  
 
 -- NOTIFICATIONS
 CREATE TABLE notifications (
