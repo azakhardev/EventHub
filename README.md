@@ -1,25 +1,34 @@
-# EventHub
 EventHub je letní projekt, který umožňuje uživatelům vytvářet, sdílet a sledovat události s automatickými notifikacemi před jejich začátkem. Aplikace zároveň podporuje sledování uživatelů, opakování událostí, soukromé i veřejné eventy a reaktivní upozornění na změny v kalendáři.
 
 ## 🔧 Shrnutí celkových funkcí (kompletní)
+
 ### 🧑‍🤝‍🧑 Uživatelé
+
 - Registrace / přihlášení (JWT)
 - Profil uživatele
 - Sledování jiných uživatelů
 - Přehled sledovaných událostí
+
 ### 📅 Události
+
 - Tvorba/editace/mazání události
 - Atributy: název, popis, čas, místo, odkaz, kategorie (ikonka), sdílený link
 - Automatické přidání události přes pozvánkový link
 - (Volitelně) obrázek události
+
 ### 🔔 Notifikace
+
 - Když někdo, koho sleduji, vytvoří/smaže/urpaví událost
 - **15 a 5 minut před událostí**
 - Možno rozšířit o přehled "nadcházející události"
+
 ### 🌐 Sdílení
+
 - Pozvánka přes URL
 - Přidání do seznamu kliknutím
+
 ## 📁Struktura Projektu
+
 ```
 EventHub/
 ├── Frontend/
@@ -27,16 +36,18 @@ EventHub/
 │   └── (React projekt)
 ├── Backend/
 │   ├── Dockerfile
-│   └── (backend kód - Spring, Node...)
+│   └── (backend kód - Spring Boot)
 ├── PostgresqlDb/
-│   ├── init/
-│   │   └── 01-init.sql
+│   └── create_db.sql
+│	└── inserts.sql
 ├── docker-compose.yml
 └── README.md
 ```
+
 **Obsah `docker-compose.yml`**
+
 ```yaml
-version: '3.9'
+version: "3.9"
 
 services:
   frontend:
@@ -70,7 +81,9 @@ services:
     ports:
       - "5432:5432"
 ```
-**Databázové napojení `application.properties`:**
+
+**Databázové napojení `application.properties`:**
+
 ```properties
 spring.application.name=eventhub.restapi
 spring.datasource.url=jdbc:postgresql://localhost:5432/EventHub
@@ -82,7 +95,9 @@ spring.jpa.hibernate.ddl-auto=update
 spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
 spring.jpa.show-sql=true
 ```
+
 ### Databázové schéma:
+
 ```sql
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
@@ -94,7 +109,7 @@ CREATE TABLE users (
     follow_token UUID DEFAULT gen_random_uuid()
 );
 
--- FOLLOWED USERS
+-- FOLLOWED USERS (m:n relation)
 CREATE TABLE followed_users (
     following_user_id INTEGER NOT NULL,
     followed_user_id INTEGER NOT NULL,
@@ -102,10 +117,10 @@ CREATE TABLE followed_users (
     FOREIGN KEY (following_user_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (followed_user_id) REFERENCES users(id) ON DELETE CASCADE,
     PRIMARY KEY (following_user_id, followed_user_id)
-);  
+);
 
 -- RECURRENCE TYPE
-CREATE TYPE recurrence_type AS ENUM ('once', 'weekly', 'biweekly', 'monthly', 'quarterly', 'yearly');  
+CREATE TYPE recurrence_type AS ENUM ('once', 'weekly', 'biweekly', 'monthly', 'quarterly', 'yearly');
 
 -- EVENTS
 CREATE TABLE events (
@@ -125,16 +140,17 @@ CREATE TABLE events (
     FOREIGN KEY (owner_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
--- USERS_EVENTS (m:n relace)
-CREATE TABLE users_events (
+-- EVENTS_PARTICIPANTS (m:n relation)
+CREATE TABLE events_participants (
     user_id INTEGER NOT NULL,
     event_id INTEGER NOT NULL,
-    invitation BOOLEAN DEFAULT TRUE, -- User invited to an event
+    accepted BOOLEAN DEFAULT TRUE, -- User invited to an event
     important BOOLEAN DEFAULT FALSE,
     PRIMARY KEY (user_id, event_id),
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (event_id) REFERENCES events(id) ON DELETE CASCADE
-);  
+    PRIMARY KEY (user_id, event_id)
+);
 
 -- NOTIFICATIONS
 CREATE TABLE notifications (
@@ -144,6 +160,8 @@ CREATE TABLE notifications (
     type VARCHAR(50) NOT NULL,
     message TEXT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    is_read BOOLEAN DEFAULT FALSE
+    is_read BOOLEAN DEFAULT FALSE,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (event_id) REFERENCES events(id) ON DELETE CASCADE
 );
 ```
