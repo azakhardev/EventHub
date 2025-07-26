@@ -1,5 +1,8 @@
 package cz.zakharchenkoartem.eventhub.restapi;
 
+import cz.zakharchenkoartem.eventhub.restapi.login.JwtService;
+import cz.zakharchenkoartem.eventhub.restapi.users.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 

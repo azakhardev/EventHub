@@ -35,7 +35,7 @@ public class User {
     @Column(name = "follow_token", columnDefinition = "UUID DEFAULT gen_random_uuid()")
     private UUID followToken;
 
-    @OneToMany(mappedBy = "owner")
+    @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER)
     @JsonIgnore
     private List<Event> events;
 
