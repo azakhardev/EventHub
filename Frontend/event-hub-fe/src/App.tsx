@@ -1,7 +1,12 @@
 import "./App.css";
+import Header from "./components/Layout/Header";
 
 function App() {
-  return <div className="text-3xl font-bold underline">Event Hub</div>;
+  return (
+    <div className="w-full">
+      <Header />
+    </div>
+  );
 }
 
 export default App;
