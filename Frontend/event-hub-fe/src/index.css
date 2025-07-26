@@ -1,1 +1,43 @@
-@import "tailwindcss";
+/* base.css */
+:root {
+  --color-primary: #4caf50;
+  --color-primary-dark: #388e3c;
+  --color-primary-light: #c8e6c9;
+  --color-background: #f3f4f6;
+  --color-surface: #2e7d32;
+  --color-on-surface: #ffffff;
+  --color-text: #212121;
+  --color-button-hover: #66bb6a;
+  --color-accent: #ffc107;
+  --color-icon: #81c784;
+  --color-border: #e0e0e0;
+  --color-card: #fafafa;
+}
+
+/* Theme overrides */
+.theme-blue {
+  --color-primary: #2196f3;
+  --color-primary-dark: #1976d2;
+  --color-primary-light: #bbdefb;
+  --color-surface: #1565c0;
+  --color-button-hover: #64b5f6;
+  --color-icon: #90caf9;
+}
+
+.theme-purple {
+  --color-primary: #9c27b0;
+  --color-primary-dark: #7b1fa2;
+  --color-primary-light: #e1bee7;
+  --color-surface: #6a1b9a;
+  --color-button-hover: #ba68c8;
+  --color-icon: #ce93d8;
+}
+
+.theme-black {
+  --color-primary: #212121;
+  --color-primary-dark: #000000;
+  --color-primary-light: #424242;
+  --color-surface: #1b1b1b;
+  --color-button-hover: #333333;
+  --color-icon: #616161;
+}
