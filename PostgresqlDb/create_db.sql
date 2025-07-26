@@ -3,6 +3,8 @@ CREATE TABLE users (
 	username VARCHAR(255) NOT NULL,
 	password VARCHAR(255) NOT NULL,
 	nickname VARCHAR(255),
+    profile_picture_url varchar(1023),
+    proffesion VARCHAR(255),
     email VARCHAR(255),
 	about TEXT,
 	follow_token UUID DEFAULT gen_random_uuid()
@@ -47,8 +49,7 @@ CREATE TABLE events_participants (
     important BOOLEAN DEFAULT FALSE,
     PRIMARY KEY (user_id, event_id),
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-    FOREIGN KEY (event_id) REFERENCES events(id) ON DELETE CASCADE,
-    PRIMARY KEY (user_id, event_id)
+    FOREIGN KEY (event_id) REFERENCES events(id) ON DELETE CASCADE
 );  
 
 -- NOTIFICATIONS
