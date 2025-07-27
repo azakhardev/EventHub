@@ -19,6 +19,7 @@ export default function Header() {
           className="hover:bg-primary"
           icon={<Bell size={32} />}
           onClick={() => {}}
+          label="Notifications"
         />
       </div>
     </div>

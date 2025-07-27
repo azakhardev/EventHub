@@ -1,11 +1,12 @@
 import "./App.css";
-import Header from "./components/layout/Header";
 import Sidebar from "./components/layout/Sidebar";
 import FriendList from "./components/layout/FriendList";
 import Content from "./components/layout/Content";
 import { useEffect, useState } from "react";
 import LoginPage from "./components/pages/LoginPage";
 import { isTokenExpired } from "./utils/utils";
+
+type THEME = "blue" | "purple" | "black" | "green";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -26,8 +27,7 @@ function App() {
       <div className="flex-1">
         <Sidebar />
       </div>
-      <div className="flex-[24]">
-        <Header />
+      <div className="flex-[7]">
         <div className="flex flex-row gap-2">
           <div className="flex-[3]">
             <Content />

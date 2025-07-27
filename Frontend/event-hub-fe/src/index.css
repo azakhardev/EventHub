@@ -16,6 +16,7 @@
   --color-icon: #81c784;
   --color-border: #e0e0e0;
   --color-card: #fafafa;
+  --color-dialog: #e8f5e9;
 }
 
 .theme-blue {
@@ -25,6 +26,7 @@
   --color-surface: #1565c0;
   --color-button-hover: #64b5f6;
   --color-icon: #90caf9;
+  --color-dialog: #e3f2fd;
 }
 
 .theme-purple {
@@ -34,6 +36,7 @@
   --color-surface: #6a1b9a;
   --color-button-hover: #ba68c8;
   --color-icon: #ce93d8;
+  --color-dialog: #f3e5f5;
 }
 
 .theme-black {
@@ -43,4 +46,5 @@
   --color-surface: #1b1b1b;
   --color-button-hover: #333333;
   --color-icon: #616161;
+  --color-dialog: #2a2a2a;
 }
