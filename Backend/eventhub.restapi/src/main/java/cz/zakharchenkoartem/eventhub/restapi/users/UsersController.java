@@ -17,87 +17,44 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
 @RestController
 @RequestMapping("/users")
 public class UsersController {
-    private final EventsDataSource eventsDataSource;
-    UsersDataSource usersDataSource;
 
-    FollowRelationsDataSource followersDataSource;
-
-    NotificationsDataSource notificationsDataSource;
-
-    EventsParticipantsDataSource eventsParticipantsDataSource;
+    private final UserService userService;
 
     @Autowired
-    public UsersController(UsersDataSource usersDataSource, FollowRelationsDataSource followersDataSource, NotificationsDataSource notificationsDataSource, EventsParticipantsDataSource eventsParticipantsDataSource, EventsDataSource eventsDataSource) {
-        this.usersDataSource = usersDataSource;
-        this.followersDataSource = followersDataSource;
-        this.notificationsDataSource = notificationsDataSource;
-        this.eventsParticipantsDataSource = eventsParticipantsDataSource;
-        this.eventsDataSource = eventsDataSource;
+    public UsersController(UserService userService) {
+        this.userService = userService;
     }
 
     @GetMapping
     public List<User> getUsers() {
-        return usersDataSource.findAll();
+        return userService.getUsers();
     }
 
     @GetMapping("/{id}")
     public User getUser(@PathVariable Long id) {
-        return getUserFromDataSource(id);
+        return userService.getUser(id);
     }
 
     @GetMapping("/{id}/following")
     public List<User> getFollowers(@PathVariable Long id) {
-        User user = getUserFromDataSource(id);
-        List<FollowRelation> followRelations = followersDataSource.findByFollower(user);
-
-        List<User> followedUsers = new ArrayList<User>();
-
-        for (FollowRelation relation : followRelations) {
-            followedUsers.add(relation.getFollowedUser());
-        }
-
-        return followedUsers;
+        return userService.getFollowing(id);
     }
 
-    @GetMapping("{id}/notifications")
+    @GetMapping("/{id}/notifications")
     public List<Notification> getNotifications(@PathVariable Long id) {
-        User user = getUserFromDataSource(id);
-
-        return notificationsDataSource.findByUser(user);
+        return userService.getNotifications(id);
     }
 
-    @GetMapping("{id}/my-events")
+    @GetMapping("/{id}/my-events")
     public List<Event> getMyEvents(@PathVariable Long id) {
-        User user = getUserFromDataSource(id);
-
-        List<EventParticipantRelation> participantRelations = eventsParticipantsDataSource.findByUser(user);
-        List<Event> events = new ArrayList<>();
-
-        for (EventParticipantRelation relation : participantRelations) {
-            events.add(relation.getEvent());
-        }
-
-        return events;
+        return userService.getMyEvents(id);
     }
 
-    @GetMapping("{id}/foreign-events")
+    @GetMapping("/{id}/foreign-events")
     public List<Event> getForeignEvents(@PathVariable Long id) {
-        User user = getUserFromDataSource(id);
-
-        return eventsDataSource.findAllByOwnerIdAndIsPublic(id, true);
-    }
-
-    private User getUserFromDataSource(Long id) {
-        Optional<User> user = usersDataSource.findById(id);
-
-        if (user.isEmpty()) {
-            throw new RuntimeException("User not found");
-        }
-
-        return user.get();
+        return userService.getForeignEvents(id);
     }
 }

@@ -9,56 +9,32 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/events")
 public class EventsController {
 
-    EventsDataSource eventsDataSource;
-
-    EventsParticipantsDataSource eventsParticipantsDataSource;
+    EventService eventService;
 
     @Autowired
-    public EventsController(EventsDataSource eventsDataSource, EventsParticipantsDataSource eventsParticipantsDataSource) {
-        this.eventsDataSource = eventsDataSource;
-        this.eventsParticipantsDataSource = eventsParticipantsDataSource;
+    public EventsController(EventService eventService) {
+        this.eventService = eventService;
     }
 
     @GetMapping
     public List<Event> getEvents() {
-        return eventsDataSource.findAll();
+        return eventService.getEvents();
     }
 
     @GetMapping("{id}")
     public Event getEvent(@PathVariable Long id) {
-        Optional<Event> event = eventsDataSource.findById(id);
-
-        if (event.isEmpty()) {
-            throw new RuntimeException("Event not found");
-        }
-
-        return event.get();
+        return eventService.getEvent(id);
     }
 
     @GetMapping("{id}/participants")
     public List<User> getParticipatedUsers(@PathVariable Long id) {
-        Optional<Event> event = eventsDataSource.findById(id);
-
-        if (event.isEmpty()) {
-            throw new RuntimeException("Event not found");
-        }
-
-        List<EventParticipantRelation> participantRelations = eventsParticipantsDataSource.findByEvent(event.get());
-        List<User> user = new ArrayList<>();
-
-        for (EventParticipantRelation relation : participantRelations) {
-            user.add(relation.getUser());
-        }
-
-        return user;
+        return eventService.getEventParticipants(id);
     }
 
 }
