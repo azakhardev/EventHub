@@ -1,6 +1,5 @@
 import { create } from "zustand";
-
-export type SELECTED_PAGE = "home" | "calendar" | "profile" | "friends";
+import type { SELECTED_PAGE } from "../types/helpers";
 
 type PageState = {
   selectedPage: SELECTED_PAGE;

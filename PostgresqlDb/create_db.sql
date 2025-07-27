@@ -14,6 +14,7 @@ CREATE TABLE users (
 CREATE TABLE followed_users (
     following_user_id INTEGER NOT NULL,
     followed_user_id INTEGER NOT NULL,
+    favorite boolean DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (following_user_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (followed_user_id) REFERENCES users(id) ON DELETE CASCADE,

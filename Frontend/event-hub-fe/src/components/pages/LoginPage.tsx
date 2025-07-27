@@ -2,14 +2,11 @@ import { Field, Label } from "@headlessui/react";
 import Input from "../ui/forms/Input";
 import Button from "../ui/forms/Button";
 import { useState } from "react";
+import type { LoginResponse } from "../../types/helpers";
 const api = import.meta.env.VITE_API_URL;
 
 interface LoginPageProps {
   setIsLoggedIn: (isLoggedIn: boolean) => void;
-}
-
-interface LoginResponse {
-  token: string;
 }
 
 export default function LoginPage({ setIsLoggedIn }: LoginPageProps) {

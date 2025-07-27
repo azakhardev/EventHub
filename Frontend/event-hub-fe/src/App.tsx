@@ -6,8 +6,6 @@ import { useEffect, useState } from "react";
 import LoginPage from "./components/pages/LoginPage";
 import { isTokenExpired } from "./utils/utils";
 
-type THEME = "blue" | "purple" | "black" | "green";
-
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -29,7 +27,7 @@ function App() {
       </div>
       <div className="flex-[7]">
         <div className="flex flex-row gap-2">
-          <div className="flex-[3]">
+          <div className="flex-[3] xl:flex-[4]">
             <Content />
           </div>
           <div className="flex-1">

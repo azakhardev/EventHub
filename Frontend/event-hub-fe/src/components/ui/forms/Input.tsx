@@ -1,16 +1,25 @@
 import { Input as HeadlessInput } from "@headlessui/react";
 import { combineString } from "../../../utils/utils";
 
-interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {}
+interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+  icon?: React.ReactNode;
+}
 
-export default function Input({ className, ...props }: InputProps) {
+export default function Input({ className, icon, ...props }: InputProps) {
   return (
-    <HeadlessInput
+    <div
       className={combineString([
-        "bg-input rounded-lg p-2 data-[invalid]:text-red-500 data-[disabled]:text-text-muted",
+        "flex flex-row bg-input rounded-lg ",
         className,
       ])}
-      {...props}
-    />
+    >
+      {icon && (
+        <div className="p-2 bg-primary text-onSurface rounded-l">{icon}</div>
+      )}
+      <HeadlessInput
+        className="p-2 w-full data-[invalid]:text-red-500 data-[disabled]:text-text-muted"
+        {...props}
+      />
+    </div>
   );
 }

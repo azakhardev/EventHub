@@ -20,7 +20,7 @@ export default function Sidebar() {
         />
         <IconButton
           icon={<User size={32} className="text-onSurface" />}
-          onClick={() => setSelectedPage("profile")}
+          onClick={() => alert("open profile dialog")}
           label="Profile"
         />
         <IconButton

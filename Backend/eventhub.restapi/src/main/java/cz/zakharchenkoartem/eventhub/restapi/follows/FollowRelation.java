@@ -26,15 +26,18 @@ public class FollowRelation {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
+    private boolean favorite;
+
     public FollowRelation() {
 
     }
 
-    public FollowRelation(FollowRelationId id, User follower, User followedUser, LocalDateTime createdAt) {
+    public FollowRelation(FollowRelationId id, User follower, User followedUser, LocalDateTime createdAt, boolean favorite) {
         this.id = id;
         this.follower = follower;
         this.followedUser = followedUser;
         this.createdAt = createdAt;
+        this.favorite = favorite;
     }
 
     public FollowRelationId getId() {
@@ -69,6 +72,14 @@ public class FollowRelation {
         this.createdAt = createdAt;
     }
 
+    public boolean isFavorite() {
+        return favorite;
+    }
+
+    public void setFavorite(boolean favorite) {
+        this.favorite = favorite;
+    }
+
     @Override
     public String toString() {
         return "FollowRelation{" +
@@ -76,6 +87,7 @@ public class FollowRelation {
                 ", follower=" + follower +
                 ", followed=" + followedUser +
                 ", createdAt=" + createdAt +
+                ", favorite=" + favorite +
                 '}';
     }
 
@@ -83,11 +95,11 @@ public class FollowRelation {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         FollowRelation that = (FollowRelation) o;
-        return Objects.equals(id, that.id) && Objects.equals(follower, that.follower) && Objects.equals(followedUser, that.followedUser) && Objects.equals(createdAt, that.createdAt);
+        return Objects.equals(id, that.id) && Objects.equals(follower, that.follower) && Objects.equals(followedUser, that.followedUser) && Objects.equals(createdAt, that.createdAt) && Objects.equals(favorite, that.favorite);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, follower, followedUser, createdAt);
+        return Objects.hash(id, follower, followedUser, createdAt, favorite);
     }
 }
