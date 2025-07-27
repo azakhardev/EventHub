@@ -5,6 +5,7 @@ import cz.zakharchenkoartem.eventhub.restapi.events_participants.EventsParticipa
 import cz.zakharchenkoartem.eventhub.restapi.users.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,10 +23,12 @@ public class EventService {
         this.eventsParticipantsDataSource = eventsParticipantsDataSource;
     }
 
+    @Transactional(readOnly = true)
     public List<Event> getEvents() {
         return eventsDataSource.findAll();
     }
 
+    @Transactional(readOnly = true)
     public Event getEvent(Long id) {
         Optional<Event> event = eventsDataSource.findById(id);
 
@@ -36,6 +39,7 @@ public class EventService {
         return event.get();
     }
 
+    @Transactional(readOnly = true)
     public List<User> getEventParticipants(Long id) {
         Optional<Event> event = eventsDataSource.findById(id);
 
@@ -52,5 +56,4 @@ public class EventService {
 
         return user;
     }
-
 }

@@ -1,6 +1,7 @@
 package cz.zakharchenkoartem.eventhub.restapi.events;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import cz.zakharchenkoartem.eventhub.restapi.users.User;
 import jakarta.persistence.*;
@@ -26,6 +27,7 @@ public class Event {
 
     @ManyToOne
     @JoinColumn(name = "owner_id", nullable = false, foreignKey = @ForeignKey(name = "fk_event_owner"))
+    @JsonIgnoreProperties("events")
     private User owner;
 
     @Column(name = "creation_date", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP", updatable = false, insertable = false)

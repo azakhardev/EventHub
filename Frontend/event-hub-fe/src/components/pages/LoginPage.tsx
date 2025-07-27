@@ -32,6 +32,7 @@ export default function LoginPage({ setIsLoggedIn }: LoginPageProps) {
     if (response.ok) {
       const data = (await response.json()) as LoginResponse;
       localStorage.setItem("token", data.token);
+      localStorage.setItem("userId", data.userId.toString());
       setIsLoggedIn(true);
     } else {
       setError("Invalid credentials");
@@ -40,10 +41,10 @@ export default function LoginPage({ setIsLoggedIn }: LoginPageProps) {
 
   return (
     <div className="w-[100vw] h-[100vh] flex flex-col items-center justify-center">
-      <h1 className="text-surface text-4xl font-bold">EventHub</h1>
-      <h2 className="text-primary italic text-lg">
+      <h1 className="text-surface">EventHub</h1>
+      <h3 className="text-primary italic">
         Single app for all of your events.
-      </h2>
+      </h3>
       <div className="w-[400px] h-[500px] bg-card rounded-lg p-8 mt-4 border-2">
         <form
           onSubmit={handleSubmit}

@@ -7,7 +7,7 @@ export default function Sidebar() {
   return (
     <div className="flex flex-col items-center justify-between bg-surface text-onSurface h-full">
       <div className="flex flex-col items-start gap-8 w-full pl-8 mt-4">
-        <div className="text-[36px] font-bold">EventHub</div>
+        <h2>EventHub</h2>
         <IconButton
           icon={<Home size={32} className="text-onSurface" />}
           onClick={() => setSelectedPage("home")}

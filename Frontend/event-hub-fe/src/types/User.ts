@@ -6,5 +6,5 @@ export type User = {
   profile_picture_url?: string;
   proffesion?: string;
   about?: string;
-  follow_token: string;
+  followToken: string;
 };

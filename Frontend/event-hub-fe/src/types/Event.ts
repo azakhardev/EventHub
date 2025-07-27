@@ -1,16 +1,18 @@
+import type { User } from "./User";
+
 export type Event = {
   id: number;
   title: string;
   body: string;
-  owner_id: number;
-  creation_date: Date;
-  start_time: Date;
-  end_time: Date;
+  owner: User;
+  creationDate: string;
+  startTime: string;
+  endTime: string;
   place: string;
   category: string;
   color: string;
   public: boolean;
-  link_token: string;
+  linkToken: string;
   recurrence: EventRecurrence;
 };
 

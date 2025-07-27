@@ -7,7 +7,7 @@ export default function Content() {
   const { selectedPage } = usePageStore();
 
   return (
-    <main>
+    <main className="mx-16 mt-8">
       {selectedPage === "home" && <HomePage />}
       {selectedPage === "calendar" && <CalendarPage />}
       {selectedPage === "friends" && <FriendsPage />}

@@ -1,9 +1,9 @@
 --CREATE USERS
 INSERT INTO users (username, password, nickname, profile_picture_url, proffesion, email, about)
 VALUES 
-  ('alice', 'hashed_password1', 'Alice', 'https://i.redd.it/guys-do-you-think-this-is-an-improvement-to-my-pfp-first-v0-cdsukhn39xef1.jpg?width=1700&format=pjpg&auto=webp&s=d141b6bca0bd278915501359476e95b2e129dd3f', 'scientis', 'alice@gmail.com', 'I love order and organizing my day.'),
-  ('bob', 'hashed_password2', 'Bobby', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSAATF5rUkFKY0Iqw0oNQxdZQmY3xRZ2Wss-g&s', 'plumber', 'bob@gmail.com','Runner and event enthusiast.'),
-  ('carol', 'hashed_password3', 'Carol', 'https://i.pinimg.com/736x/a8/a0/cd/a8a0cd3cbb13ff96d5bfca73b011a07d.jpg', 'OnlyFans model', 'carol@gmail.com','Concert lover and social butterfly.'),
+  ('alice', '$2a$12$ERUZ3IHsyPuV/phmYnZU7e.6FmB0Is9RDqP5gcdceMo.3vj6zIDHO', 'Alice', 'https://i.redd.it/guys-do-you-think-this-is-an-improvement-to-my-pfp-first-v0-cdsukhn39xef1.jpg?width=1700&format=pjpg&auto=webp&s=d141b6bca0bd278915501359476e95b2e129dd3f', 'scientis', 'alice@gmail.com', 'I love order and organizing my day.'),
+  ('bob', '$2a$12$ERUZ3IHsyPuV/phmYnZU7e.6FmB0Is9RDqP5gcdceMo.3vj6zIDHO', 'Bobby', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSAATF5rUkFKY0Iqw0oNQxdZQmY3xRZ2Wss-g&s', 'plumber', 'bob@gmail.com','Runner and event enthusiast.'),
+  ('carol', '$2a$12$ERUZ3IHsyPuV/phmYnZU7e.6FmB0Is9RDqP5gcdceMo.3vj6zIDHO', 'Carol', 'https://i.pinimg.com/736x/a8/a0/cd/a8a0cd3cbb13ff96d5bfca73b011a07d.jpg', 'OnlyFans model', 'carol@gmail.com','Concert lover and social butterfly.'),
   ('guest', '$2a$12$ERUZ3IHsyPuV/phmYnZU7e.6FmB0Is9RDqP5gcdceMo.3vj6zIDHO', 'Test user', 'https://unchainedcrypto.com/wp-content/uploads/2023/07/pfp-nft.png', 'Tester', 'guest@gmail.com','Introvert who prefers quiet, well-planned days.');
 
 --ADD FOLLOWERS

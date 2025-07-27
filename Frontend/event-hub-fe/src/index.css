@@ -2,6 +2,26 @@
 @tailwind components;
 @tailwind utilities;
 
+h1 {
+  font-size: 48px;
+  font-weight: 700;
+}
+
+h2 {
+  font-size: 32px;
+  font-weight: 600;
+}
+
+h3 {
+  font-size: 24px;
+  font-weight: 600;
+}
+
+h4 {
+  font-size: 20px;
+  font-weight: 500;
+}
+
 :root {
   --color-primary: #4caf50;
   --color-primary-dark: #388e3c;

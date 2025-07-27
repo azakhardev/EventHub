@@ -4,4 +4,5 @@ export type THEME = "blue" | "purple" | "black" | "green";
 
 export type LoginResponse = {
   token: string;
+  userId: number;
 };

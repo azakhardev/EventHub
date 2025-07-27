@@ -5,14 +5,18 @@ import Content from "./components/layout/Content";
 import { useEffect, useState } from "react";
 import LoginPage from "./components/pages/LoginPage";
 import { isTokenExpired } from "./utils/utils";
+import { useUserStore } from "./store/store";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const { setUserId, setToken } = useUserStore();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token && !isTokenExpired(token)) {
       setIsLoggedIn(true);
+      setUserId(parseInt(localStorage.getItem("userId") ?? "0"));
+      setToken(token);
     }
   }, [isLoggedIn]);
 

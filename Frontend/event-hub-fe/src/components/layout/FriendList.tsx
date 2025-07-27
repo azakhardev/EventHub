@@ -10,7 +10,7 @@ export default function FriendList() {
       {selectedPage !== "friends" && (
         <div className="flex flex-col gap-2 items-center mt-6 border-l-2 h-auto">
           <div className="flex flex-row items-center justify-between w-full pr-2 pl-4">
-            <h2 className="text-2xl font-bold">Friends</h2>
+            <h3>Friends</h3>
             <div className="flex flex-row gap-2">
               <div className="rounded-full bg-primary p-2 cursor-pointer hover:bg-button-hover">
                 <UserPlus size={28} className="text-onSurface" />

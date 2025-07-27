@@ -22,7 +22,7 @@ public class User {
 
     private String nickname;
 
-    private String profile_picture_url;
+    private String profilePictureUrl;
 
     private String proffesion;
 
@@ -43,13 +43,15 @@ public class User {
 
     }
 
-    public User(Long id, String username, String password, String nickname, String email, String about) {
+    public User(Long id, String username, String password, String nickname, String email, String about, String profilePictureUrl, String proffesion) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.nickname = nickname;
         this.email = email;
         this.about = about;
+        this.profilePictureUrl = profilePictureUrl;
+        this.proffesion = proffesion;
     }
 
     public Long getId() {
@@ -85,11 +87,11 @@ public class User {
     }
 
     public String getProfile_picture_url() {
-        return profile_picture_url;
+        return profilePictureUrl;
     }
 
-    public void setProfile_picture_url(String profile_picture_url) {
-        this.profile_picture_url = profile_picture_url;
+    public void setProfile_picture_url(String profilePictureUrl) {
+        this.profilePictureUrl = profilePictureUrl;
     }
 
     public String getProffesion() {
@@ -139,12 +141,11 @@ public class User {
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
                 ", nickname='" + nickname + '\'' +
-                ", profile_picture_url='" + profile_picture_url + '\'' +
+                ", profilePictureUrl='" + profilePictureUrl + '\'' +
                 ", proffesion='" + proffesion + '\'' +
                 ", email='" + email + '\'' +
                 ", about='" + about + '\'' +
                 ", followToken=" + followToken +
-                ", events=" + events +
                 '}';
     }
 
@@ -152,11 +153,11 @@ public class User {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return Objects.equals(id, user.id) && Objects.equals(username, user.username) && Objects.equals(password, user.password) && Objects.equals(nickname, user.nickname) && Objects.equals(profile_picture_url, user.profile_picture_url) && Objects.equals(proffesion, user.proffesion) && Objects.equals(email, user.email) && Objects.equals(about, user.about) && Objects.equals(followToken, user.followToken) && Objects.equals(events, user.events);
+        return Objects.equals(id, user.id) && Objects.equals(username, user.username) && Objects.equals(password, user.password) && Objects.equals(nickname, user.nickname) && Objects.equals(profilePictureUrl, user.profilePictureUrl) && Objects.equals(proffesion, user.proffesion) && Objects.equals(email, user.email) && Objects.equals(about, user.about) && Objects.equals(followToken, user.followToken) && Objects.equals(events, user.events);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, username, password, nickname, profile_picture_url, proffesion, email, about, followToken, events);
+        return Objects.hash(id, username, password, nickname, profilePictureUrl, proffesion, email, about, followToken, events);
     }
 }
