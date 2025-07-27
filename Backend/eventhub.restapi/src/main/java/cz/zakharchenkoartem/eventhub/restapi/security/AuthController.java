@@ -1,5 +1,8 @@
-package cz.zakharchenkoartem.eventhub.restapi.login;
+package cz.zakharchenkoartem.eventhub.restapi.security;
 
+import cz.zakharchenkoartem.eventhub.restapi.login.JwtResponse;
+import cz.zakharchenkoartem.eventhub.restapi.login.JwtService;
+import cz.zakharchenkoartem.eventhub.restapi.login.LoginRequest;
 import cz.zakharchenkoartem.eventhub.restapi.users.User;
 import cz.zakharchenkoartem.eventhub.restapi.users.UsersDataSource;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -3,8 +3,24 @@ import Header from "./components/layout/Header";
 import Sidebar from "./components/layout/Sidebar";
 import FriendList from "./components/layout/FriendList";
 import Content from "./components/layout/Content";
+import { useEffect, useState } from "react";
+import LoginPage from "./components/pages/LoginPage";
+import { isTokenExpired } from "./utils/utils";
 
 function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token && !isTokenExpired(token)) {
+      setIsLoggedIn(true);
+    }
+  }, [isLoggedIn]);
+
+  if (!isLoggedIn) {
+    return <LoginPage setIsLoggedIn={setIsLoggedIn} />;
+  }
+
   return (
     <div className="w-full h-screen flex flex-row bg-background">
       <div className="flex-1">

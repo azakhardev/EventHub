@@ -1,4 +1,4 @@
-package cz.zakharchenkoartem.eventhub.restapi.login;
+package cz.zakharchenkoartem.eventhub.restapi.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

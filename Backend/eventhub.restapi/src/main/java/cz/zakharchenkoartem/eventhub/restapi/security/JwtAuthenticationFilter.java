@@ -1,5 +1,6 @@
-package cz.zakharchenkoartem.eventhub.restapi.login;
+package cz.zakharchenkoartem.eventhub.restapi.security;
 
+import cz.zakharchenkoartem.eventhub.restapi.login.JwtService;
 import cz.zakharchenkoartem.eventhub.restapi.users.User;
 import cz.zakharchenkoartem.eventhub.restapi.users.UsersDataSource;
 import jakarta.servlet.FilterChain;
