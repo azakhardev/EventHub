@@ -15,7 +15,7 @@ export default function EventCard({ event, ...props }: EventCardProps) {
     <div className="flex flex-row items-center w-full">
       <div
         className={combineString([
-          "flex-[3] cursor-pointer relative rounded-lg border-2 flex flex-row bg-card pr-4 overflow-hidden hover:shadow-b-md hover:scale-[1.008]",
+          "flex-[4] cursor-pointer relative rounded-lg border-2 flex flex-row bg-card pr-4 overflow-hidden hover:shadow-b-md hover:scale-[1.008]",
           props.className,
         ])}
       >
@@ -66,7 +66,7 @@ export default function EventCard({ event, ...props }: EventCardProps) {
           </div>
         </div>
       </div>
-      <div className="flex-1 flex justify-around">
+      <div className="flex-1 flex justify-around px-4">
         <Button className="bg-transparent hover:bg-transparent hover:scale-[1.03] px-4 py-6 border-2 border-icon rounded-md">
           <Pencil className="text-primary" size={32} />
         </Button>

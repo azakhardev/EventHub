@@ -5,21 +5,25 @@
 h1 {
   font-size: 48px;
   font-weight: 700;
+  color: var(--color-text);
 }
 
 h2 {
   font-size: 32px;
   font-weight: 600;
+  color: var(--color-text);
 }
 
 h3 {
   font-size: 24px;
   font-weight: 600;
+  color: var(--color-text);
 }
 
 h4 {
   font-size: 20px;
   font-weight: 500;
+  color: var(--color-text);
 }
 
 :root {
@@ -36,6 +40,17 @@ h4 {
   --color-icon: #81c784;
   --color-border: #e0e0e0;
   --color-card: #fafafa;
+  --color-dialog: #e8f5e9;
+}
+
+.theme-green {
+  --color-primary: #4caf50;
+  --color-primary-dark: #388e3c;
+  --color-primary-light: #c8e6c9;
+  --color-background: #f3f4f6;
+  --color-surface: #2e7d32;
+  --color-button-hover: #66bb6a;
+  --color-icon: #81c784;
   --color-dialog: #e8f5e9;
 }
 
@@ -67,4 +82,6 @@ h4 {
   --color-button-hover: #333333;
   --color-icon: #616161;
   --color-dialog: #2a2a2a;
+  --color-text: #f5f5f5;
+  --color-text-muted: #aaaaaa;
 }

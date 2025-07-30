@@ -39,9 +39,15 @@ export default {
           "70%": { transform: "rotate(15deg)" },
           "100%": { transform: "rotate(0deg)" },
         },
+        backgroundMove: {
+          "0%": { backgroundPosition: "0% 50%" },
+          "50%": { backgroundPosition: "100% 50%" },
+          "100%": { backgroundPosition: "0% 50%" },
+        },
       },
       animation: {
         wiggle15: "wiggle15 0.5s ease-in-out",
+        backgroundMove: "backgroundMove 20s linear infinite",
       },
     },
   },

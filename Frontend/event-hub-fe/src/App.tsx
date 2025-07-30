@@ -5,11 +5,16 @@ import Content from "./components/layout/Content";
 import { useEffect, useState } from "react";
 import LoginPage from "./components/pages/LoginPage";
 import { isTokenExpired } from "./utils/utils";
-import { useUserStore } from "./store/store";
+import { useThemeStore, useUserStore } from "./store/store";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const { setUserId, setToken } = useUserStore();
+  const { theme } = useThemeStore();
+
+  useEffect(() => {
+    document.body.className = `theme-${theme}`;
+  }, [theme]);
 
   useEffect(() => {
     const token = localStorage.getItem("token");

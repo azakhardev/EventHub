@@ -40,7 +40,14 @@ export default function LoginPage({ setIsLoggedIn }: LoginPageProps) {
   }
 
   return (
-    <div className="w-[100vw] h-[100vh] flex flex-col items-center justify-center">
+    <div
+      className="w-[100vw] h-[100vh] flex flex-col items-center justify-center animate-backgroundMove"
+      style={{
+        background:
+          "linear-gradient(135deg, #ffffff, #e0e0e0, var(--color-surface))",
+        backgroundSize: "200% 200%",
+      }}
+    >
       <h1 className="text-surface">EventHub</h1>
       <h3 className="text-primary italic">
         Single app for all of your events.

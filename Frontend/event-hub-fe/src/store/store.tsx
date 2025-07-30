@@ -13,6 +13,11 @@ type UserState = {
   setUserId: (userId: number) => void;
 };
 
+type ThemeState = {
+  theme: "green" | "purple" | "blue" | "black";
+  setTheme: (theme: "green" | "purple" | "blue" | "black") => void;
+};
+
 export const usePageStore = create<PageState>((set) => ({
   selectedPage: "home",
   setSelectedPage: (page: SELECTED_PAGE) => set({ selectedPage: page }),
@@ -23,4 +28,11 @@ export const useUserStore = create<UserState>((set) => ({
   setToken: (token: string) => set({ token }),
   userId: 0,
   setUserId: (userId: number) => set({ userId }),
+}));
+
+export const useThemeStore = create<ThemeState>((set) => ({
+  theme:
+    (localStorage.getItem("theme") as "green" | "purple" | "blue" | "black") ||
+    "green",
+  setTheme: (theme: "green" | "purple" | "blue" | "black") => set({ theme }),
 }));
