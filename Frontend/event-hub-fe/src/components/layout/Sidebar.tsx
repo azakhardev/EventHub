@@ -1,9 +1,17 @@
 import { Calendar, Home, LogOut, Settings, User, Users } from "lucide-react";
 import IconButton from "../ui/IconButton";
 import { usePageStore } from "../../store/store";
+import { useState } from "react";
+import ProfileDialog from "../ui/dialogs/ProfileDialog";
 
 export default function Sidebar() {
   const { setSelectedPage } = usePageStore();
+  const [profileDialogIsOpen, setProfileDialogIsOpen] = useState(false);
+
+  function handleOpenProfileDialog() {
+    setProfileDialogIsOpen(true);
+  }
+
   return (
     <div className="flex flex-col items-center justify-between bg-surface text-onSurface h-full">
       <div className="flex flex-col items-start gap-8 w-full pl-8 mt-4">
@@ -20,7 +28,7 @@ export default function Sidebar() {
         />
         <IconButton
           icon={<User size={32} className="text-onSurface" />}
-          onClick={() => alert("open profile dialog")}
+          onClick={handleOpenProfileDialog}
           label="Profile"
         />
         <IconButton
@@ -34,6 +42,10 @@ export default function Sidebar() {
             alert("open settings dialog");
           }}
           label="Settings"
+        />
+        <ProfileDialog
+          isOpen={profileDialogIsOpen}
+          setIsOpen={setProfileDialogIsOpen}
         />
       </div>
       <div className="mb-8">

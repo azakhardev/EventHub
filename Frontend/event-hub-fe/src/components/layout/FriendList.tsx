@@ -4,6 +4,8 @@ import { Bell, Search, UserPlus } from "lucide-react";
 import Input from "../ui/forms/Input";
 import { useQuery } from "@tanstack/react-query";
 import type { User } from "../../types/user.tsx";
+import { SyncLoader } from "../ui/loaders/SyncLoader.tsx";
+import EmptyArray from "../ui/alerts/EmptyArray.tsx";
 
 const api = import.meta.env.VITE_API_URL;
 
@@ -50,8 +52,9 @@ export default function FriendList() {
               data.map((user: User) => (
                 <FriendCard key={user.id} user={user} />
               ))}
-            {isLoading && <div>Loading...</div>}
+            {isLoading && <SyncLoader />}
             {error && <div>Error: {error.message}</div>}
+            {data && data.length === 0 && <EmptyArray />}
           </div>
         </div>
       )}

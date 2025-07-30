@@ -4,6 +4,8 @@ import Line from "../ui/Line";
 import { useUserStore } from "../../store/store";
 import EventCard from "../ui/EventCard";
 import type { Event } from "../../types/event.tsx";
+import { SyncLoader } from "../ui/loaders/SyncLoader.tsx";
+import EmptyArray from "../ui/alerts/EmptyArray.tsx";
 
 const api = import.meta.env.VITE_API_URL;
 
@@ -31,7 +33,7 @@ export default function HomePage() {
         </div>
       </div>
       <Line />
-      {isLoading && <div>Loading...</div>}
+      {isLoading && <SyncLoader />}
       {error && <div>Error: {error.message}</div>}
       {data && (
         <div className="flex flex-col gap-2">
@@ -40,7 +42,7 @@ export default function HomePage() {
           ))}
         </div>
       )}
-      {data && data.length === 0 && <div>No events found</div>}
+      {data && data.length === 0 && <EmptyArray />}
     </div>
   );
 }
