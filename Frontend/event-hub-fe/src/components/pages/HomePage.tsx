@@ -3,7 +3,7 @@ import Button from "../ui/forms/Button";
 import Line from "../ui/Line";
 import { useUserStore } from "../../store/store";
 import EventCard from "../ui/EventCard";
-import type { Event } from "../../types/Event";
+import type { Event } from "../../types/event.tsx";
 
 const api = import.meta.env.VITE_API_URL;
 

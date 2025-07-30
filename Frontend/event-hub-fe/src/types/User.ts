@@ -7,4 +7,5 @@ export type User = {
   proffesion?: string;
   about?: string;
   followToken: string;
+  pinned?: boolean;
 };

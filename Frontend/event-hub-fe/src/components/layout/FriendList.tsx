@@ -1,14 +1,32 @@
 import FriendCard from "../ui/FriendCard";
-import { usePageStore } from "../../store/store";
+import { usePageStore, useUserStore } from "../../store/store";
 import { Bell, Search, UserPlus } from "lucide-react";
 import Input from "../ui/forms/Input";
+import { useQuery } from "@tanstack/react-query";
+import type { User } from "../../types/user.tsx";
+
+const api = import.meta.env.VITE_API_URL;
 
 export default function FriendList() {
   const { selectedPage } = usePageStore();
+  const { token, userId } = useUserStore();
+
+  const { data, isLoading, error, isSuccess } = useQuery({
+    queryKey: ["friends", userId],
+    queryFn: () =>
+      fetch(`${api}/users/${userId}/following`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }).then((res) => res.json()),
+    enabled: !!token && !!userId,
+  });
+
   return (
     <>
       {selectedPage !== "friends" && (
-        <div className="flex flex-col gap-2 items-center mt-6 border-l-2 h-auto">
+        <div className="flex flex-col gap-2 items-center mt-6 border-l-2 max-h-[100vh]">
           <div className="flex flex-row items-center justify-between w-full pr-2 pl-4">
             <h3>Friends</h3>
             <div className="flex flex-row gap-2">
@@ -26,22 +44,14 @@ export default function FriendList() {
               icon={<Search size={24} />}
             />
           </div>
+
           <div className="flex flex-col gap-2">
-            {[1, 1, 1, 1, 1, 1, 1, 1, 1, 1].map((_, index) => (
-              <FriendCard
-                key={index}
-                user={{
-                  id: index,
-                  username: "John Doe",
-                  email: "john.doe@example.com",
-                  follow_token: "1234567890",
-                  profile_picture_url:
-                    "https://i.pinimg.com/1200x/bd/af/6d/bdaf6d8fe7871aa0a0fdf89f0587fd69.jpg",
-                  proffesion: "Software Engineer",
-                  about: "I am a software engineer",
-                }}
-              />
-            ))}
+            {isSuccess &&
+              data.map((user: User) => (
+                <FriendCard key={user.id} user={user} />
+              ))}
+            {isLoading && <div>Loading...</div>}
+            {error && <div>Error: {error.message}</div>}
           </div>
         </div>
       )}

@@ -14,6 +14,13 @@ public class FollowRelationId implements Serializable {
     @Column(name = "followed_user_id")
     private Long followedUserId;
 
+    public FollowRelationId() {}
+
+    public FollowRelationId(Long followerId, Long followedUserId) {
+        this.followerId = followerId;
+        this.followedUserId = followedUserId;
+    }
+
     public Long getFollowerId() {
         return followerId;
     }

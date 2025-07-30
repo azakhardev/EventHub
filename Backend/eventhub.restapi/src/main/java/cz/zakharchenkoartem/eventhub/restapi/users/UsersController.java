@@ -1,22 +1,16 @@
 package cz.zakharchenkoartem.eventhub.restapi.users;
 
 import cz.zakharchenkoartem.eventhub.restapi.events.Event;
-import cz.zakharchenkoartem.eventhub.restapi.events.EventsDataSource;
-import cz.zakharchenkoartem.eventhub.restapi.events_participants.EventParticipantRelation;
-import cz.zakharchenkoartem.eventhub.restapi.events_participants.EventsParticipantsDataSource;
 import cz.zakharchenkoartem.eventhub.restapi.follows.FollowRelation;
-import cz.zakharchenkoartem.eventhub.restapi.follows.FollowRelationsDataSource;
+import cz.zakharchenkoartem.eventhub.restapi.follows.dto.PinFollowerRequest;
 import cz.zakharchenkoartem.eventhub.restapi.notifications.Notification;
-import cz.zakharchenkoartem.eventhub.restapi.notifications.NotificationsDataSource;
+import cz.zakharchenkoartem.eventhub.restapi.users.dto.FollowedUser;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+
 @RestController
 @RequestMapping("/users")
 public class UsersController {
@@ -39,7 +33,7 @@ public class UsersController {
     }
 
     @GetMapping("/{id}/following")
-    public List<User> getFollowers(@PathVariable Long id) {
+    public List<FollowedUser> getFollowers(@PathVariable Long id) {
         return userService.getFollowing(id);
     }
 
@@ -56,5 +50,11 @@ public class UsersController {
     @GetMapping("/{id}/foreign-events")
     public List<Event> getForeignEvents(@PathVariable Long id) {
         return userService.getForeignEvents(id);
+    }
+
+    @PutMapping("/pin-follower")
+    public ResponseEntity<FollowedUser> pinFollower(@RequestBody PinFollowerRequest request) {
+        FollowedUser user = userService.pinFollower(request);
+        return ResponseEntity.ok(user);
     }
 }

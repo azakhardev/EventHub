@@ -30,7 +30,7 @@ function App() {
         <Sidebar />
       </div>
       <div className="flex-[7]">
-        <div className="flex flex-row gap-2">
+        <div className="flex flex-row gap-2 max-h-[100vh] h-[100vh]">
           <div className="flex-[3] xl:flex-[4]">
             <Content />
           </div>

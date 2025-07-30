@@ -4,17 +4,21 @@ import cz.zakharchenkoartem.eventhub.restapi.events.Event;
 import cz.zakharchenkoartem.eventhub.restapi.events_participants.EventParticipantRelation;
 import cz.zakharchenkoartem.eventhub.restapi.events_participants.EventsParticipantsDataSource;
 import cz.zakharchenkoartem.eventhub.restapi.follows.FollowRelation;
+import cz.zakharchenkoartem.eventhub.restapi.follows.FollowRelationId;
 import cz.zakharchenkoartem.eventhub.restapi.follows.FollowRelationsDataSource;
+import cz.zakharchenkoartem.eventhub.restapi.follows.dto.PinFollowerRequest;
 import cz.zakharchenkoartem.eventhub.restapi.notifications.Notification;
 import cz.zakharchenkoartem.eventhub.restapi.notifications.NotificationsDataSource;
 
+import cz.zakharchenkoartem.eventhub.restapi.users.dto.FollowedUser;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -48,13 +52,13 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public List<User> getFollowing(Long id) {
+    public List<FollowedUser> getFollowing(Long id) {
         User user = getUser(id);
         List<FollowRelation> followRelations = followersDataSource.findByFollower(user);
 
-        List<User> followedUsers = new ArrayList<>();
+        List<FollowedUser> followedUsers = new ArrayList<>();
         for (FollowRelation relation : followRelations) {
-            followedUsers.add(relation.getFollowedUser());
+            followedUsers.add(new FollowedUser(relation.getFollowedUser(), relation.isFavorite()));
         }
 
         return followedUsers;
@@ -92,5 +96,31 @@ public class UserService {
         }
 
         return events;
+    }
+
+    @Transactional
+    public FollowedUser pinFollower(PinFollowerRequest request) {
+        User follower = usersDataSource.findById(request.getFollowerId())
+                .orElseThrow(() -> new RuntimeException("User (follower) not found"));
+        User followed = usersDataSource.findById(request.getFollowedUserId())
+                .orElseThrow(() -> new RuntimeException("Followed user not found"));
+
+        FollowRelation relation = followersDataSource
+                .findByFollowedUserIdAndFollowerId(request.getFollowedUserId(), request.getFollowerId())
+                .orElse(new FollowRelation());
+
+        if(relation == null) {
+            relation.setId(new FollowRelationId(request.getFollowerId(), request.getFollowedUserId()));
+            relation.setFollower(follower);
+            relation.setFollowedUser(followed);
+            relation.setFavorite(request.isPinned());
+            relation.setCreatedAt(LocalDateTime.now());
+        }else{
+            relation.setFavorite(request.isPinned());
+        }
+
+        followersDataSource.save(relation);
+
+        return new FollowedUser(followed, request.isPinned());
     }
 }
