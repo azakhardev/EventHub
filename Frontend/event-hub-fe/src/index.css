@@ -34,6 +34,7 @@ h4 {
   --color-surface: #2e7d32;
   --color-on-surface: #ffffff;
   --color-text: #212121;
+  --color-text-on-light: #212121;
   --color-text-muted: #777777;
   --color-button-hover: #66bb6a;
   --color-accent: #ffc107;
@@ -49,6 +50,7 @@ h4 {
   --color-primary-light: #c8e6c9;
   --color-background: #f3f4f6;
   --color-surface: #2e7d32;
+  --color-text-on-light: #212121;
   --color-button-hover: #66bb6a;
   --color-icon: #81c784;
   --color-dialog: #e8f5e9;
@@ -59,6 +61,7 @@ h4 {
   --color-primary-dark: #1976d2;
   --color-primary-light: #bbdefb;
   --color-surface: #1565c0;
+  --color-text-on-light: #212121;
   --color-button-hover: #64b5f6;
   --color-icon: #90caf9;
   --color-dialog: #e3f2fd;
@@ -70,6 +73,7 @@ h4 {
   --color-primary-light: #e1bee7;
   --color-surface: #6a1b9a;
   --color-button-hover: #ba68c8;
+  --color-text-on-light: #212121;
   --color-icon: #ce93d8;
   --color-dialog: #f3e5f5;
 }
@@ -83,5 +87,6 @@ h4 {
   --color-icon: #616161;
   --color-dialog: #2a2a2a;
   --color-text: #f5f5f5;
+  --color-text-on-light: #212121;
   --color-text-muted: #aaaaaa;
 }

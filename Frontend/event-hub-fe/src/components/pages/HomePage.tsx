@@ -6,11 +6,17 @@ import EventCard from "../ui/EventCard";
 import type { Event } from "../../types/event.tsx";
 import { SyncLoader } from "../ui/loaders/SyncLoader.tsx";
 import EmptyArray from "../ui/alerts/EmptyArray.tsx";
+import { useState } from "react";
+import EventDialog from "../ui/dialogs/EventDialog.tsx";
 
 const api = import.meta.env.VITE_API_URL;
 
 export default function HomePage() {
   const { token, userId } = useUserStore();
+
+  const [event, setEvent] = useState<Event | null>(null);
+
+  console.log(event);
 
   const { data, isLoading, error } = useQuery<Event[]>({
     queryKey: ["events", userId],
@@ -27,7 +33,7 @@ export default function HomePage() {
   return (
     <div className="flex flex-col w-full">
       <div className="flex flex-row items-center justify-between">
-        <h3>Upcoming Events</h3>
+        <h3 className="text-text-on-light">Upcoming Events</h3>
         <div className="flex flex-row items-center gap-2">
           <Button>Add Event</Button>
         </div>
@@ -38,11 +44,16 @@ export default function HomePage() {
       {data && (
         <div className="flex flex-col gap-2">
           {data.map((event) => (
-            <EventCard event={event} key={event.id} />
+            <EventCard
+              event={event}
+              key={event.id}
+              onClick={() => setEvent(event)}
+            />
           ))}
         </div>
       )}
       {data && data.length === 0 && <EmptyArray />}
+      <EventDialog isOpen={event !== null} setEvent={setEvent} event={event} />
     </div>
   );
 }

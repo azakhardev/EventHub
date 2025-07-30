@@ -3,6 +3,7 @@ import Dialog from "./Dialog";
 import { useUserStore } from "../../../store/store";
 import { BounceLoader } from "react-spinners";
 import type { User } from "../../../types/user";
+import Description from "../Description";
 
 const api = import.meta.env.VITE_API_URL;
 
@@ -55,9 +56,7 @@ export default function ProfileDialog({
                 </h4>
                 <div className="mt-2">
                   <h4>About:</h4>
-                  <div className="w-auto p-1 bg-white rounded-md border border-black">
-                    {data.about ? data.about : ""}
-                  </div>
+                  <Description text={data.about ?? ""} />
                 </div>
                 <h4>Your follow token:</h4>
                 <div

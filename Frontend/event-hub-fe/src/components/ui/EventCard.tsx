@@ -18,6 +18,7 @@ export default function EventCard({ event, ...props }: EventCardProps) {
           "flex-[4] cursor-pointer relative rounded-lg border-2 flex flex-row bg-card pr-4 overflow-hidden hover:shadow-b-md hover:scale-[1.008]",
           props.className,
         ])}
+        {...props}
       >
         <div
           className="absolute top-[0] left-[100%] w-[150px] h-[150px] rotate-45 origin-top-right"
@@ -27,9 +28,9 @@ export default function EventCard({ event, ...props }: EventCardProps) {
           style={{ backgroundColor: event.color }}
           className="min-w-[30px] min-h-[100%] mr-4"
         ></div>
-        <div className="flex flex-col gap-2 w-full pr-[10%]">
+        <div className="flex flex-col gap-2 w-full pr-[10%] py-2">
           <div className="flex flex-row items-center justify-between">
-            <h4>{event.title}</h4>
+            <h4 className="text-text-on-light">{event.title}</h4>
             <div>{startTime.toLocaleDateString()}</div>
           </div>
           <hr />

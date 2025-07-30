@@ -28,6 +28,7 @@ export default {
         border: "var(--color-border)",
         card: "var(--color-card)",
         dialog: "var(--color-dialog)",
+        "text-on-light": "var(--color-text-on-light)",
       },
       fontFamily: {
         hub: ['"Inter"', "sans-serif"],
