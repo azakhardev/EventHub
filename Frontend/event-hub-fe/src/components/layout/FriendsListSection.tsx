@@ -10,7 +10,7 @@ import { useRef, useState } from "react";
 
 const api = import.meta.env.VITE_API_URL;
 
-export default function FriendList() {
+export default function FriendsListSection() {
   const { selectedPage } = usePageStore();
   const { token, userId } = useUserStore();
   const [expression, setExpression] = useState("");
@@ -26,6 +26,7 @@ export default function FriendList() {
         },
       }).then((res) => res.json()),
     enabled: !!token && !!userId,
+    staleTime: 5 * 60 * 1000,
   });
 
   return (
@@ -33,7 +34,7 @@ export default function FriendList() {
       {selectedPage !== "friends" && (
         <div className="flex flex-col gap-2 items-center mt-6 border-l-2 max-h-[100vh]">
           <div className="flex flex-row items-center justify-between w-full pr-2 pl-4">
-            <h3>Friends</h3>
+            <h3 className="text-text-on-light">Friends</h3>
             <div className="flex flex-row gap-2">
               <div className="rounded-full bg-primary p-2 cursor-pointer hover:bg-button-hover">
                 <UserPlus size={28} className="text-onSurface" />

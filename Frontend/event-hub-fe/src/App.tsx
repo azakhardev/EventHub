@@ -1,6 +1,6 @@
 import "./App.css";
 import Sidebar from "./components/layout/Sidebar";
-import FriendList from "./components/layout/FriendList";
+import FriendsListSection from "./components/layout/FriendsListSection";
 import Content from "./components/layout/Content";
 import { useEffect, useState } from "react";
 import LoginPage from "./components/pages/LoginPage";
@@ -40,7 +40,7 @@ function App() {
             <Content />
           </div>
           <div className="flex-1">
-            <FriendList />
+            <FriendsListSection />
           </div>
         </div>
       </div>

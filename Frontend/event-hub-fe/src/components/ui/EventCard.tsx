@@ -21,12 +21,12 @@ export default function EventCard({ event, ...props }: EventCardProps) {
         {...props}
       >
         <div
-          className="absolute top-[0] left-[100%] w-[150px] h-[150px] rotate-45 origin-top-right"
+          className="absolute top-[0] left-[100%] w-[150px] h-[150px] rotate-45 origin-top-right opacity-50"
           style={{ backgroundColor: event.color }}
         />
         <div
           style={{ backgroundColor: event.color }}
-          className="min-w-[30px] min-h-[100%] mr-4"
+          className="min-w-[30px] min-h-[100%] mr-4 opacity-50"
         ></div>
         <div className="flex flex-col gap-2 w-full pr-[10%] py-2">
           <div className="flex flex-row items-center justify-between">
