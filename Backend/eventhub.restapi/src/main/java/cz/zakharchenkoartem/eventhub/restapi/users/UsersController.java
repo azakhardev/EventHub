@@ -33,8 +33,8 @@ public class UsersController {
     }
 
     @GetMapping("/{id}/following")
-    public List<FollowedUser> getFollowers(@PathVariable Long id) {
-        return userService.getFollowing(id);
+    public List<FollowedUser> getFollowers(@PathVariable Long id,  @RequestParam(required = false) String expression) {
+        return userService.getFollowing(id, expression);
     }
 
     @GetMapping("/{id}/notifications")

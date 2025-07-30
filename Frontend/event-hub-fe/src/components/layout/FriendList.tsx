@@ -6,17 +6,20 @@ import { useQuery } from "@tanstack/react-query";
 import type { User } from "../../types/user.tsx";
 import { SyncLoader } from "../ui/loaders/SyncLoader.tsx";
 import EmptyArray from "../ui/alerts/EmptyArray.tsx";
+import { useRef, useState } from "react";
 
 const api = import.meta.env.VITE_API_URL;
 
 export default function FriendList() {
   const { selectedPage } = usePageStore();
   const { token, userId } = useUserStore();
+  const [expression, setExpression] = useState("");
+  const searchRef = useRef<HTMLInputElement>(null);
 
   const { data, isLoading, error, isSuccess } = useQuery({
-    queryKey: ["friends", userId],
+    queryKey: ["friends", userId, expression],
     queryFn: () =>
-      fetch(`${api}/users/${userId}/following`, {
+      fetch(`${api}/users/${userId}/following?expression=${expression}`, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
@@ -44,6 +47,10 @@ export default function FriendList() {
             <Input
               placeholder="Search for a friend"
               icon={<Search size={24} />}
+              ref={searchRef}
+              onChange={() => {
+                setExpression(searchRef.current?.value ?? "");
+              }}
             />
           </div>
 

@@ -52,9 +52,15 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public List<FollowedUser> getFollowing(Long id) {
+    public List<FollowedUser> getFollowing(Long id, String expression) {
         User user = getUser(id);
-        List<FollowRelation> followRelations = followersDataSource.findByFollower(user);
+        List<FollowRelation> followRelations;
+
+        if (expression != null && !expression.isBlank()) {
+            followRelations = followersDataSource.findByFollowerAndUsernameLike(user, expression);
+        } else {
+            followRelations = followersDataSource.findByFollower(user);
+        }
 
         List<FollowedUser> followedUsers = new ArrayList<>();
         for (FollowRelation relation : followRelations) {
