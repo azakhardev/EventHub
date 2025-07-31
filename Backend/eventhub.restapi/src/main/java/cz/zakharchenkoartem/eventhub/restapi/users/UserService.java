@@ -113,9 +113,10 @@ public class UserService {
 
         FollowRelation relation = followersDataSource
                 .findByFollowedUserIdAndFollowerId(request.getFollowedUserId(), request.getFollowerId())
-                .orElse(new FollowRelation());
+                .orElse(null);
 
         if(relation == null) {
+            relation = new FollowRelation();
             relation.setId(new FollowRelationId(request.getFollowerId(), request.getFollowedUserId()));
             relation.setFollower(follower);
             relation.setFollowedUser(followed);

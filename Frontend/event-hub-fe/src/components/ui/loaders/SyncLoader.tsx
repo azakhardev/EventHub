@@ -1,18 +1,19 @@
 import { SyncLoader as SyncLoaderComponent } from "react-spinners";
 import { useEffect, useState } from "react";
+import { useThemeStore } from "../../../store/store";
 
 export function SyncLoader() {
-  const [spinnerColor, setSpinnerColor] = useState("#000");
-
+  const [loaderColor, setLoaderColor] = useState("#000");
+  const { theme } = useThemeStore();
   useEffect(() => {
     const root = getComputedStyle(document.documentElement);
     const color = root.getPropertyValue("--color-primary").trim();
-    setSpinnerColor(color);
-  }, []);
+    setLoaderColor(color);
+  }, [theme]);
 
   return (
-    <div className="flex justify-center items-center">
-      <SyncLoaderComponent color={spinnerColor} />
+    <div className="flex justify-center items-center mt-2">
+      <SyncLoaderComponent color={loaderColor} />
     </div>
   );
 }

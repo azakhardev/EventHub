@@ -34,6 +34,15 @@ public class JwtService {
                 .getSubject();
     }
 
+    public Long extractUserId(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(KEY)
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .get("userId", Long.class);
+    }
+
     public boolean validateToken(String token, User user) {
         return extractEmail(token).equals(user.getEmail());
     }

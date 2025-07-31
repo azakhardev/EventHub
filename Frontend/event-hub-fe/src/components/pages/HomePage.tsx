@@ -8,6 +8,7 @@ import { SyncLoader } from "../ui/loaders/SyncLoader.tsx";
 import EmptyArray from "../ui/alerts/EmptyArray.tsx";
 import { useState } from "react";
 import EventDialog from "../ui/dialogs/EventDialog.tsx";
+import Error from "../ui/alerts/Error.tsx";
 
 const api = import.meta.env.VITE_API_URL;
 
@@ -40,7 +41,7 @@ export default function HomePage() {
       </div>
       <Line />
       {isLoading && <SyncLoader />}
-      {error && <div>Error: {error.message}</div>}
+      {error && <Error error={error.message} />}
       {data && (
         <div className="flex flex-col gap-2">
           {data.map((event) => (

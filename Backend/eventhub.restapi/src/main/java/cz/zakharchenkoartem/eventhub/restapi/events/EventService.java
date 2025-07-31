@@ -51,7 +51,9 @@ public class EventService {
         List<User> user = new ArrayList<>();
 
         for (EventParticipantRelation relation : participantRelations) {
-            user.add(relation.getUser());
+            if(relation.isAccepted()) {
+                user.add(relation.getUser());
+            }
         }
 
         return user;

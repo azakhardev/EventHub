@@ -7,6 +7,7 @@ import type { User } from "../../types/user.tsx";
 import { SyncLoader } from "../ui/loaders/SyncLoader.tsx";
 import EmptyArray from "../ui/alerts/EmptyArray.tsx";
 import { useRef, useState } from "react";
+import Error from "../ui/alerts/Error";
 
 const api = import.meta.env.VITE_API_URL;
 
@@ -32,7 +33,7 @@ export default function FriendsListSection() {
   return (
     <>
       {selectedPage !== "friends" && (
-        <div className="flex flex-col gap-2 items-center mt-6 border-l-2 max-h-[100vh]">
+        <div className="flex flex-col gap-2 items-center mt-6 border-l-2 max-h-[calc(100vh-1.5rem)] overflow-y-scroll">
           <div className="flex flex-row items-center justify-between w-full pr-2 pl-4">
             <h3 className="text-text-on-light">Friends</h3>
             <div className="flex flex-row gap-2">
@@ -44,7 +45,7 @@ export default function FriendsListSection() {
               </div>
             </div>
           </div>
-          <div className="w-full md:w-2/3 px-4 my-2">
+          <div className="w-full px-1 lg:w-2/3 lg:px-4 my-2">
             <Input
               placeholder="Search for a friend"
               icon={<Search size={24} />}
@@ -61,7 +62,7 @@ export default function FriendsListSection() {
                 <FriendCard key={user.id} user={user} />
               ))}
             {isLoading && <SyncLoader />}
-            {error && <div>Error: {error.message}</div>}
+            {error && <Error error={error.message} />}
             {data && data.length === 0 && <EmptyArray />}
           </div>
         </div>

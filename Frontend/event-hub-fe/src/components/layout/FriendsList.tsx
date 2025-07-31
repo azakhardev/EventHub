@@ -29,7 +29,7 @@ export default function FriendsList() {
   });
   return (
     <>
-      <div className="w-full md:w-2/3 px-4 my-2">
+      <div className="w-full md:w-2/3 md:px-4 my-2">
         <Input
           placeholder="Search for a friend"
           icon={<Search size={24} />}

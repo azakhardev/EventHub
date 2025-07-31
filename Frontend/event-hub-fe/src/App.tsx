@@ -13,7 +13,7 @@ function App() {
   const { theme } = useThemeStore();
 
   useEffect(() => {
-    document.body.className = `theme-${theme}`;
+    document.documentElement.className = `theme-${theme}`;
   }, [theme]);
 
   useEffect(() => {
@@ -30,7 +30,7 @@ function App() {
   }
 
   return (
-    <div className="w-full h-screen flex flex-row bg-background">
+    <div className="w-full h-auto max-h-screen flex flex-row bg-background">
       <div className="flex-1">
         <Sidebar />
       </div>

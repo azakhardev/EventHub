@@ -1,9 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import Dialog from "./Dialog";
 import { useUserStore } from "../../../store/store";
-import { BounceLoader } from "react-spinners";
+import { BounceLoader } from "../loaders/BounceLoader";
 import type { User } from "../../../types/user";
 import Description from "../Description";
+import Error from "../alerts/Error";
 
 const api = import.meta.env.VITE_API_URL;
 
@@ -38,8 +39,8 @@ export default function ProfileDialog({
         isOpen={isOpen}
         setIsOpen={setIsOpen}
       >
-        {isLoading && <BounceLoader className="bg-primary" />}
-        {error && <div>Error: {error.message}</div>}
+        {isLoading && <BounceLoader />}
+        {error && <Error error={error.message} />}
         {data && (
           <div className="flex flex-row gap-[15%] px-12 ">
             <div className="flex-1 min-w-16 min-h-16 flex items-center justify-center">

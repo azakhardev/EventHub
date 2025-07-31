@@ -9,6 +9,7 @@ import { useRef, useState } from "react";
 import { Send, X } from "lucide-react";
 import { SyncLoader } from "../loaders/SyncLoader";
 import Button from "../forms/Button";
+import Error from "../alerts/Error";
 
 const api = import.meta.env.VITE_API_URL;
 
@@ -138,7 +139,7 @@ export default function ParticipantsDialog({
       <div className="flex flex-col gap-2 w-full px-8 py-4 text-text">
         {participantsQuery.isLoading && <BounceLoader />}
         {participantsQuery.error && (
-          <div>Error: {participantsQuery.error.message}</div>
+          <Error error={participantsQuery.error.message} />
         )}
         {participantsQuery.isSuccess && (
           <>
