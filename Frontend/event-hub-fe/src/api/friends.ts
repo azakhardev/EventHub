@@ -34,7 +34,7 @@ export async function addFriend(
   followToken: string,
   followedUserId: number
 ) {
-  return apiRequest(`${api}/users/${userId}/add-friend`, {
+  const response = await fetch(`${api}/users/${userId}/add-friend`, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${token}`,
@@ -44,4 +44,34 @@ export async function addFriend(
       followedUserId: followedUserId,
     }),
   });
+
+  if (!response.ok) {
+    throw new Error("Failed to add friend");
+  }
+
+  return await response.json();
+}
+
+export async function removeFriend(
+  userId: number,
+  token: string,
+  followedUserId: number
+) {
+  const response = await fetch(
+    `${api}/users/${userId}/remove-friend/${followedUserId}`,
+    {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({}),
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to remove friend");
+  }
+
+  return await response.json();
 }

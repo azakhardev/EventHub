@@ -1,11 +1,10 @@
 import type { User } from "../../types/user.tsx";
-import { Star } from "lucide-react";
+import { Star, Trash2 } from "lucide-react";
 import { useUserStore } from "../../store/store";
 import { useMutation } from "@tanstack/react-query";
 import { queryClient } from "../../main.tsx";
-import { pinFriend } from "../../api/friends.ts";
-
-const api = import.meta.env.VITE_API_URL;
+import { pinFriend, removeFriend } from "../../api/friends.ts";
+import { toast, ToastContainer } from "react-toastify";
 
 interface FriendCardProps extends React.HTMLAttributes<HTMLDivElement> {
   user: User;
@@ -14,7 +13,7 @@ interface FriendCardProps extends React.HTMLAttributes<HTMLDivElement> {
 export default function FriendCard({ user, ...props }: FriendCardProps) {
   const { token, userId } = useUserStore();
 
-  const { mutate } = useMutation<User>({
+  const { mutate: pinFriendMutation } = useMutation<User>({
     mutationFn: () => pinFriend(user.id, !user.pinned, userId, token),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["friends"] });
@@ -22,7 +21,27 @@ export default function FriendCard({ user, ...props }: FriendCardProps) {
   });
 
   function handlePinFriend() {
-    mutate();
+    pinFriendMutation();
+  }
+
+  const { mutate: removeFriendMutation } = useMutation({
+    mutationFn: () => removeFriend(userId, token, user.id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["friends"] });
+    },
+    onError: (error) => {
+      toast.error("Failed to remove friend: " + error.message, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+      });
+    },
+  });
+
+  function handleRemoveFriend() {
+    removeFriendMutation();
   }
 
   return (
@@ -30,7 +49,7 @@ export default function FriendCard({ user, ...props }: FriendCardProps) {
       className="w-full flex flex-row items-center justify-between gap-2"
       {...props}
     >
-      <div className="flex flex-row items-center gap-2">
+      <div className="flex-1 flex flex-row items-center gap-2">
         <div>
           <img
             src={user.profilePictureUrl}
@@ -45,15 +64,21 @@ export default function FriendCard({ user, ...props }: FriendCardProps) {
           </div>
         </div>
       </div>
-      <div className="flex items-center justify-center">
+      <div className="flex items-center justify-center gap-2">
         <Star
           onClick={handlePinFriend}
           fill={user.pinned ? "yellow" : "none"}
           stroke={user.pinned ? "gray" : "black"}
-          size={32}
+          size={28}
           className="cursor-pointer hover:text-yellow-500"
         />
+        <Trash2
+          onClick={handleRemoveFriend}
+          size={28}
+          className="cursor-pointer hover:text-red-500"
+        />
       </div>
+      <ToastContainer />
     </div>
   );
 }

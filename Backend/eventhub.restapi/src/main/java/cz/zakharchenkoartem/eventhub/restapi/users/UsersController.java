@@ -41,7 +41,7 @@ public class UsersController {
     @JsonView(Views.Owner.class)
     public User getUser(@PathVariable Long id, @RequestHeader("Authorization") String authHeader) {
         Long userId = jwtService.extractUserId(authHeader.replace("Bearer ", ""));
-        if(!Objects.equals(userId, id)){
+        if (!Objects.equals(userId, id)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access denied");
         }
         return userService.getUser(id);
@@ -55,9 +55,9 @@ public class UsersController {
 
     @GetMapping("/{id}/following")
     @JsonView(Views.Public.class)
-    public List<FollowedUser> getFollowers(@RequestHeader("Authorization") String authHeader, @PathVariable Long id,  @RequestParam(required = false) String expression) {
+    public List<FollowedUser> getFollowers(@RequestHeader("Authorization") String authHeader, @PathVariable Long id, @RequestParam(required = false) String expression) {
         Long userId = jwtService.extractUserId(authHeader.replace("Bearer ", ""));
-        if(!Objects.equals(userId, id)){
+        if (!Objects.equals(userId, id)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access denied");
         }
         return userService.getFollowing(id, expression);
@@ -71,7 +71,7 @@ public class UsersController {
     @GetMapping("/{id}/my-events")
     public List<Event> getMyEvents(@RequestHeader("Authorization") String authHeader, @PathVariable Long id) {
         Long userId = jwtService.extractUserId(authHeader.replace("Bearer ", ""));
-        if(!Objects.equals(userId, id)){
+        if (!Objects.equals(userId, id)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access denied");
         }
         return userService.getMyEvents(id);
@@ -82,6 +82,17 @@ public class UsersController {
     public ResponseEntity<User> sendFriendRequest(@PathVariable Long id, @RequestBody FriendRequest friendRequest) {
         User followedUser = userService.followUser(id, friendRequest);
         return ResponseEntity.ok(followedUser);
+    }
+
+    @DeleteMapping("/{id}/remove-friend/{friendId}")
+    public ResponseEntity<?> removeFriend(@RequestHeader("Authorization") String authHeader,@PathVariable Long id, @PathVariable Long friendId) {
+        Long userId = jwtService.extractUserId(authHeader.replace("Bearer ", ""));
+        if (!Objects.equals(userId, id)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access denied");
+        }
+
+        userService.unfollowUser(id, friendId);
+        return ResponseEntity.ok(friendId);
     }
 
     @GetMapping("/{id}/foreign-events")
