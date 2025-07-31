@@ -3,9 +3,9 @@ export type User = {
   username: string;
   password?: string;
   email: string;
-  profile_picture_url?: string;
+  profilePictureUrl?: string;
   proffesion?: string;
   about?: string;
-  followToken: string;
+  followToken?: string;
   pinned?: boolean;
 };

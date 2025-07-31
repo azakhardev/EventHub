@@ -1,6 +1,8 @@
 package cz.zakharchenkoartem.eventhub.restapi.users;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
+import cz.zakharchenkoartem.eventhub.restapi.dto.Views;
 import cz.zakharchenkoartem.eventhub.restapi.events.Event;
 import jakarta.persistence.*;
 
@@ -12,26 +14,33 @@ import java.util.UUID;
 @Table(name = "users")
 public class User {
     @Id
+    @JsonView(Views.Public.class)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @JsonView(Views.Public.class)
     private String username;
 
     @JsonIgnore
     private String password;
 
+    @JsonView(Views.Public.class)
     private String nickname;
 
+    @JsonView(Views.Public.class)
     private String profilePictureUrl;
 
+    @JsonView(Views.Public.class)
     private String proffesion;
 
+    @JsonView(Views.Public.class)
     private String email;
 
+    @JsonView(Views.Public.class)
     @Column(columnDefinition = "TEXT")
     private String about;
 
-
+    @JsonView(Views.Owner.class)
     @Column(name = "follow_token", columnDefinition = "UUID DEFAULT gen_random_uuid()")
     private UUID followToken;
 

@@ -11,9 +11,12 @@ import cz.zakharchenkoartem.eventhub.restapi.notifications.Notification;
 import cz.zakharchenkoartem.eventhub.restapi.notifications.NotificationsDataSource;
 
 import cz.zakharchenkoartem.eventhub.restapi.users.dto.FollowedUser;
+import cz.zakharchenkoartem.eventhub.restapi.users.dto.FriendRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -27,22 +30,29 @@ public class UserService {
     private final FollowRelationsDataSource followersDataSource;
     private final NotificationsDataSource notificationsDataSource;
     private final EventsParticipantsDataSource eventsParticipantsDataSource;
+    private final FollowRelationsDataSource followRelationsDataSource;
 
     @Autowired
     public UserService(
             UsersDataSource usersDataSource,
             FollowRelationsDataSource followersDataSource,
             NotificationsDataSource notificationsDataSource,
-            EventsParticipantsDataSource eventsParticipantsDataSource) {
+            EventsParticipantsDataSource eventsParticipantsDataSource, FollowRelationsDataSource followRelationsDataSource) {
         this.usersDataSource = usersDataSource;
         this.followersDataSource = followersDataSource;
         this.notificationsDataSource = notificationsDataSource;
         this.eventsParticipantsDataSource = eventsParticipantsDataSource;
+        this.followRelationsDataSource = followRelationsDataSource;
     }
 
     @Transactional(readOnly = true)
     public List<User> getUsers() {
         return usersDataSource.findAll();
+    }
+
+    @Transactional(readOnly = true)
+    public List<User> getUsersByName(String name) {
+        return usersDataSource.findAllByUsernameContainingIgnoreCase(name);
     }
 
     @Transactional(readOnly = true)
@@ -129,5 +139,28 @@ public class UserService {
         followersDataSource.save(relation);
 
         return new FollowedUser(followed, request.isPinned());
+    }
+
+    @Transactional
+    public User followUser(Long followerId, FriendRequest friendRequest) {
+        User user = getUser(followerId);
+        User followedUser = getUser(friendRequest.getFollowedUserId());
+
+        if(!followedUser.getFollowToken().equals(friendRequest.getFollowToken())) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User with that follow token does not exist");
+        }
+
+        if(followersDataSource.findByFollowedUserIdAndFollowerId(followedUser.getId(), followerId).isPresent()) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "User with that follow already exists");
+        }
+
+        FollowRelation relation = new FollowRelation();
+        relation.setId(new FollowRelationId(followerId, followedUser.getId()));
+        relation.setFollowedUser(followedUser);
+        relation.setFollower(user);
+
+        followersDataSource.save(relation);
+
+        return followedUser;
     }
 }

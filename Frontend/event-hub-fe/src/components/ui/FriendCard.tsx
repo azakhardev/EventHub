@@ -33,7 +33,7 @@ export default function FriendCard({ user, ...props }: FriendCardProps) {
       <div className="flex flex-row items-center gap-2">
         <div>
           <img
-            src={user.profile_picture_url}
+            src={user.profilePictureUrl}
             alt={user.username}
             className="w-14 h-14 rounded-full"
           />

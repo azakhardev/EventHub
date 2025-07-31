@@ -5,8 +5,6 @@ import {
   DialogTitle,
 } from "@headlessui/react";
 
-import Button from "../forms/Button";
-
 interface DialogProps extends React.HTMLAttributes<HTMLDivElement> {
   title: string;
   description: string;
@@ -42,10 +40,7 @@ export default function Dialog({
           <DialogTitle className="font-bold text-3xl">{title}</DialogTitle>
           <Description className="text-text-muted">{description}</Description>
           {children}
-          <div className="flex gap-2 justify-end">
-            {buttons}
-            <Button onClick={() => setIsOpen(false)}>Close</Button>
-          </div>
+          <div className="flex gap-2 justify-end">{buttons}</div>
         </DialogPanel>
       </div>
     </HeadlessDialog>

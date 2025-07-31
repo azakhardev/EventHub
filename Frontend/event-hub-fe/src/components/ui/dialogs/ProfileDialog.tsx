@@ -4,9 +4,8 @@ import { useUserStore } from "../../../store/store";
 import { BounceLoader } from "../loaders/BounceLoader";
 import type { User } from "../../../types/user";
 import Description from "../Description";
-import Error from "../alerts/Error";
-
-const api = import.meta.env.VITE_API_URL;
+import ErrorAlert from "../alerts/ErrorAlert";
+import { apiRequest, api } from "../../../utils/api";
 
 interface ProfileDialogProps {
   isOpen: boolean;
@@ -21,13 +20,13 @@ export default function ProfileDialog({
 
   const { data, isLoading, error } = useQuery<User>({
     queryKey: ["profile"],
-    queryFn: () =>
-      fetch(`${api}/users/${userId}`, {
+    queryFn: async () => {
+      return apiRequest<User>(`${api}/users/${userId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
         },
-      }).then((res) => res.json()),
+      });
+    },
     enabled: !!token && !!userId,
   });
 
@@ -40,12 +39,12 @@ export default function ProfileDialog({
         setIsOpen={setIsOpen}
       >
         {isLoading && <BounceLoader />}
-        {error && <Error error={error.message} />}
+        {error && <ErrorAlert error={error.message} />}
         {data && (
           <div className="flex flex-row gap-[15%] px-12 ">
             <div className="flex-1 min-w-16 min-h-16 flex items-center justify-center">
               <img
-                src={data.profile_picture_url}
+                src={data.profilePictureUrl}
                 alt="profile_picture"
                 className="rounded-full"
               />
@@ -62,7 +61,7 @@ export default function ProfileDialog({
                 <h4>Your follow token:</h4>
                 <div
                   onClick={() => {
-                    navigator.clipboard.writeText(data.followToken);
+                    navigator.clipboard.writeText(data.followToken!);
                     alert("Follow token copied to clipboard");
                   }}
                   className="w-auto cursor-pointer p-1 bg-white rounded-md border-2 border-transparent hover:border-primary"

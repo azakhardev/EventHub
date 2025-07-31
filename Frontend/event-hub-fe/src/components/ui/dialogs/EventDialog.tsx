@@ -64,7 +64,7 @@ export default function EventDialog({
           </div>
           <div className="flex flex-row items-center gap-2">
             <img
-              src={event?.owner.profile_picture_url}
+              src={event?.owner.profilePictureUrl}
               alt="profile_picture"
               className="w-8 h-8 rounded-full"
             />

@@ -9,7 +9,7 @@ import { useRef, useState } from "react";
 import { Send, X } from "lucide-react";
 import { SyncLoader } from "../loaders/SyncLoader";
 import Button from "../forms/Button";
-import Error from "../alerts/Error";
+import ErrorAlert from "../alerts/ErrorAlert";
 
 const api = import.meta.env.VITE_API_URL;
 
@@ -34,7 +34,7 @@ function ParticipantCard({
     <div className="flex items-center gap-2 p-2 bg-primary-light border rounded justify-between py-2">
       <div className="flex items-center gap-2">
         <img
-          src={user.profile_picture_url}
+          src={user.profilePictureUrl}
           alt="profile_picture"
           className="w-8 h-8 rounded-full"
         />
@@ -76,40 +76,73 @@ export default function ParticipantsDialog({
 
   const friendsQuery = useQuery({
     queryKey: ["friends", userId, expression],
-    queryFn: () =>
-      fetch(`${api}/users/${userId}/following?expression=${expression}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      }).then((res) => res.json()),
+    queryFn: async () => {
+      const response = await fetch(
+        `${api}/users/${userId}/following?expression=${expression}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(
+          errorData.message || `HTTP error! status: ${response.status}`
+        );
+      }
+
+      return response.json();
+    },
     enabled: !!token && !!userId && expression !== "",
     staleTime: 5 * 60 * 1000,
   });
 
   const participantsQuery = useQuery({
     queryKey: ["participants", eventId],
-    queryFn: () =>
-      fetch(`${api}/events/${eventId}/participants`, {
+    queryFn: async () => {
+      const response = await fetch(`${api}/events/${eventId}/participants`, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
-      }).then((res) => res.json()),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(
+          errorData.message || `HTTP error! status: ${response.status}`
+        );
+      }
+
+      return response.json();
+    },
     enabled: !!eventId && !!token && expression === "",
     staleTime: 5 * 60 * 1000,
   });
 
   const { mutate: inviteFriends } = useMutation({
-    mutationFn: () =>
-      fetch(`${api}/events/${eventId}/invite`, {
+    mutationFn: async () => {
+      const response = await fetch(`${api}/events/${eventId}/invite`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify(selectedFriends.map((friend) => friend.id)),
-      }).then((res) => res.json()),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(
+          errorData.message || `HTTP error! status: ${response.status}`
+        );
+      }
+
+      return response.json();
+    },
     onSuccess: () => {
       setSelectedFriends([]);
       setExpression("");
@@ -139,7 +172,7 @@ export default function ParticipantsDialog({
       <div className="flex flex-col gap-2 w-full px-8 py-4 text-text max-h-50%">
         {participantsQuery.isLoading && <BounceLoader />}
         {participantsQuery.error && (
-          <Error error={participantsQuery.error.message} />
+          <ErrorAlert error={participantsQuery.error.message} />
         )}
         <Input
           placeholder="Invite a friend"
