@@ -136,80 +136,82 @@ export default function ParticipantsDialog({
       }}
       width="w-1/4"
     >
-      <div className="flex flex-col gap-2 w-full px-8 py-4 text-text">
+      <div className="flex flex-col gap-2 w-full px-8 py-4 text-text max-h-50%">
         {participantsQuery.isLoading && <BounceLoader />}
         {participantsQuery.error && (
           <Error error={participantsQuery.error.message} />
         )}
-        {participantsQuery.isSuccess && (
-          <>
-            <Input
-              placeholder="Invite a friend"
-              ref={searchRef}
-              onChange={() => {
-                setExpression(searchRef.current?.value ?? "");
-              }}
-            />
-            {expression === "" && (
-              <div className="flex flex-col gap-2">
-                {participantsQuery.data.map((participant: User) => (
-                  <ParticipantCard
-                    key={participant.id}
-                    invitable={false}
-                    isSelected={false}
-                    onClick={() => {}}
-                    user={participant}
-                  />
-                ))}
-                {participantsQuery.isSuccess &&
-                  participantsQuery.data.length === 0 && <EmptyArray />}
-              </div>
-            )}
-            {expression !== "" && (
-              <div className="flex flex-col gap-2">
-                {friendsQuery.isSuccess &&
-                  friendsQuery.data
-                    .filter(
-                      (friend: User) =>
-                        !participantsQuery.data.some(
-                          (participant: User) => participant.id === friend.id
-                        )
-                    )
-                    .map((friend: User) => (
-                      <ParticipantCard
-                        key={friend.id}
-                        invitable={true}
-                        isSelected={selectedFriends.some(
-                          (selectedFriend: User) =>
-                            selectedFriend.id === friend.id
-                        )}
-                        onClick={() => handleInvite(friend)}
-                        user={friend}
-                      />
-                    ))}
-                {friendsQuery.isLoading && <SyncLoader />}
-                {friendsQuery.isSuccess && friendsQuery.data.length === 0 && (
-                  <EmptyArray />
-                )}
-              </div>
-            )}
-            {selectedFriends.length > 0 && (
-              <>
-                <hr className="border-text" />
+        <Input
+          placeholder="Invite a friend"
+          ref={searchRef}
+          onChange={() => {
+            setExpression(searchRef.current?.value ?? "");
+          }}
+        />
+        <div className="overflow-y-scroll max-h-[40vh] scrollbar-hide">
+          {participantsQuery.isSuccess && (
+            <div>
+              {expression === "" && (
                 <div className="flex flex-col gap-2">
-                  {selectedFriends.map((friend) => (
+                  {participantsQuery.data.map((participant: User) => (
                     <ParticipantCard
-                      key={friend.id}
-                      invitable={true}
-                      isSelected={true}
-                      onClick={() => handleInvite(friend)}
-                      user={friend}
+                      key={participant.id}
+                      invitable={false}
+                      isSelected={false}
+                      onClick={() => {}}
+                      user={participant}
                     />
                   ))}
+                  {participantsQuery.isSuccess &&
+                    participantsQuery.data.length === 0 && <EmptyArray />}
                 </div>
-                <Button onClick={() => inviteFriends()}>Invite</Button>
-              </>
-            )}
+              )}
+              {expression !== "" && (
+                <div className="flex flex-col gap-2">
+                  {friendsQuery.isSuccess &&
+                    friendsQuery.data
+                      .filter(
+                        (friend: User) =>
+                          !participantsQuery.data.some(
+                            (participant: User) => participant.id === friend.id
+                          )
+                      )
+                      .map((friend: User) => (
+                        <ParticipantCard
+                          key={friend.id}
+                          invitable={true}
+                          isSelected={selectedFriends.some(
+                            (selectedFriend: User) =>
+                              selectedFriend.id === friend.id
+                          )}
+                          onClick={() => handleInvite(friend)}
+                          user={friend}
+                        />
+                      ))}
+                  {friendsQuery.isLoading && <SyncLoader />}
+                  {friendsQuery.isSuccess && friendsQuery.data.length === 0 && (
+                    <EmptyArray />
+                  )}
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+        {selectedFriends.length > 0 && (
+          <>
+            <hr className="border-text" />
+            <div className="flex flex-col gap-2 max-h-[10vh] overflow-y-scroll scrollbar-hide">
+              {selectedFriends.map((friend) => (
+                <ParticipantCard
+                  key={friend.id}
+                  invitable={true}
+                  isSelected={true}
+                  onClick={() => handleInvite(friend)}
+                  user={friend}
+                />
+              ))}
+            </div>
+            <Button onClick={() => inviteFriends()}>Invite</Button>
           </>
         )}
       </div>

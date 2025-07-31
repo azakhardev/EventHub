@@ -58,9 +58,13 @@ export default function FriendsListSection() {
 
           <div className="flex flex-col gap-2">
             {isSuccess &&
-              data.map((user: User) => (
-                <FriendCard key={user.id} user={user} />
-              ))}
+              data
+                ?.slice()
+                .sort((a: User, b: User) => {
+                  if (a.pinned === b.pinned) return 0;
+                  return a.pinned ? -1 : 1;
+                })
+                .map((user: User) => <FriendCard key={user.id} user={user} />)}
             {isLoading && <SyncLoader />}
             {error && <Error error={error.message} />}
             {data && data.length === 0 && <EmptyArray />}

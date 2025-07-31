@@ -16,7 +16,7 @@ export default function FriendsList() {
 
   const [expression, setExpression] = useState("");
   const searchRef = useRef<HTMLInputElement>(null);
-  const { data, isLoading, error, isSuccess } = useQuery({
+  const { data, isLoading, error, isSuccess } = useQuery<User[]>({
     queryKey: ["friends", userId, expression],
     queryFn: () =>
       fetch(`${api}/users/${userId}/following?expression=${expression}`, {
@@ -42,7 +42,13 @@ export default function FriendsList() {
 
       <div className="flex flex-col gap-2">
         {isSuccess &&
-          data.map((user: User) => <FriendCard key={user.id} user={user} />)}
+          data
+            ?.slice()
+            .sort((a, b) => {
+              if (a.pinned === b.pinned) return 0;
+              return a.pinned ? -1 : 1;
+            })
+            .map((user: User) => <FriendCard key={user.id} user={user} />)}
         {isLoading && <SyncLoader />}
         {error && <div>Error: {error.message}</div>}
         {data && data.length === 0 && <EmptyArray />}
