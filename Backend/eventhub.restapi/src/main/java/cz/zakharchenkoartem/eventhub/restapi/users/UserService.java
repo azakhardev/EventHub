@@ -20,6 +20,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -147,11 +148,11 @@ public class UserService {
         User followedUser = getUser(friendRequest.getFollowedUserId());
 
         if(!followedUser.getFollowToken().equals(friendRequest.getFollowToken())) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User with that follow token does not exist");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Wrong follow token");
         }
 
         if(followersDataSource.findByFollowedUserIdAndFollowerId(followedUser.getId(), followerId).isPresent()) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "User with that follow already exists");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "You already follow this user");
         }
 
         FollowRelation relation = new FollowRelation();

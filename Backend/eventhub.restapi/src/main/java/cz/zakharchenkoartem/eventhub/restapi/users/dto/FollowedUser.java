@@ -1,8 +1,11 @@
 package cz.zakharchenkoartem.eventhub.restapi.users.dto;
 
+import com.fasterxml.jackson.annotation.JsonView;
+import cz.zakharchenkoartem.eventhub.restapi.dto.Views;
 import cz.zakharchenkoartem.eventhub.restapi.users.User;
 
 public class FollowedUser extends User {
+    @JsonView(Views.Public.class)
     private boolean pinned;
 
     public FollowedUser(User user, boolean pinned) {

@@ -14,6 +14,7 @@ interface DialogProps extends React.HTMLAttributes<HTMLDivElement> {
   upperStrip?: React.ReactNode;
   buttons?: React.ReactNode;
   width?: string;
+  onClose?: () => void;
 }
 
 export default function Dialog({
@@ -25,11 +26,12 @@ export default function Dialog({
   upperStrip,
   buttons,
   width = "w-1/3",
+  onClose,
 }: DialogProps) {
   return (
     <HeadlessDialog
       open={isOpen}
-      onClose={() => setIsOpen(false)}
+      onClose={onClose ?? (() => setIsOpen(false))}
       className="fixed inset-0 flex w-screen items-center justify-center data-closed:opacity-0"
     >
       <div className="fixed inset-0 flex w-screen items-center justify-center p-4 bg-black bg-opacity-50 ">

@@ -7,8 +7,10 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { useUserStore } from "../../store/store";
 import type { User } from "../../types/user";
 import { ToastContainer, toast } from "react-toastify";
-import SyncLoader from "react-spinners/SyncLoader";
+import { SyncLoader } from "../ui/loaders/SyncLoader";
 import { apiRequest, api } from "../../utils/api";
+import { addFriend } from "../../api/friends";
+import EmptyArray from "../ui/alerts/EmptyArray";
 
 export default function AddFriendButton() {
   const [isOpen, setIsOpen] = useState(false);
@@ -19,18 +21,13 @@ export default function AddFriendButton() {
   const tokenInputRef = useRef<HTMLInputElement>(null);
 
   const addFriendMutation = useMutation({
-    mutationFn: async () => {
-      return apiRequest(`${api}/users/${userId}/add-friend`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          followToken: tokenInputRef.current?.value,
-          followedUserId: selectedUser?.id,
-        }),
-      });
-    },
+    mutationFn: () =>
+      addFriend(
+        userId,
+        token,
+        tokenInputRef.current?.value ?? "",
+        selectedUser?.id ?? 0
+      ),
     onSuccess: () => {
       setSelectedUser(null);
       setIsOpen(false);
@@ -80,6 +77,11 @@ export default function AddFriendButton() {
         description="Find a user and use his link token to add him as a friend"
         isOpen={isOpen}
         setIsOpen={setIsOpen}
+        onClose={() => {
+          setSelectedUser(null);
+          setSearch("");
+          setIsOpen(false);
+        }}
         buttons={
           <Button
             disabled={!selectedUser}
@@ -92,7 +94,7 @@ export default function AddFriendButton() {
         }
       >
         {!selectedUser && (
-          <div className="w-full my-2 flex flex-col items-center justify-center">
+          <div className="w-full my-2 flex flex-col items-center ">
             <Input
               placeholder="Enter user's username"
               icon={<Search size={24} />}
@@ -102,24 +104,42 @@ export default function AddFriendButton() {
             {isLoadingUsers ? (
               <SyncLoader />
             ) : (
-              users?.map((user) => (
-                <div
-                  key={user.id}
-                  onClick={() => setSelectedUser(user)}
-                  className="cursor-pointer"
-                >
-                  {user.username}
+              <div className="flex w-full flex-col items-center gap-2 mt-4 max-h-[20vh] overflow-y-scroll scrollbar-hide">
+                <div className="flex flex-col w-full items-center gap-2">
+                  {users?.map((user) => (
+                    <div
+                      key={user.id}
+                      className="flex items-center justify-start gap-2 w-2/3 p-2 bg-primary-light rounded-md cursor-pointer hover:scale-[1.01]"
+                      onClick={() => setSelectedUser(user)}
+                    >
+                      <img
+                        src={user.profilePictureUrl}
+                        alt="profile_picture"
+                        className="w-8 h-8 rounded-full"
+                      />
+                      <span>{user.username}</span>
+                    </div>
+                  ))}
                 </div>
-              ))
+              </div>
             )}
+            {users?.length === 0 && <EmptyArray />}
           </div>
         )}
         {selectedUser && (
           <Input
-            placeholder="Enter friend's link token"
+            placeholder="Enter friend's link token (36 characters)"
             icon={<Plus size={24} />}
             className="w-full my-2"
             ref={tokenInputRef}
+            required={true}
+            minLength={36}
+            maxLength={36}
+            onChange={(e) => {
+              if (e.target.value.length > 36) {
+                e.target.value = e.target.value.slice(0, 36);
+              }
+            }}
           />
         )}
       </Dialog>

@@ -12,7 +12,7 @@ export function SyncLoader() {
   }, [theme]);
 
   return (
-    <div className="flex justify-center items-center mt-2">
+    <div className="flex justify-center items-center mt-4">
       <SyncLoaderComponent color={loaderColor} />
     </div>
   );

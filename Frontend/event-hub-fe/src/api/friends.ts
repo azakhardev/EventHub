@@ -1,3 +1,5 @@
+import { apiRequest } from "../utils/api";
+
 const api = import.meta.env.VITE_API_URL;
 
 export async function pinFriend(
@@ -24,4 +26,22 @@ export async function pinFriend(
   }
 
   return await response.json();
+}
+
+export async function addFriend(
+  userId: number,
+  token: string,
+  followToken: string,
+  followedUserId: number
+) {
+  return apiRequest(`${api}/users/${userId}/add-friend`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({
+      followToken: followToken,
+      followedUserId: followedUserId,
+    }),
+  });
 }

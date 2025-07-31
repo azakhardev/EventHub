@@ -1,6 +1,6 @@
 import FriendCard from "../ui/FriendCard";
 import { usePageStore, useUserStore } from "../../store/store";
-import { Bell, Search, UserPlus } from "lucide-react";
+import { Search } from "lucide-react";
 import Input from "../ui/forms/Input";
 import { useQuery } from "@tanstack/react-query";
 import type { User } from "../../types/user.tsx";
@@ -54,7 +54,7 @@ export default function FriendsListSection() {
             />
           </div>
 
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-4 w-full px-4">
             {isSuccess &&
               data
                 ?.slice()
