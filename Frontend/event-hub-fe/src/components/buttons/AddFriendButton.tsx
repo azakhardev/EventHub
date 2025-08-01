@@ -9,8 +9,9 @@ import type { User } from "../../types/user";
 import { ToastContainer, toast } from "react-toastify";
 import { SyncLoader } from "../ui/loaders/SyncLoader";
 import { apiRequest, api } from "../../utils/api";
-import { addFriend } from "../../api/friends";
+import { addFriend } from "../../api/users";
 import EmptyArray from "../ui/alerts/EmptyArray";
+import type { Page } from "../../types/page";
 
 export default function AddFriendButton() {
   const [isOpen, setIsOpen] = useState(false);
@@ -50,7 +51,7 @@ export default function AddFriendButton() {
     },
   });
 
-  const { data: users, isLoading: isLoadingUsers } = useQuery<User[]>({
+  const { data: users, isLoading: isLoadingUsers } = useQuery<Page<User>>({
     queryKey: ["search-users", search],
     queryFn: async () => {
       return apiRequest(`${api}/users/by-name/${search}`, {
@@ -106,7 +107,7 @@ export default function AddFriendButton() {
             ) : (
               <div className="flex w-full flex-col items-center gap-2 mt-4 max-h-[20vh] overflow-y-scroll scrollbar-hide">
                 <div className="flex flex-col w-full items-center gap-2">
-                  {users?.map((user) => (
+                  {users?.data.map((user) => (
                     <div
                       key={user.id}
                       className="flex items-center justify-start gap-2 w-2/3 p-2 bg-primary-light rounded-md cursor-pointer hover:scale-[1.01]"
@@ -123,7 +124,7 @@ export default function AddFriendButton() {
                 </div>
               </div>
             )}
-            {users?.length === 0 && <EmptyArray />}
+            {users?.pageInfo.totalElements === 0 && <EmptyArray />}
           </div>
         )}
         {selectedUser && (

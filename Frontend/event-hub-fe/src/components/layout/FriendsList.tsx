@@ -8,6 +8,7 @@ import type { User } from "../../types/user";
 import FriendCard from "../ui/FriendCard";
 import { SyncLoader } from "../ui/loaders/SyncLoader";
 import EmptyArray from "../ui/alerts/EmptyArray";
+import type { Page } from "../../types/page";
 
 const api = import.meta.env.VITE_API_URL;
 
@@ -16,7 +17,7 @@ export default function FriendsList() {
 
   const [expression, setExpression] = useState("");
   const searchRef = useRef<HTMLInputElement>(null);
-  const { data, isLoading, error, isSuccess } = useQuery<User[]>({
+  const { data, isLoading, error, isSuccess } = useQuery<Page<User>>({
     queryKey: ["friends", userId, expression],
     queryFn: () =>
       fetch(`${api}/users/${userId}/following?expression=${expression}`, {
@@ -42,8 +43,7 @@ export default function FriendsList() {
 
       <div className="flex flex-col gap-2">
         {isSuccess &&
-          data
-            ?.slice()
+          data.data
             .sort((a, b) => {
               if (a.pinned === b.pinned) return 0;
               return a.pinned ? -1 : 1;
@@ -51,7 +51,7 @@ export default function FriendsList() {
             .map((user: User) => <FriendCard key={user.id} user={user} />)}
         {isLoading && <SyncLoader />}
         {error && <div>Error: {error.message}</div>}
-        {data && data.length === 0 && <EmptyArray />}
+        {data && data.pageInfo.totalElements === 0 && <EmptyArray />}
       </div>
     </>
   );

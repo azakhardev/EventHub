@@ -1,6 +1,8 @@
 package cz.zakharchenkoartem.eventhub.restapi.users;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import cz.zakharchenkoartem.eventhub.restapi.dto.PageInfo;
+import cz.zakharchenkoartem.eventhub.restapi.dto.PaginatedResponse;
 import cz.zakharchenkoartem.eventhub.restapi.dto.Views;
 import cz.zakharchenkoartem.eventhub.restapi.events.Event;
 import cz.zakharchenkoartem.eventhub.restapi.follows.FollowRelation;
@@ -10,6 +12,7 @@ import cz.zakharchenkoartem.eventhub.restapi.notifications.Notification;
 import cz.zakharchenkoartem.eventhub.restapi.users.dto.FollowedUser;
 import cz.zakharchenkoartem.eventhub.restapi.users.dto.FriendRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -49,32 +52,50 @@ public class UsersController {
 
     @GetMapping("/by-name/{name}")
     @JsonView(Views.Public.class)
-    public List<User> getUsersByName(@PathVariable String name) {
-        return userService.getUsersByName(name);
+    public PaginatedResponse<User> getUsersByName(@PathVariable String name, @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "20") int pageSize) {
+        Page<User> pageResult = userService.getUsersByName(name, page, pageSize);
+
+        PageInfo pageInfo = new PageInfo(page, pageSize, pageResult.getTotalPages(), pageResult.getTotalElements());
+
+        return new PaginatedResponse<User>(pageResult.getContent(), pageInfo);
     }
 
     @GetMapping("/{id}/following")
     @JsonView(Views.Public.class)
-    public List<FollowedUser> getFollowers(@RequestHeader("Authorization") String authHeader, @PathVariable Long id, @RequestParam(required = false) String expression) {
+    public PaginatedResponse<FollowedUser> getFollowers(@RequestHeader("Authorization") String authHeader, @PathVariable Long id, @RequestParam(required = false) String expression, @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "20") int pageSize ) {
         Long userId = jwtService.extractUserId(authHeader.replace("Bearer ", ""));
         if (!Objects.equals(userId, id)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access denied");
         }
-        return userService.getFollowing(id, expression);
+
+        Page<FollowedUser> pageResult = userService.getFollowing(id, expression, page - 1, pageSize);
+
+        PageInfo pageInfo = new PageInfo(page, pageSize, pageResult.getTotalPages(), pageResult.getTotalElements());
+
+        return new PaginatedResponse<FollowedUser>(pageResult.getContent(), pageInfo);
     }
 
     @GetMapping("/{id}/notifications")
-    public List<Notification> getNotifications(@PathVariable Long id) {
-        return userService.getNotifications(id);
+    public PaginatedResponse<Notification> getNotifications(@PathVariable Long id, @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "20") int pageSize) {
+        Page<Notification> pageResult  = userService.getNotifications(id, page - 1, pageSize);
+
+        PageInfo pageInfo = new PageInfo(page, pageSize, pageResult.getTotalPages(), pageResult.getTotalElements() );
+
+        return new PaginatedResponse<Notification>(pageResult.getContent(), pageInfo);
     }
 
     @GetMapping("/{id}/my-events")
-    public List<Event> getMyEvents(@RequestHeader("Authorization") String authHeader, @PathVariable Long id) {
+    public PaginatedResponse<Event> getMyEvents(@RequestHeader("Authorization") String authHeader, @PathVariable Long id, @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "20") int pageSize ) {
         Long userId = jwtService.extractUserId(authHeader.replace("Bearer ", ""));
         if (!Objects.equals(userId, id)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access denied");
         }
-        return userService.getMyEvents(id);
+
+        Page<Event> pageResult = userService.getMyEvents(id, page - 1, pageSize);
+
+        PageInfo pageInfo = new PageInfo(page, pageSize, pageResult.getTotalPages(), pageResult.getTotalElements() );
+
+        return new PaginatedResponse<Event>(pageResult.getContent(), pageInfo);
     }
 
     @PostMapping("/{id}/add-friend")
@@ -96,8 +117,12 @@ public class UsersController {
     }
 
     @GetMapping("/{id}/foreign-events")
-    public List<Event> getForeignEvents(@PathVariable Long id) {
-        return userService.getForeignEvents(id);
+    public PaginatedResponse<Event> getForeignEvents(@PathVariable Long id, @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "20") int pageSize) {
+        Page<Event> pageResult = userService.getForeignEvents(id, page - 1, pageSize);
+
+        PageInfo pageInfo = new PageInfo(page, pageSize, pageResult.getTotalPages(), pageResult.getTotalElements() );
+
+        return new PaginatedResponse<Event>(pageResult.getContent(), pageInfo);
     }
 
     @PutMapping("/pin-follower")

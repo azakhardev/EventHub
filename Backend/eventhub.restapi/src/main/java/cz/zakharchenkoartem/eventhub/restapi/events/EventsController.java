@@ -1,11 +1,12 @@
 package cz.zakharchenkoartem.eventhub.restapi.events;
 
+import cz.zakharchenkoartem.eventhub.restapi.dto.PageInfo;
+import cz.zakharchenkoartem.eventhub.restapi.dto.PaginatedResponse;
 import cz.zakharchenkoartem.eventhub.restapi.events.dto.InvitationResponse;
-import cz.zakharchenkoartem.eventhub.restapi.events_participants.EventParticipantRelation;
-import cz.zakharchenkoartem.eventhub.restapi.events_participants.EventsParticipantsDataSource;
 import cz.zakharchenkoartem.eventhub.restapi.notifications.NotificationService;
 import cz.zakharchenkoartem.eventhub.restapi.users.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,8 +26,18 @@ public class EventsController {
     }
 
     @GetMapping
-    public List<Event> getEvents() {
-        return eventService.getEvents();
+    public PaginatedResponse<Event> getEvents(@RequestParam(defaultValue = "1") int page,
+                                              @RequestParam(defaultValue = "20") int pageSize) {
+        Page<Event> pageResult = eventService.getEvents(page - 1, pageSize);
+
+        PageInfo pageInfo = new PageInfo(
+                page,
+                pageResult.getSize(),
+                pageResult.getTotalPages(),
+                pageResult.getTotalElements()
+        );
+
+        return new PaginatedResponse<Event>(pageResult.getContent(), pageInfo);
     }
 
     @GetMapping("{id}")
@@ -35,8 +46,13 @@ public class EventsController {
     }
 
     @GetMapping("{id}/participants")
-    public List<User> getParticipatedUsers(@PathVariable Long id) {
-        return eventService.getEventParticipants(id);
+    public PaginatedResponse<User> getParticipatedUsers(@PathVariable Long id, @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "20") int pageSize) {
+
+        Page<User> pageResult = eventService.getEventParticipants(id, page - 1, pageSize);
+
+        PageInfo pageInfo = new PageInfo(page, pageSize, pageResult.getTotalPages(), pageResult.getTotalElements());
+
+        return new PaginatedResponse<User>(pageResult.getContent(), pageInfo);
     }
 
     @PostMapping("/{id}/invite")

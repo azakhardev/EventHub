@@ -2,12 +2,14 @@ package cz.zakharchenkoartem.eventhub.restapi.events_participants;
 
 import cz.zakharchenkoartem.eventhub.restapi.events.Event;
 import cz.zakharchenkoartem.eventhub.restapi.users.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
 public interface EventsParticipantsDataSource extends JpaRepository<EventParticipantRelation, Long> {
-    List<EventParticipantRelation> findByEvent(Event event);
+    Page<EventParticipantRelation> findByEvent(Event event, Pageable pageable);
 
-    List<EventParticipantRelation> findByUser(User user);
+    Page<EventParticipantRelation> findByUser(User user, Pageable pageable);
 }

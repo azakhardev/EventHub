@@ -3,7 +3,7 @@ import { Star, Trash2 } from "lucide-react";
 import { useUserStore } from "../../store/store";
 import { useMutation } from "@tanstack/react-query";
 import { queryClient } from "../../main.tsx";
-import { pinFriend, removeFriend } from "../../api/friends.ts";
+import { pinFriend, removeFriend } from "../../api/users.ts";
 import { toast, ToastContainer } from "react-toastify";
 
 interface FriendCardProps extends React.HTMLAttributes<HTMLDivElement> {

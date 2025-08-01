@@ -1,4 +1,4 @@
-import { apiRequest } from "../utils/api";
+import type { User } from "../types/user";
 
 const api = import.meta.env.VITE_API_URL;
 
@@ -38,6 +38,7 @@ export async function addFriend(
     method: "POST",
     headers: {
       Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
     },
     body: JSON.stringify({
       followToken: followToken,
@@ -74,4 +75,47 @@ export async function removeFriend(
   }
 
   return await response.json();
+}
+
+export async function getParticipants(token: string, eventId: number) {
+  const response = await fetch(`${api}/events/${eventId}/participants`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(
+      errorData.message || `HTTP error! status: ${response.status}`
+    );
+  }
+
+  return response.json();
+}
+
+export async function getFriends(
+  userId: number,
+  token: string,
+  expression: string
+) {
+  const response = await fetch(
+    `${api}/users/${userId}/following?expression=${expression}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(
+      errorData.message || `HTTP error! status: ${response.status}`
+    );
+  }
+
+  return response.json();
 }

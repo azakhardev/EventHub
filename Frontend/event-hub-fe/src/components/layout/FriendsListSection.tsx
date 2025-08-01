@@ -10,6 +10,7 @@ import { useRef, useState } from "react";
 import ErrorAlert from "../ui/alerts/ErrorAlert.tsx";
 import NotificationsButton from "../buttons/NotificationsButton.tsx";
 import AddFriendButton from "../buttons/AddFriendButton.tsx";
+import type { Page } from "../../types/page.ts";
 
 const api = import.meta.env.VITE_API_URL;
 
@@ -19,7 +20,7 @@ export default function FriendsListSection() {
   const [expression, setExpression] = useState("");
   const searchRef = useRef<HTMLInputElement>(null);
 
-  const { data, isLoading, error, isSuccess } = useQuery({
+  const { data, isLoading, error, isSuccess } = useQuery<Page<User>>({
     queryKey: ["friends", userId, expression],
     queryFn: () =>
       fetch(`${api}/users/${userId}/following?expression=${expression}`, {
@@ -56,8 +57,7 @@ export default function FriendsListSection() {
 
           <div className="flex flex-col gap-4 w-full px-4">
             {isSuccess &&
-              data
-                ?.slice()
+              data.data
                 .sort((a: User, b: User) => {
                   if (a.pinned === b.pinned) return 0;
                   return a.pinned ? -1 : 1;
@@ -65,7 +65,7 @@ export default function FriendsListSection() {
                 .map((user: User) => <FriendCard key={user.id} user={user} />)}
             {isLoading && <SyncLoader />}
             {error && <ErrorAlert error={error.message} />}
-            {data && data.length === 0 && <EmptyArray />}
+            {data && data.pageInfo.totalElements === 0 && <EmptyArray />}
           </div>
         </div>
       )}

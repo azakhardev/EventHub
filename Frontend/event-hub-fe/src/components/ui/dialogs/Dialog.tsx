@@ -14,6 +14,7 @@ interface DialogProps extends React.HTMLAttributes<HTMLDivElement> {
   upperStrip?: React.ReactNode;
   buttons?: React.ReactNode;
   width?: string;
+  height?: string;
   onClose?: () => void;
 }
 
@@ -26,6 +27,7 @@ export default function Dialog({
   upperStrip,
   buttons,
   width = "w-1/3",
+  height = "h-[55vh]",
   onClose,
 }: DialogProps) {
   return (
@@ -36,7 +38,7 @@ export default function Dialog({
     >
       <div className="fixed inset-0 flex w-screen items-center justify-center p-4 bg-black bg-opacity-50 ">
         <DialogPanel
-          className={`${width} border p-8 bg-dialog rounded-lg relative overflow-hidden`}
+          className={`${width} border p-8 bg-dialog rounded-lg relative overflow-hidden ${height}`}
         >
           {upperStrip}
           <DialogTitle className="font-bold text-3xl">{title}</DialogTitle>

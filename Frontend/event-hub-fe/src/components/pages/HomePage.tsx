@@ -9,6 +9,7 @@ import EmptyArray from "../ui/alerts/EmptyArray.tsx";
 import { useState } from "react";
 import EventDialog from "../ui/dialogs/EventDialog.tsx";
 import ErrorAlert from "../ui/alerts/ErrorAlert.tsx";
+import type { Page } from "../../types/page.ts";
 
 const api = import.meta.env.VITE_API_URL;
 
@@ -19,10 +20,10 @@ export default function HomePage() {
 
   console.log(event);
 
-  const { data, isLoading, error } = useQuery<Event[]>({
+  const { data, isLoading, error } = useQuery<Page<Event>>({
     queryKey: ["events", userId],
     queryFn: () =>
-      fetch(`${api}/users/${userId}/my-events`, {
+      fetch(`${api}/users/${userId}/my-events?page=1&pageSize=5`, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
@@ -44,7 +45,7 @@ export default function HomePage() {
       {error && <ErrorAlert error={error.message} />}
       {data && (
         <div className="flex flex-col gap-2">
-          {data.map((event) => (
+          {data.data.map((event) => (
             <EventCard
               event={event}
               key={event.id}
@@ -53,7 +54,7 @@ export default function HomePage() {
           ))}
         </div>
       )}
-      {data && data.length === 0 && <EmptyArray />}
+      {data && data.pageInfo.totalElements === 0 && <EmptyArray />}
       <EventDialog isOpen={event !== null} setEvent={setEvent} event={event} />
     </div>
   );

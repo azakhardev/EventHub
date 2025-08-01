@@ -3,7 +3,11 @@ package cz.zakharchenkoartem.eventhub.restapi.events;
 import cz.zakharchenkoartem.eventhub.restapi.events_participants.EventParticipantRelation;
 import cz.zakharchenkoartem.eventhub.restapi.events_participants.EventsParticipantsDataSource;
 import cz.zakharchenkoartem.eventhub.restapi.users.User;
+import org.springframework.data.domain.Page;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,8 +28,9 @@ public class EventService {
     }
 
     @Transactional(readOnly = true)
-    public List<Event> getEvents() {
-        return eventsDataSource.findAll();
+    public Page<Event> getEvents(int pageNumber, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        return eventsDataSource.findAll(pageable);
     }
 
     @Transactional(readOnly = true)
@@ -40,14 +45,16 @@ public class EventService {
     }
 
     @Transactional(readOnly = true)
-    public List<User> getEventParticipants(Long id) {
+    public Page<User> getEventParticipants(Long id, int page, int pageSize) {
         Optional<Event> event = eventsDataSource.findById(id);
 
         if (event.isEmpty()) {
             throw new RuntimeException("Event not found");
         }
 
-        List<EventParticipantRelation> participantRelations = eventsParticipantsDataSource.findByEvent(event.get());
+        Pageable pageable = PageRequest.of(page, pageSize);
+
+        Page<EventParticipantRelation> participantRelations = eventsParticipantsDataSource.findByEvent(event.get(), pageable );
         List<User> user = new ArrayList<>();
 
         for (EventParticipantRelation relation : participantRelations) {
@@ -56,6 +63,6 @@ public class EventService {
             }
         }
 
-        return user;
+        return new PageImpl<>(user, pageable, participantRelations.getTotalElements());
     }
 }

@@ -13,6 +13,10 @@ import cz.zakharchenkoartem.eventhub.restapi.notifications.NotificationsDataSour
 import cz.zakharchenkoartem.eventhub.restapi.users.dto.FollowedUser;
 import cz.zakharchenkoartem.eventhub.restapi.users.dto.FriendRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -52,8 +56,10 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public List<User> getUsersByName(String name) {
-        return usersDataSource.findAllByUsernameContainingIgnoreCase(name);
+    public Page<User> getUsersByName(String name, int page, int pageSize) {
+        Pageable pageable = PageRequest.of(page, pageSize);
+
+        return usersDataSource.findAllByUsernameContainingIgnoreCase(name, pageable);
     }
 
     @Transactional(readOnly = true)
@@ -63,14 +69,16 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public List<FollowedUser> getFollowing(Long id, String expression) {
+    public Page<FollowedUser> getFollowing(Long id, String expression, int page, int pageSize) {
         User user = getUser(id);
-        List<FollowRelation> followRelations;
+        Page<FollowRelation> followRelations;
+
+        Pageable pageable = PageRequest.of(page, pageSize);
 
         if (expression != null && !expression.isBlank()) {
-            followRelations = followersDataSource.findByFollowerAndUsernameLike(user, expression);
+            followRelations = followersDataSource.findByFollowerAndUsernameLike(user, expression, pageable );
         } else {
-            followRelations = followersDataSource.findByFollower(user);
+            followRelations = followersDataSource.findByFollower(user, pageable);
         }
 
         List<FollowedUser> followedUsers = new ArrayList<>();
@@ -78,32 +86,41 @@ public class UserService {
             followedUsers.add(new FollowedUser(relation.getFollowedUser(), relation.isFavorite()));
         }
 
-        return followedUsers;
+        return new PageImpl<>(followedUsers, pageable, followRelations.getTotalElements());
     }
 
     @Transactional(readOnly = true)
-    public List<Notification> getNotifications(Long id) {
+    public Page<Notification> getNotifications(Long id, int size, int pageSize) {
         User user = getUser(id);
-        return notificationsDataSource.findByUser(user);
+
+        Pageable pageable = PageRequest.of(pageSize, size);
+
+        return notificationsDataSource.findByUser(user, pageable);
     }
 
     @Transactional(readOnly = true)
-    public List<Event> getMyEvents(Long id) {
+    public Page<Event> getMyEvents(Long id, int page, int pageSize) {
         User user = getUser(id);
-        List<EventParticipantRelation> participantRelations = eventsParticipantsDataSource.findByUser(user);
+
+        Pageable pageable = PageRequest.of(page, pageSize);
+
+        Page<EventParticipantRelation> participantRelations = eventsParticipantsDataSource.findByUser(user, pageable);
 
         List<Event> events = new ArrayList<>();
         for (EventParticipantRelation relation : participantRelations) {
             events.add(relation.getEvent());
         }
 
-        return events;
+        return new PageImpl<Event>(events, pageable, participantRelations.getTotalElements());
     }
 
     @Transactional(readOnly = true)
-    public List<Event> getForeignEvents(Long id) {
+    public Page<Event> getForeignEvents(Long id, int page, int pageSize) {
         User user = getUser(id);
-        List<EventParticipantRelation> participantRelations = eventsParticipantsDataSource.findByUser(user);
+
+        Pageable pageable = PageRequest.of(page, pageSize);
+
+        Page<EventParticipantRelation> participantRelations = eventsParticipantsDataSource.findByUser(user, pageable);
 
         List<Event> events = new ArrayList<>();
         for (EventParticipantRelation relation : participantRelations) {
@@ -112,7 +129,7 @@ public class UserService {
             }
         }
 
-        return events;
+        return new PageImpl<Event>(events, pageable, participantRelations.getTotalElements());
     }
 
     @Transactional

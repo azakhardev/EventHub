@@ -19,6 +19,7 @@ export default function SettingsDialog({
       description="Setup your app"
       isOpen={isOpen}
       setIsOpen={setIsOpen}
+      height="h-auto"
     >
       <div className="flex flex-row items-center gap-2 mt-2 mb-6">
         <h4 className="w-auto">Select themes:</h4>

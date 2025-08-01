@@ -37,6 +37,7 @@ export default function ProfileDialog({
         description={data?.proffesion ?? "Your profile information"}
         isOpen={isOpen}
         setIsOpen={setIsOpen}
+        height="h-auto"
       >
         {isLoading && <BounceLoader />}
         {error && <ErrorAlert error={error.message} />}

@@ -6,12 +6,13 @@ import type { User } from "../../../types/user";
 import EmptyArray from "../alerts/EmptyArray";
 import Input from "../forms/Input";
 import { useRef, useState } from "react";
-import { Send, X } from "lucide-react";
+import { Plus, Send, X } from "lucide-react";
 import { SyncLoader } from "../loaders/SyncLoader";
 import Button from "../forms/Button";
 import ErrorAlert from "../alerts/ErrorAlert";
-
-const api = import.meta.env.VITE_API_URL;
+import type { Page } from "../../../types/page";
+import { getFriends, getParticipants } from "../../../api/users";
+import { inviteFriends } from "../../../api/events";
 
 interface ParticipantsDialogProps {
   isOpen: boolean;
@@ -74,75 +75,22 @@ export default function ParticipantsDialog({
   const searchRef = useRef<HTMLInputElement>(null);
   const [selectedFriends, setSelectedFriends] = useState<User[]>([]);
 
-  const friendsQuery = useQuery({
+  const friendsQuery = useQuery<Page<User>>({
     queryKey: ["friends", userId, expression],
-    queryFn: async () => {
-      const response = await fetch(
-        `${api}/users/${userId}/following?expression=${expression}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(
-          errorData.message || `HTTP error! status: ${response.status}`
-        );
-      }
-
-      return response.json();
-    },
+    queryFn: () => getFriends(userId, token, expression),
     enabled: !!token && !!userId && expression !== "",
     staleTime: 5 * 60 * 1000,
   });
 
-  const participantsQuery = useQuery({
+  const participantsQuery = useQuery<Page<User>>({
     queryKey: ["participants", eventId],
-    queryFn: async () => {
-      const response = await fetch(`${api}/events/${eventId}/participants`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(
-          errorData.message || `HTTP error! status: ${response.status}`
-        );
-      }
-
-      return response.json();
-    },
+    queryFn: () => getParticipants(token, eventId),
     enabled: !!eventId && !!token && expression === "",
     staleTime: 5 * 60 * 1000,
   });
 
-  const { mutate: inviteFriends } = useMutation({
-    mutationFn: async () => {
-      const response = await fetch(`${api}/events/${eventId}/invite`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(selectedFriends.map((friend) => friend.id)),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(
-          errorData.message || `HTTP error! status: ${response.status}`
-        );
-      }
-
-      return response.json();
-    },
+  const { mutate: inviteFriendsMutation } = useMutation({
+    mutationFn: () => inviteFriends(token, eventId, selectedFriends),
     onSuccess: () => {
       setSelectedFriends([]);
       setExpression("");
@@ -170,42 +118,50 @@ export default function ParticipantsDialog({
       width="w-1/4"
     >
       <div className="flex flex-col gap-2 w-full px-8 py-4 text-text max-h-50%">
-        {participantsQuery.isLoading && <BounceLoader />}
-        {participantsQuery.error && (
-          <ErrorAlert error={participantsQuery.error.message} />
-        )}
         <Input
           placeholder="Invite a friend"
           ref={searchRef}
           onChange={() => {
             setExpression(searchRef.current?.value ?? "");
           }}
+          icon={<Plus size={24} />}
         />
-        <div className="overflow-y-scroll max-h-[40vh] scrollbar-hide">
+        <div className="overflow-y-scroll max-h-[18vh] scrollbar-hide">
+          {participantsQuery.isLoading && <BounceLoader />}
+          {participantsQuery.error && (
+            <ErrorAlert error={participantsQuery.error.message} />
+          )}
           {participantsQuery.isSuccess && (
             <div>
               {expression === "" && (
                 <div className="flex flex-col gap-2">
-                  {participantsQuery.data.map((participant: User) => (
-                    <ParticipantCard
-                      key={participant.id}
-                      invitable={false}
-                      isSelected={false}
-                      onClick={() => {}}
-                      user={participant}
-                    />
-                  ))}
+                  {Array.isArray(participantsQuery.data?.data) &&
+                    participantsQuery.data.data.map((participant: User) => (
+                      <ParticipantCard
+                        key={participant.id}
+                        invitable={false}
+                        isSelected={false}
+                        onClick={() => {}}
+                        user={participant}
+                      />
+                    ))}
                   {participantsQuery.isSuccess &&
-                    participantsQuery.data.length === 0 && <EmptyArray />}
+                    participantsQuery.data.pageInfo.totalElements === 0 && (
+                      <EmptyArray />
+                    )}
                 </div>
               )}
               {expression !== "" && (
                 <div className="flex flex-col gap-2">
+                  {friendsQuery.isLoading && <BounceLoader />}
+                  {friendsQuery.error && (
+                    <ErrorAlert error={friendsQuery.error.message} />
+                  )}
                   {friendsQuery.isSuccess &&
-                    friendsQuery.data
+                    friendsQuery.data.data
                       .filter(
                         (friend: User) =>
-                          !participantsQuery.data.some(
+                          !participantsQuery.data.data.some(
                             (participant: User) => participant.id === friend.id
                           )
                       )
@@ -221,32 +177,36 @@ export default function ParticipantsDialog({
                           user={friend}
                         />
                       ))}
-                  {friendsQuery.isLoading && <SyncLoader />}
-                  {friendsQuery.isSuccess && friendsQuery.data.length === 0 && (
-                    <EmptyArray />
-                  )}
                 </div>
               )}
             </div>
           )}
         </div>
-        {selectedFriends.length > 0 && (
-          <>
-            <hr className="border-text" />
-            <div className="flex flex-col gap-2 max-h-[10vh] overflow-y-scroll scrollbar-hide">
-              {selectedFriends.map((friend) => (
-                <ParticipantCard
-                  key={friend.id}
-                  invitable={true}
-                  isSelected={true}
-                  onClick={() => handleInvite(friend)}
-                  user={friend}
-                />
-              ))}
-            </div>
-            <Button onClick={() => inviteFriends()}>Invite</Button>
-          </>
-        )}
+        <hr className="border-text" />
+        <div className="flex flex-col gap-2 max-h-[10vh] overflow-y-scroll scrollbar-hide">
+          {selectedFriends.length > 0 ? (
+            selectedFriends.map((friend) => (
+              <ParticipantCard
+                key={friend.id}
+                invitable={true}
+                isSelected={true}
+                onClick={() => handleInvite(friend)}
+                user={friend}
+              />
+            ))
+          ) : (
+            <p className="text-text-muted">Select friends to invite</p>
+          )}
+        </div>
+        <div className="flex justify-center">
+          <Button
+            onClick={() => inviteFriendsMutation()}
+            disabled={selectedFriends.length === 0}
+            className="w-2/3"
+          >
+            Invite
+          </Button>
+        </div>
       </div>
     </Dialog>
   );

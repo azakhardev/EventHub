@@ -1,7 +1,7 @@
 import Dialog from "./Dialog";
 import type { Event } from "../../../types/event";
 import Description from "../Description";
-import { Calendar, Clock, Eye, Pin, Repeat, Share2 } from "lucide-react";
+import { Calendar, Clock, Eye, MapPin, Repeat, Share2 } from "lucide-react";
 import Button from "../forms/Button";
 import { useState } from "react";
 import ParticipantsDialog from "./ParticipantsDialog";
@@ -39,10 +39,12 @@ export default function EventDialog({
         <div className="flex flex-col gap-2 w-full px-8 py-4 text-text">
           <div className="flex flex-row items-center justify-between gap-2">
             <div className="flex flex-row items-center gap-2">
-              <Calendar size={32} />
+              <Calendar size={32} className="text-primary" />
               <p>
-                {new Date(event?.startTime ?? "").toLocaleDateString()} -{" "}
-                {new Date(event?.endTime ?? "").toLocaleDateString()}
+                {new Date(event?.startTime ?? "").toLocaleDateString()}
+                {new Date(event?.endTime ?? "").getDate() !==
+                  new Date(event?.startTime ?? "").getDate() &&
+                  " - " + new Date(event?.endTime ?? "").toLocaleDateString()}
               </p>
             </div>
             <div>
@@ -52,14 +54,14 @@ export default function EventDialog({
             </div>
           </div>
           <div className="flex flex-row items-center gap-2">
-            <Clock size={32} />
+            <Clock size={32} className="text-primary" />
             <p>
               {new Date(event?.startTime ?? "").toLocaleTimeString()} -{" "}
               {new Date(event?.endTime ?? "").toLocaleTimeString()}
             </p>
           </div>
           <div className="flex flex-row items-center gap-2">
-            <Pin size={32} />
+            <MapPin size={32} className="text-primary" />
             <p>{event?.place}</p>
           </div>
           <div className="flex flex-row items-center gap-2">
@@ -68,20 +70,20 @@ export default function EventDialog({
               alt="profile_picture"
               className="w-8 h-8 rounded-full"
             />
-            <p>{event?.owner.username}</p>
+            <p className="text-primary">{event?.owner.username}</p>
           </div>
           <Description text={event?.body ?? ""} />
           <div className="flex flex-row items-center gap-2 justify-between mx-[5%]">
             <div className="flex flex-row items-center gap-2">
-              <Eye size={32} />
+              <Eye size={32} className="text-primary" />
               <p>{event?.public ? "Public" : "Private"}</p>
             </div>
             <div className="flex flex-row items-center gap-2">
-              <Repeat size={32} />
+              <Repeat size={32} className="text-primary" />
               <p className="capitalize">{event?.recurrence}</p>
             </div>
           </div>
-          <div className="flex flex-row items-center gap-2 my-2">
+          <div className="flex flex-row items-center justify-end gap-2 mb-2 mt-6 ">
             <Button
               onClick={() => {
                 navigator.clipboard.writeText(event?.linkToken ?? "");
