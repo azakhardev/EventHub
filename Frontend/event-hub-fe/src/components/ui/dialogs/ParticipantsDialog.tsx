@@ -1,18 +1,18 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useMutation } from "@tanstack/react-query";
 import Dialog from "./Dialog";
 import { useUserStore } from "../../../store/store";
 import { BounceLoader } from "../loaders/BounceLoader";
 import type { User } from "../../../types/user";
 import EmptyArray from "../alerts/EmptyArray";
 import Input from "../forms/Input";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Plus, Send, X } from "lucide-react";
-import { SyncLoader } from "../loaders/SyncLoader";
 import Button from "../forms/Button";
 import ErrorAlert from "../alerts/ErrorAlert";
 import type { Page } from "../../../types/page";
 import { getFriends, getParticipants } from "../../../api/users";
 import { inviteFriends } from "../../../api/events";
+import { useInView } from "react-intersection-observer";
 
 interface ParticipantsDialogProps {
   isOpen: boolean;
@@ -75,18 +75,40 @@ export default function ParticipantsDialog({
   const searchRef = useRef<HTMLInputElement>(null);
   const [selectedFriends, setSelectedFriends] = useState<User[]>([]);
 
-  const friendsQuery = useQuery<Page<User>>({
-    queryKey: ["friends", userId, expression],
-    queryFn: () => getFriends(userId, token, expression),
-    enabled: !!token && !!userId && expression !== "",
-    staleTime: 5 * 60 * 1000,
+  const { ref: friendsRef, inView: friendsInView } = useInView({
+    threshold: 0,
+    triggerOnce: false,
   });
 
-  const participantsQuery = useQuery<Page<User>>({
+  const { ref: participantsRef, inView: participantsInView } = useInView({
+    threshold: 0,
+    triggerOnce: false,
+  });
+
+  const friendsQuery = useInfiniteQuery<Page<User>>({
+    queryKey: ["friends", userId, expression],
+    queryFn: ({ pageParam = 1 }) =>
+      getFriends(userId, token, expression, pageParam as number),
+    enabled: !!token && !!userId && expression !== "",
+    staleTime: 5 * 60 * 1000,
+    getNextPageParam: (lastPage) =>
+      lastPage.pageInfo.page < lastPage.pageInfo.totalPages
+        ? lastPage.pageInfo.page + 1
+        : undefined,
+    initialPageParam: 1,
+  });
+
+  const participantsQuery = useInfiniteQuery<Page<User>>({
     queryKey: ["participants", eventId],
-    queryFn: () => getParticipants(token, eventId),
+    queryFn: ({ pageParam = 1 }) =>
+      getParticipants(token, eventId, pageParam as number),
     enabled: !!eventId && !!token && expression === "",
     staleTime: 5 * 60 * 1000,
+    getNextPageParam: (lastPage) =>
+      lastPage.pageInfo.page < lastPage.pageInfo.totalPages
+        ? lastPage.pageInfo.page + 1
+        : undefined,
+    initialPageParam: 1,
   });
 
   const { mutate: inviteFriendsMutation } = useMutation({
@@ -105,6 +127,36 @@ export default function ParticipantsDialog({
       setSelectedFriends([...selectedFriends, user]);
     }
   }
+
+  useEffect(() => {
+    if (
+      friendsInView &&
+      friendsQuery.hasNextPage &&
+      !friendsQuery.isFetchingNextPage
+    ) {
+      friendsQuery.fetchNextPage();
+    }
+  }, [
+    friendsInView,
+    friendsQuery.hasNextPage,
+    friendsQuery.isFetchingNextPage,
+    friendsQuery.fetchNextPage,
+  ]);
+
+  useEffect(() => {
+    if (
+      participantsInView &&
+      participantsQuery.hasNextPage &&
+      !participantsQuery.isFetchingNextPage
+    ) {
+      participantsQuery.fetchNextPage();
+    }
+  }, [
+    participantsInView,
+    participantsQuery.hasNextPage,
+    participantsQuery.isFetchingNextPage,
+    participantsQuery.fetchNextPage,
+  ]);
 
   return (
     <Dialog
@@ -135,20 +187,26 @@ export default function ParticipantsDialog({
             <div>
               {expression === "" && (
                 <div className="flex flex-col gap-2">
-                  {Array.isArray(participantsQuery.data?.data) &&
-                    participantsQuery.data.data.map((participant: User) => (
-                      <ParticipantCard
-                        key={participant.id}
-                        invitable={false}
-                        isSelected={false}
-                        onClick={() => {}}
-                        user={participant}
-                      />
-                    ))}
+                  {Array.isArray(
+                    participantsQuery.data?.pages.flatMap((page) => page.data)
+                  ) &&
+                    participantsQuery.data.pages
+                      .flatMap((page) => page.data)
+                      .map((participant: User) => (
+                        <ParticipantCard
+                          key={participant.id}
+                          invitable={false}
+                          isSelected={false}
+                          onClick={() => {}}
+                          user={participant}
+                        />
+                      ))}
                   {participantsQuery.isSuccess &&
-                    participantsQuery.data.pageInfo.totalElements === 0 && (
-                      <EmptyArray />
-                    )}
+                    participantsQuery.data.pages.flatMap((page) => page.data)
+                      .length === 0 && <EmptyArray />}
+                  {participantsQuery.hasNextPage && (
+                    <div ref={participantsRef} className="h-4"></div>
+                  )}
                 </div>
               )}
               {expression !== "" && (
@@ -158,12 +216,16 @@ export default function ParticipantsDialog({
                     <ErrorAlert error={friendsQuery.error.message} />
                   )}
                   {friendsQuery.isSuccess &&
-                    friendsQuery.data.data
+                    friendsQuery.data.pages
+                      .flatMap((page) => page.data)
                       .filter(
                         (friend: User) =>
-                          !participantsQuery.data.data.some(
-                            (participant: User) => participant.id === friend.id
-                          )
+                          !participantsQuery.data.pages
+                            .flatMap((page) => page.data)
+                            .some(
+                              (participant: User) =>
+                                participant.id === friend.id
+                            )
                       )
                       .map((friend: User) => (
                         <ParticipantCard
@@ -177,6 +239,9 @@ export default function ParticipantsDialog({
                           user={friend}
                         />
                       ))}
+                  {friendsQuery.hasNextPage && (
+                    <div ref={friendsRef} className="h-4"></div>
+                  )}
                 </div>
               )}
             </div>

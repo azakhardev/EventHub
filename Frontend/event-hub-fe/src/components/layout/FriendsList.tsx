@@ -30,6 +30,7 @@ export default function FriendsList() {
   });
   return (
     <>
+      <h1>THIS IS FRIEND LIST COMPONENT</h1>
       <div className="w-full md:w-2/3 md:px-4 my-2">
         <Input
           placeholder="Search for a friend"

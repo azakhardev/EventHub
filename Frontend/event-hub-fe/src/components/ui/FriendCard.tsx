@@ -53,12 +53,12 @@ export default function FriendCard({ user, ...props }: FriendCardProps) {
         <div>
           <img
             src={user.profilePictureUrl}
-            alt={user.username}
+            alt={user.nickname}
             className="w-14 h-14 rounded-full"
           />
         </div>
         <div className="flex flex-col">
-          <div className="font-bold font-[20px]">{user.username}</div>
+          <div className="font-bold font-[20px]">{user.nickname}</div>
           <div className="text-[16px] font-bold text-text-muted">
             {user.proffesion}
           </div>

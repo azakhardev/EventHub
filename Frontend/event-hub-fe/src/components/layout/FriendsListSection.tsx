@@ -2,15 +2,17 @@ import FriendCard from "../ui/FriendCard";
 import { usePageStore, useUserStore } from "../../store/store";
 import { Search } from "lucide-react";
 import Input from "../ui/forms/Input";
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import type { User } from "../../types/user.tsx";
 import { SyncLoader } from "../ui/loaders/SyncLoader.tsx";
 import EmptyArray from "../ui/alerts/EmptyArray.tsx";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ErrorAlert from "../ui/alerts/ErrorAlert.tsx";
 import NotificationsButton from "../buttons/NotificationsButton.tsx";
 import AddFriendButton from "../buttons/AddFriendButton.tsx";
 import type { Page } from "../../types/page.ts";
+import { useInView } from "react-intersection-observer";
+import { getFriends } from "../../api/users.ts";
 
 const api = import.meta.env.VITE_API_URL;
 
@@ -19,19 +21,36 @@ export default function FriendsListSection() {
   const { token, userId } = useUserStore();
   const [expression, setExpression] = useState("");
   const searchRef = useRef<HTMLInputElement>(null);
+  const { ref, inView } = useInView({
+    threshold: 0,
+    triggerOnce: false,
+  });
 
-  const { data, isLoading, error, isSuccess } = useQuery<Page<User>>({
+  const {
+    data,
+    isFetchingNextPage,
+    hasNextPage,
+    fetchNextPage,
+    isSuccess,
+    error,
+  } = useInfiniteQuery<Page<User>>({
     queryKey: ["friends", userId, expression],
-    queryFn: () =>
-      fetch(`${api}/users/${userId}/following?expression=${expression}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      }).then((res) => res.json()),
+    queryFn: ({ pageParam = 1 }) =>
+      getFriends(userId, token, expression, pageParam as number),
+    getNextPageParam: (lastPage) =>
+      lastPage.pageInfo.page < lastPage.pageInfo.totalPages
+        ? lastPage.pageInfo.page + 1
+        : undefined,
+    initialPageParam: 1,
     enabled: !!token && !!userId,
     staleTime: 5 * 60 * 1000,
   });
+
+  useEffect(() => {
+    if (inView && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, hasNextPage, fetchNextPage, isFetchingNextPage]);
 
   return (
     <>
@@ -56,16 +75,24 @@ export default function FriendsListSection() {
           </div>
 
           <div className="flex flex-col gap-4 w-full px-4">
-            {isSuccess &&
-              data.data
-                .sort((a: User, b: User) => {
-                  if (a.pinned === b.pinned) return 0;
-                  return a.pinned ? -1 : 1;
-                })
-                .map((user: User) => <FriendCard key={user.id} user={user} />)}
-            {isLoading && <SyncLoader />}
+            <>
+              {isSuccess &&
+                data?.pages
+                  .flatMap((page) => page.data)
+                  .sort((a: User, b: User) => {
+                    if (a.pinned === b.pinned) return 0;
+                    return a.pinned ? -1 : 1;
+                  })
+                  .map((user: User) => (
+                    <FriendCard key={user.id} user={user} />
+                  ))}
+              <div ref={ref}></div>
+            </>
+            {isFetchingNextPage && <SyncLoader />}
             {error && <ErrorAlert error={error.message} />}
-            {data && data.pageInfo.totalElements === 0 && <EmptyArray />}
+            {data?.pages.flatMap((page) => page.data).length === 0 && (
+              <EmptyArray />
+            )}
           </div>
         </div>
       )}

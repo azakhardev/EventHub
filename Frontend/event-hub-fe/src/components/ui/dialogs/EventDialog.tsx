@@ -70,7 +70,7 @@ export default function EventDialog({
               alt="profile_picture"
               className="w-8 h-8 rounded-full"
             />
-            <p className="text-primary">{event?.owner.username}</p>
+            <p className="font-bold">{event?.owner.nickname}</p>
           </div>
           <Description text={event?.body ?? ""} />
           <div className="flex flex-row items-center gap-2 justify-between mx-[5%]">

@@ -77,13 +77,20 @@ export async function removeFriend(
   return await response.json();
 }
 
-export async function getParticipants(token: string, eventId: number) {
-  const response = await fetch(`${api}/events/${eventId}/participants`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
-    },
-  });
+export async function getParticipants(
+  token: string,
+  eventId: number,
+  page: number
+) {
+  const response = await fetch(
+    `${api}/events/${eventId}/participants?page=${page}&pageSize=15`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    }
+  );
 
   if (!response.ok) {
     const errorData = await response.json();
@@ -98,10 +105,11 @@ export async function getParticipants(token: string, eventId: number) {
 export async function getFriends(
   userId: number,
   token: string,
-  expression: string
+  expression: string,
+  pageParam: number
 ) {
   const response = await fetch(
-    `${api}/users/${userId}/following?expression=${expression}`,
+    `${api}/users/${userId}/following?expression=${expression}&page=${pageParam}&pageSize=15`,
     {
       headers: {
         Authorization: `Bearer ${token}`,

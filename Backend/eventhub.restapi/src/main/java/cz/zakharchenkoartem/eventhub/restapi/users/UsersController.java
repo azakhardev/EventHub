@@ -50,10 +50,12 @@ public class UsersController {
         return userService.getUser(id);
     }
 
-    @GetMapping("/by-name/{name}")
+    @GetMapping("/by-name")
     @JsonView(Views.Public.class)
-    public PaginatedResponse<User> getUsersByName(@PathVariable String name, @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "20") int pageSize) {
-        Page<User> pageResult = userService.getUsersByName(name, page, pageSize);
+    public PaginatedResponse<User> getUsersByName(@RequestParam String name, @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "20") int pageSize) {
+        Page<User> pageResult = userService.getUsersByName(name, page - 1, pageSize);
+
+        System.out.println(pageResult.getContent());
 
         PageInfo pageInfo = new PageInfo(page, pageSize, pageResult.getTotalPages(), pageResult.getTotalElements());
 
