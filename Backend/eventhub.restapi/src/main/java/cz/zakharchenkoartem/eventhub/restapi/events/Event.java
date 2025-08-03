@@ -3,6 +3,7 @@ package cz.zakharchenkoartem.eventhub.restapi.events;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import cz.zakharchenkoartem.eventhub.restapi.events_participants.EventParticipantRelation;
+import cz.zakharchenkoartem.eventhub.restapi.notifications.Notification;
 import cz.zakharchenkoartem.eventhub.restapi.users.User;
 import jakarta.persistence.*;
 
@@ -55,6 +56,10 @@ public class Event {
     @JsonIgnore
     @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<EventParticipantRelation> participants;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Notification> notifications;
 
     @Enumerated(EnumType.STRING)
     private RecurrenceType recurrence = RecurrenceType.once;

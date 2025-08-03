@@ -73,4 +73,9 @@ public class EventService {
         eventsDataSource.deleteOldEvents(now);
     }
 
+    @Transactional
+    public void deleteEvent(Long eventId) {
+        eventsDataSource.deleteById(eventId);
+    }
+
 }
