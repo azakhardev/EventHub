@@ -55,8 +55,6 @@ public class UsersController {
     public PaginatedResponse<User> getUsersByName(@RequestParam String name, @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "20") int pageSize) {
         Page<User> pageResult = userService.getUsersByName(name, page - 1, pageSize);
 
-        System.out.println(pageResult.getContent());
-
         PageInfo pageInfo = new PageInfo(page, pageSize, pageResult.getTotalPages(), pageResult.getTotalElements());
 
         return new PaginatedResponse<User>(pageResult.getContent(), pageInfo);
@@ -64,7 +62,7 @@ public class UsersController {
 
     @GetMapping("/{id}/following")
     @JsonView(Views.Public.class)
-    public PaginatedResponse<FollowedUser> getFollowers(@RequestHeader("Authorization") String authHeader, @PathVariable Long id, @RequestParam(required = false) String expression, @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "20") int pageSize ) {
+    public PaginatedResponse<FollowedUser> getFollowers(@RequestHeader("Authorization") String authHeader, @PathVariable Long id, @RequestParam(required = false) String expression, @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "20") int pageSize) {
         Long userId = jwtService.extractUserId(authHeader.replace("Bearer ", ""));
         if (!Objects.equals(userId, id)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access denied");
@@ -79,23 +77,23 @@ public class UsersController {
 
     @GetMapping("/{id}/notifications")
     public PaginatedResponse<Notification> getNotifications(@PathVariable Long id, @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "20") int pageSize) {
-        Page<Notification> pageResult  = userService.getNotifications(id, page - 1, pageSize);
+        Page<Notification> pageResult = userService.getNotifications(id, page - 1, pageSize);
 
-        PageInfo pageInfo = new PageInfo(page, pageSize, pageResult.getTotalPages(), pageResult.getTotalElements() );
+        PageInfo pageInfo = new PageInfo(page, pageSize, pageResult.getTotalPages(), pageResult.getTotalElements());
 
         return new PaginatedResponse<Notification>(pageResult.getContent(), pageInfo);
     }
 
     @GetMapping("/{id}/my-events")
-    public PaginatedResponse<Event> getMyEvents(@RequestHeader("Authorization") String authHeader, @PathVariable Long id, @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "20") int pageSize ) {
+    public PaginatedResponse<Event> getMyEvents(@RequestHeader("Authorization") String authHeader, @PathVariable Long id, @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "20") int pageSize, @RequestParam(required = false) Boolean important, @RequestParam(required = false) Boolean owned) {
         Long userId = jwtService.extractUserId(authHeader.replace("Bearer ", ""));
         if (!Objects.equals(userId, id)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access denied");
         }
 
-        Page<Event> pageResult = userService.getMyEvents(id, page - 1, pageSize);
+        Page<Event> pageResult = userService.getMyEvents(id, page - 1, pageSize, important, owned);
 
-        PageInfo pageInfo = new PageInfo(page, pageSize, pageResult.getTotalPages(), pageResult.getTotalElements() );
+        PageInfo pageInfo = new PageInfo(page, pageSize, pageResult.getTotalPages(), pageResult.getTotalElements());
 
         return new PaginatedResponse<Event>(pageResult.getContent(), pageInfo);
     }
@@ -108,7 +106,7 @@ public class UsersController {
     }
 
     @DeleteMapping("/{id}/remove-friend/{friendId}")
-    public ResponseEntity<?> removeFriend(@RequestHeader("Authorization") String authHeader,@PathVariable Long id, @PathVariable Long friendId) {
+    public ResponseEntity<?> removeFriend(@RequestHeader("Authorization") String authHeader, @PathVariable Long id, @PathVariable Long friendId) {
         Long userId = jwtService.extractUserId(authHeader.replace("Bearer ", ""));
         if (!Objects.equals(userId, id)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access denied");
@@ -119,10 +117,10 @@ public class UsersController {
     }
 
     @GetMapping("/{id}/foreign-events")
-    public PaginatedResponse<Event> getForeignEvents(@PathVariable Long id, @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "20") int pageSize) {
-        Page<Event> pageResult = userService.getForeignEvents(id, page - 1, pageSize);
+    public PaginatedResponse<Event> getForeignEvents(@PathVariable Long id, @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "20") int pageSize, @RequestParam(required = false) Boolean important) {
+        Page<Event> pageResult = userService.getForeignEvents(id, page - 1, pageSize, important);
 
-        PageInfo pageInfo = new PageInfo(page, pageSize, pageResult.getTotalPages(), pageResult.getTotalElements() );
+        PageInfo pageInfo = new PageInfo(page, pageSize, pageResult.getTotalPages(), pageResult.getTotalElements());
 
         return new PaginatedResponse<Event>(pageResult.getContent(), pageInfo);
     }

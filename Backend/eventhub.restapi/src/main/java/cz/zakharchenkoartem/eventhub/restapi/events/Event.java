@@ -1,12 +1,14 @@
 package cz.zakharchenkoartem.eventhub.restapi.events;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import cz.zakharchenkoartem.eventhub.restapi.events_participants.EventParticipantRelation;
 import cz.zakharchenkoartem.eventhub.restapi.users.User;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -23,7 +25,6 @@ public class Event {
 
     @Column(columnDefinition = "TEXT")
     private String body;
-
 
     @ManyToOne
     @JoinColumn(name = "owner_id", nullable = false, foreignKey = @ForeignKey(name = "fk_event_owner"))
@@ -51,8 +52,14 @@ public class Event {
     @Column(name = "link_token", columnDefinition = "UUID DEFAULT gen_random_uuid()", updatable = false, insertable = false)
     private UUID linkToken;
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<EventParticipantRelation> participants;
+
     @Enumerated(EnumType.STRING)
     private RecurrenceType recurrence = RecurrenceType.once;
+
+    private Date recurrenceEndDate;
 
     public enum RecurrenceType {
         once,
@@ -66,7 +73,7 @@ public class Event {
     public Event() {
     }
 
-    public Event(Long id, String title, String body, User owner, LocalDateTime creationDate, LocalDateTime startTime, LocalDateTime endTime, String place, String category, String color, boolean isPublic, UUID linkToken, RecurrenceType recurrence) {
+    public Event(Long id, String title, String body, User owner, LocalDateTime creationDate, LocalDateTime startTime, LocalDateTime endTime, String place, String category, String color, boolean isPublic, UUID linkToken, RecurrenceType recurrence, Date recurrenceEndDate) {
         this.id = id;
         this.title = title;
         this.body = body;
@@ -80,6 +87,7 @@ public class Event {
         this.isPublic = isPublic;
         this.linkToken = linkToken;
         this.recurrence = recurrence;
+        this.recurrenceEndDate = recurrenceEndDate;
     }
 
     public Long getId() {

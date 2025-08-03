@@ -58,11 +58,11 @@ VALUES
   INSERT INTO events (title, body, owner_id, start_time, end_time, place, category, color, public, recurrence)
 VALUES 
   ('Morning Run in the Park', 'Meet at the main entrance of Stromovka.', 2,
-   '2025-07-26 07:00:00', '2025-07-26 08:00:00', 'Stromovka Park, Prague', 'sports', '#00FF00', TRUE, 'weekly'),
+   '2025-07-26 07:00:00', '2030-07-26 08:00:00', 'Stromovka Park, Prague', 'sports', '#00FF00', TRUE, 'weekly'),
   ('Cybersecurity Talk', 'An online session for everyone interested in IT security.', 1,
-   '2025-07-27 18:00:00', '2025-07-27 19:30:00', 'Zoom', 'education', '#0000FF', TRUE, 'once'),
+   '2025-07-27 18:00:00', '2029-07-27 19:30:00', 'Zoom', 'education', '#0000FF', TRUE, 'once'),
   ('The Beatflowers Concert', 'A famous indie band performing live.', 3,
-   '2025-08-01 20:00:00', '2025-08-01 23:00:00', 'Lucerna Music Bar, Prague', 'music', '#FF00FF', TRUE, 'once'),
+   '2025-08-01 20:00:00', '2028-08-01 23:00:00', 'Lucerna Music Bar, Prague', 'music', '#FF00FF', TRUE, 'once'),
    ('Community Meetup 6', 'Description for event 6.', 1, '2032-08-05 10:00:00', '2032-08-05 12:00:00', 'Ostrava', 'education', '#33FF57', TRUE, 'once'),
 ('Community Meetup 7', 'Description for event 7.', 1, '2032-08-05 10:00:00', '2032-08-05 12:00:00', 'Ostrava', 'education', '#33FF57', TRUE, 'once'),
 ('Community Meetup 8', 'Description for event 8.', 1, '2032-08-05 10:00:00', '2032-08-05 12:00:00', 'Ostrava', 'education', '#33FF57', TRUE, 'once'),

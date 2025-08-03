@@ -14,6 +14,7 @@ export type Event = {
   public: boolean;
   linkToken: string;
   recurrence: EventRecurrence;
+  recurrenceEndDate?: string;
 };
 
 export const EventRecurrence = {

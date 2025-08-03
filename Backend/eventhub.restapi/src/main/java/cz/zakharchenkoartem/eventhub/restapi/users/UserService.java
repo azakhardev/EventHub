@@ -23,10 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class UserService {
@@ -76,7 +73,7 @@ public class UserService {
         Pageable pageable = PageRequest.of(page, pageSize);
 
         if (expression != null && !expression.isBlank()) {
-            followRelations = followersDataSource.findByFollowerAndUsernameLike(user, expression, pageable );
+            followRelations = followersDataSource.findByFollowerAndUsernameLike(user, expression, pageable);
         } else {
             followRelations = followersDataSource.findByFollower(user, pageable);
         }
@@ -99,14 +96,15 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public Page<Event> getMyEvents(Long id, int page, int pageSize) {
+    public Page<Event> getMyEvents(Long id, int page, int pageSize, Boolean important, Boolean owned) {
         User user = getUser(id);
 
         Pageable pageable = PageRequest.of(page, pageSize);
 
-        Page<EventParticipantRelation> participantRelations = eventsParticipantsDataSource.findByUser(user, pageable);
+        Page<EventParticipantRelation> participantRelations = eventsParticipantsDataSource.findByUserOrdered(user, important, owned, pageable);
 
         List<Event> events = new ArrayList<>();
+
         for (EventParticipantRelation relation : participantRelations) {
             events.add(relation.getEvent());
         }
@@ -115,12 +113,12 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public Page<Event> getForeignEvents(Long id, int page, int pageSize) {
+    public Page<Event> getForeignEvents(Long id, int page, int pageSize, Boolean important) {
         User user = getUser(id);
 
         Pageable pageable = PageRequest.of(page, pageSize);
 
-        Page<EventParticipantRelation> participantRelations = eventsParticipantsDataSource.findByUser(user, pageable);
+        Page<EventParticipantRelation> participantRelations = eventsParticipantsDataSource.findByUserOrdered(user, important, null, pageable);
 
         List<Event> events = new ArrayList<>();
         for (EventParticipantRelation relation : participantRelations) {
@@ -143,14 +141,14 @@ public class UserService {
                 .findByFollowedUserIdAndFollowerId(request.getFollowedUserId(), request.getFollowerId())
                 .orElse(null);
 
-        if(relation == null) {
+        if (relation == null) {
             relation = new FollowRelation();
             relation.setId(new FollowRelationId(request.getFollowerId(), request.getFollowedUserId()));
             relation.setFollower(follower);
             relation.setFollowedUser(followed);
             relation.setFavorite(request.isPinned());
             relation.setCreatedAt(LocalDateTime.now());
-        }else{
+        } else {
             relation.setFavorite(request.isPinned());
         }
 
@@ -164,11 +162,11 @@ public class UserService {
         User user = getUser(followerId);
         User followedUser = getUser(friendRequest.getFollowedUserId());
 
-        if(!followedUser.getFollowToken().equals(friendRequest.getFollowToken())) {
+        if (!followedUser.getFollowToken().equals(friendRequest.getFollowToken())) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Wrong follow token");
         }
 
-        if(followersDataSource.findByFollowedUserIdAndFollowerId(followedUser.getId(), followerId).isPresent()) {
+        if (followersDataSource.findByFollowedUserIdAndFollowerId(followedUser.getId(), followerId).isPresent()) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "You already follow this user");
         }
 
@@ -184,7 +182,7 @@ public class UserService {
 
     @Transactional
     public void unfollowUser(Long followerId, Long followedUserId) {
-        FollowRelation followRelation = followersDataSource.findByFollowedUserIdAndFollowerId(followedUserId, followerId).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "You do not follow this user"));
+        FollowRelation followRelation = followersDataSource.findByFollowedUserIdAndFollowerId(followedUserId, followerId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "You do not follow this user"));
 
         followersDataSource.delete(followRelation);
     }
