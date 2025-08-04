@@ -13,6 +13,15 @@ type UserState = {
   setUserId: (userId: number) => void;
 };
 
+type DeleteState = {
+  isOpen: boolean;
+  dialogQuestion: string;
+  setIsOpen: (isOpen: boolean) => void;
+  setDialogQuestion: (item: string) => void;
+  onDelete: () => Promise<void>;
+  setOnDelete: (onDelete: () => Promise<void>) => void;
+};
+
 type ThemeState = {
   theme: "green" | "purple" | "blue" | "black";
   setTheme: (theme: "green" | "purple" | "blue" | "black") => void;
@@ -28,6 +37,15 @@ export const useUserStore = create<UserState>((set) => ({
   setToken: (token: string) => set({ token }),
   userId: 0,
   setUserId: (userId: number) => set({ userId }),
+}));
+
+export const useDeleteStore = create<DeleteState>((set) => ({
+  isOpen: false,
+  dialogQuestion: "",
+  setIsOpen: (isOpen: boolean) => set({ isOpen }),
+  setDialogQuestion: (item: string) => set({ dialogQuestion: item }),
+  onDelete: async () => {},
+  setOnDelete: (onDelete: () => Promise<void>) => set({ onDelete }),
 }));
 
 export const useThemeStore = create<ThemeState>((set) => ({

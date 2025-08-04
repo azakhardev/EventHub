@@ -3,6 +3,10 @@ import { combineString } from "../../utils/utils";
 import { Clock, MapPin } from "lucide-react";
 import Button from "./forms/Button";
 import { Pencil, Trash } from "lucide-react";
+import { useDeleteStore, useUserStore } from "../../store/store";
+import { useMutation } from "@tanstack/react-query";
+import { deleteEvent } from "../../api/events";
+import { queryClient } from "../../main.tsx";
 
 interface EventCardProps extends React.HTMLAttributes<HTMLDivElement> {
   event: Event;
@@ -11,6 +15,36 @@ interface EventCardProps extends React.HTMLAttributes<HTMLDivElement> {
 export default function EventCard({ event, ...props }: EventCardProps) {
   const startTime = new Date(event.startTime);
   const endTime = new Date(event.endTime);
+
+  const { token } = useUserStore();
+  const {
+    setIsOpen,
+    setOnDelete,
+    setDialogQuestion: setDeletedItem,
+  } = useDeleteStore();
+
+  const { mutate: deleteEventMutation } = useMutation({
+    mutationFn: async () => await deleteEvent(token, event?.id ?? 0),
+  });
+
+  const onDelete = async () => {
+    return new Promise<void>((resolve, reject) => {
+      deleteEventMutation(undefined, {
+        onSuccess: () => {
+          queryClient.invalidateQueries({
+            queryKey: ["events"],
+            exact: false,
+          });
+          resolve();
+        },
+        onError: (error) => {
+          console.error("Failed to delete event:", error);
+          reject(error);
+        },
+      });
+    });
+  };
+
   return (
     <div className="flex flex-row items-center w-full">
       <div
@@ -71,7 +105,16 @@ export default function EventCard({ event, ...props }: EventCardProps) {
         <Button className="bg-transparent hover:bg-transparent hover:scale-[1.03] px-4 py-6 border-2 border-icon rounded-md">
           <Pencil className="text-primary" size={32} />
         </Button>
-        <Button className="bg-transparent hover:bg-transparent hover:scale-[1.03] px-4 py-6 border-2 border-red-300 rounded-md">
+        <Button
+          className="bg-transparent hover:bg-transparent hover:scale-[1.03] px-4 py-6 border-2 border-red-300 rounded-md"
+          onClick={() => {
+            setIsOpen(true);
+            setDeletedItem(
+              "Are you sure you want to delete event " + event.title + "?"
+            );
+            setOnDelete(onDelete);
+          }}
+        >
           <Trash className="text-red-500" size={32} />
         </Button>
       </div>

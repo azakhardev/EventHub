@@ -30,6 +30,8 @@ export default function HomePage() {
         },
       }).then((res) => res.json()),
     enabled: !!token && !!userId,
+    staleTime: 0,
+    refetchOnMount: true,
   });
 
   return (

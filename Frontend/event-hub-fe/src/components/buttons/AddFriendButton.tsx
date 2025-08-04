@@ -8,7 +8,7 @@ import { useUserStore } from "../../store/store";
 import type { User } from "../../types/user";
 import { ToastContainer, toast } from "react-toastify";
 import { SyncLoader } from "../ui/loaders/SyncLoader";
-import { apiRequest, api } from "../../utils/api";
+import { api } from "../../utils/api";
 import { addFriend } from "../../api/users";
 import EmptyArray from "../ui/alerts/EmptyArray";
 import type { Page } from "../../types/page";
@@ -46,7 +46,7 @@ export default function AddFriendButton() {
       });
     },
     onError: (error) => {
-      toast.error("Failed to add friend: " + error.message, {
+      toast.error("Failed : " + error.message, {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,

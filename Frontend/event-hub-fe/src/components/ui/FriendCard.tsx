@@ -1,10 +1,9 @@
 import type { User } from "../../types/user.tsx";
 import { Star, Trash2 } from "lucide-react";
-import { useUserStore } from "../../store/store";
+import { useDeleteStore, useUserStore } from "../../store/store";
 import { useMutation } from "@tanstack/react-query";
 import { queryClient } from "../../main.tsx";
 import { pinFriend, removeFriend } from "../../api/users.ts";
-import { toast, ToastContainer } from "react-toastify";
 
 interface FriendCardProps extends React.HTMLAttributes<HTMLDivElement> {
   user: User;
@@ -12,6 +11,11 @@ interface FriendCardProps extends React.HTMLAttributes<HTMLDivElement> {
 
 export default function FriendCard({ user, ...props }: FriendCardProps) {
   const { token, userId } = useUserStore();
+  const {
+    setIsOpen,
+    setOnDelete,
+    setDialogQuestion: setDeletedItem,
+  } = useDeleteStore();
 
   const { mutate: pinFriendMutation } = useMutation<User>({
     mutationFn: () => pinFriend(user.id, !user.pinned, userId, token),
@@ -26,23 +30,25 @@ export default function FriendCard({ user, ...props }: FriendCardProps) {
 
   const { mutate: removeFriendMutation } = useMutation({
     mutationFn: () => removeFriend(userId, token, user.id),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["friends"] });
-    },
-    onError: (error) => {
-      toast.error("Failed to remove friend: " + error.message, {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-      });
-    },
   });
 
-  function handleRemoveFriend() {
-    removeFriendMutation();
-  }
+  const onDelete = async () => {
+    return new Promise<void>((resolve, reject) => {
+      removeFriendMutation(undefined, {
+        onSuccess: () => {
+          queryClient.invalidateQueries({
+            queryKey: ["friends"],
+            exact: false,
+          });
+          resolve();
+        },
+        onError: (error) => {
+          console.error("Failed to remove friend:", error);
+          reject(error);
+        },
+      });
+    });
+  };
 
   return (
     <div
@@ -73,12 +79,17 @@ export default function FriendCard({ user, ...props }: FriendCardProps) {
           className="cursor-pointer hover:text-yellow-500"
         />
         <Trash2
-          onClick={handleRemoveFriend}
+          onClick={() => {
+            setIsOpen(true);
+            setOnDelete(onDelete);
+            setDeletedItem(
+              "Are you sure you want to remove friend " + user.nickname + "?"
+            );
+          }}
           size={28}
           className="cursor-pointer hover:text-red-500"
         />
       </div>
-      <ToastContainer />
     </div>
   );
 }

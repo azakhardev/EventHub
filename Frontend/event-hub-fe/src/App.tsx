@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import LoginPage from "./components/pages/LoginPage";
 import { isTokenExpired } from "./utils/utils";
 import { useThemeStore, useUserStore } from "./store/store";
+import DeleteDialog from "./components/ui/dialogs/DeleteDialog";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -44,6 +45,7 @@ function App() {
           </div>
         </div>
       </div>
+      <DeleteDialog description="Are you sure you want to delete" />
     </div>
   );
 }

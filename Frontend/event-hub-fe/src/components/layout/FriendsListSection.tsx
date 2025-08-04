@@ -14,8 +14,6 @@ import type { Page } from "../../types/page.ts";
 import { useInView } from "react-intersection-observer";
 import { getFriends } from "../../api/users.ts";
 
-const api = import.meta.env.VITE_API_URL;
-
 export default function FriendsListSection() {
   const { selectedPage } = usePageStore();
   const { token, userId } = useUserStore();

@@ -71,10 +71,31 @@ export async function removeFriend(
   );
 
   if (!response.ok) {
-    throw new Error("Failed to remove friend");
+    let errorMessage: string;
+    try {
+      const errorData = await response.json();
+      errorMessage =
+        errorData.message || `HTTP error! status: ${response.status}`;
+    } catch {
+      errorMessage = `HTTP error! status: ${response.status}`;
+    }
+    throw new Error(errorMessage);
   }
 
-  return await response.json();
+  if (response.status === 200) {
+    try {
+      const friendId = await response.json();
+      return { success: true, friendId };
+    } catch {
+      return { success: true };
+    }
+  }
+
+  try {
+    return await response.json();
+  } catch {
+    return { success: true };
+  }
 }
 
 export async function getParticipants(

@@ -84,5 +84,4 @@ public class EventsController {
 
         return ResponseEntity.noContent().build();
     }
-
 }
