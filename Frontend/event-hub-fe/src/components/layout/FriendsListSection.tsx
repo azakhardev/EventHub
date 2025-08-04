@@ -13,11 +13,14 @@ import AddFriendButton from "../buttons/AddFriendButton.tsx";
 import type { Page } from "../../types/page.ts";
 import { useInView } from "react-intersection-observer";
 import { getFriends } from "../../api/users.ts";
+import FriendDetailDialog from "../ui/dialogs/FriendDetailDialog.tsx";
 
 export default function FriendsListSection() {
   const { selectedPage } = usePageStore();
   const { token, userId } = useUserStore();
   const [expression, setExpression] = useState("");
+  const [friend, setFriend] = useState<User | undefined>(undefined);
+
   const searchRef = useRef<HTMLInputElement>(null);
   const { ref, inView } = useInView({
     threshold: 0,
@@ -82,7 +85,12 @@ export default function FriendsListSection() {
                     return a.pinned ? -1 : 1;
                   })
                   .map((user: User) => (
-                    <FriendCard key={user.id} user={user} />
+                    <FriendCard
+                      type="following"
+                      key={user.id}
+                      user={user}
+                      onClick={() => setFriend(user)}
+                    />
                   ))}
               <div ref={ref}></div>
             </>
@@ -94,6 +102,7 @@ export default function FriendsListSection() {
           </div>
         </div>
       )}
+      <FriendDetailDialog friend={friend} setFriend={setFriend} />
     </>
   );
 }

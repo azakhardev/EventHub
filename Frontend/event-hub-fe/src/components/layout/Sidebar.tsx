@@ -38,11 +38,6 @@ export default function Sidebar() {
           label="Profile"
         />
         <IconButton
-          icon={<Users size={32} className="text-onSurface" />}
-          onClick={() => setSelectedPage("friends")}
-          label="Friends"
-        />
-        <IconButton
           icon={<Settings size={32} className="text-onSurface" />}
           onClick={handleOpenSettingsDialog}
           label="Settings"

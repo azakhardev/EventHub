@@ -5,9 +5,6 @@ import { Calendar, Clock, Eye, MapPin, Repeat, Share2 } from "lucide-react";
 import Button from "../forms/Button";
 import { useState } from "react";
 import ParticipantsDialog from "./ParticipantsDialog";
-import { useDeleteStore, useUserStore } from "../../../store/store";
-import { useMutation } from "@tanstack/react-query";
-import { deleteEvent } from "../../../api/events";
 
 interface EventDialogProps {
   isOpen: boolean;
@@ -21,25 +18,6 @@ export default function EventDialog({
   event,
 }: EventDialogProps) {
   const [showParticipants, setShowParticipants] = useState(false);
-  const { token } = useUserStore();
-  const { setIsOpen, setOnDelete } = useDeleteStore();
-
-  useMutation({
-    mutationFn: async () => {
-      await deleteEvent(token, event?.id ?? 0);
-    },
-    onSuccess: () => {
-      setIsOpen(false);
-    },
-    onError: () => {
-      alert("Error deleting event");
-    },
-  });
-
-  const onDelete = async () => {
-    await deleteEvent(token, event?.id ?? 0);
-  };
-
   return (
     <>
       <Dialog

@@ -49,7 +49,9 @@ export default function FriendsList() {
               if (a.pinned === b.pinned) return 0;
               return a.pinned ? -1 : 1;
             })
-            .map((user: User) => <FriendCard key={user.id} user={user} />)}
+            .map((user: User) => (
+              <FriendCard type="following" key={user.id} user={user} />
+            ))}
         {isLoading && <SyncLoader />}
         {error && <div>Error: {error.message}</div>}
         {data && data.pageInfo.totalElements === 0 && <EmptyArray />}

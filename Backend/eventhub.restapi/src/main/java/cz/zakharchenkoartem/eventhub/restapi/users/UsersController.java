@@ -98,6 +98,15 @@ public class UsersController {
         return new PaginatedResponse<Event>(pageResult.getContent(), pageInfo);
     }
 
+    @GetMapping("/{id}/foreign-events")
+    public PaginatedResponse<Event> getForeignEvents(@PathVariable Long id, @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "20") int pageSize, @RequestParam(required = false) Boolean important) {
+        Page<Event> pageResult = userService.getForeignEvents(id, page - 1, pageSize, important);
+
+        PageInfo pageInfo = new PageInfo(page, pageSize, pageResult.getTotalPages(), pageResult.getTotalElements());
+
+        return new PaginatedResponse<Event>(pageResult.getContent(), pageInfo);
+    }
+
     @PostMapping("/{id}/add-friend")
     @JsonView(Views.Public.class)
     public ResponseEntity<User> sendFriendRequest(@PathVariable Long id, @RequestBody FriendRequest friendRequest) {
@@ -116,14 +125,18 @@ public class UsersController {
         return ResponseEntity.ok(friendId);
     }
 
-    @GetMapping("/{id}/foreign-events")
-    public PaginatedResponse<Event> getForeignEvents(@PathVariable Long id, @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "20") int pageSize, @RequestParam(required = false) Boolean important) {
-        Page<Event> pageResult = userService.getForeignEvents(id, page - 1, pageSize, important);
+    @DeleteMapping("/{id}/remove-follower/{followerId}")
+    public ResponseEntity<?> removeFollower(@RequestHeader("Authorization") String authHeader, @PathVariable Long id, @PathVariable Long followerId) {
+        Long userId = jwtService.extractUserId(authHeader.replace("Bearer ", ""));
+        if (!Objects.equals(userId, id)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access denied");
+        }
 
-        PageInfo pageInfo = new PageInfo(page, pageSize, pageResult.getTotalPages(), pageResult.getTotalElements());
+        userService.deleteFollower(id, followerId);
 
-        return new PaginatedResponse<Event>(pageResult.getContent(), pageInfo);
+        return ResponseEntity.ok(followerId);
     }
+
 
     @PutMapping("/pin-follower")
     public ResponseEntity<FollowedUser> pinFollower(@RequestBody PinFollowerRequest request) {

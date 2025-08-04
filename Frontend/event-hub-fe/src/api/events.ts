@@ -25,6 +25,31 @@ export async function inviteFriends(
   return response.json();
 }
 
+export async function getForeignEvents(
+  token: string,
+  userId: number,
+  page: number
+) {
+  const response = await fetch(
+    `${api}/users/${userId}/foreign-events?page=${page}&pageSize=10`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(
+      errorData.message || `HTTP error! status: ${response.status}`
+    );
+  }
+
+  return await response.json();
+}
+
 export async function deleteEvent(token: string, eventId: number) {
   const response = await fetch(`${api}/events/${eventId}`, {
     method: "DELETE",

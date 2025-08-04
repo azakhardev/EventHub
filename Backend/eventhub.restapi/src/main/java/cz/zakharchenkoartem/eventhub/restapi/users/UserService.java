@@ -186,4 +186,11 @@ public class UserService {
 
         followersDataSource.delete(followRelation);
     }
+
+    @Transactional
+    public void deleteFollower(Long userId, Long followerId) {
+        FollowRelation followRelation = followersDataSource.findByFollowedUserIdAndFollowerId(userId, followerId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "You do not follow this user"));
+
+        followersDataSource.delete(followRelation);
+    }
 }

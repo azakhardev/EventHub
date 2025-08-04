@@ -98,6 +98,29 @@ export async function removeFriend(
   }
 }
 
+export async function removeFollower(
+  userId: number,
+  token: string,
+  followerId: number
+) {
+  const response = await fetch(
+    `${api}/users/${userId}/remove-follower/${followerId}`,
+    {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error(response.statusText);
+  }
+
+  return { success: true };
+}
+
 export async function getParticipants(
   token: string,
   eventId: number,

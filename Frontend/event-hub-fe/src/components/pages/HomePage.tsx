@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import Button from "../ui/forms/Button";
 import Line from "../ui/Line";
 import { useUserStore } from "../../store/store";
-import EventCard from "../ui/EventCard";
+import EventListCard from "../ui/EventListCard.tsx";
 import type { Event } from "../../types/event.tsx";
 import { SyncLoader } from "../ui/loaders/SyncLoader.tsx";
 import EmptyArray from "../ui/alerts/EmptyArray.tsx";
@@ -48,7 +48,7 @@ export default function HomePage() {
       {data && (
         <div className="flex flex-col gap-2">
           {data.data.map((event) => (
-            <EventCard
+            <EventListCard
               event={event}
               key={event.id}
               onClick={() => setEvent(event)}

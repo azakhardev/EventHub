@@ -45,7 +45,7 @@ function App() {
           </div>
         </div>
       </div>
-      <DeleteDialog description="Are you sure you want to delete" />
+      <DeleteDialog />
     </div>
   );
 }

@@ -29,6 +29,7 @@ export default {
         card: "var(--color-card)",
         dialog: "var(--color-dialog)",
         "text-on-light": "var(--color-text-on-light)",
+        highlight: "var(--color-highlight)",
       },
       fontFamily: {
         hub: ['"Inter"', "sans-serif"],
