@@ -15,6 +15,7 @@ export type Event = {
   linkToken: string;
   recurrence: EventRecurrence;
   recurrenceEndDate?: string;
+  important?: boolean;
 };
 
 export const EventRecurrence = {

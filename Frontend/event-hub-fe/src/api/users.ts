@@ -8,7 +8,7 @@ export async function pinFriend(
   followerId: number,
   token: string
 ) {
-  const response = await fetch(`${api}/users/pin-follower`, {
+  const response = await fetch(`${api}/users/pin-followed`, {
     method: "PUT",
     headers: {
       Authorization: `Bearer ${token}`,
@@ -170,4 +170,57 @@ export async function getFriends(
   }
 
   return response.json();
+}
+
+export async function getFollowers(
+  userId: number,
+  token: string,
+  expression: string,
+  pageParam: number
+) {
+  const response = await fetch(
+    `${api}/users/${userId}/followers?expression=${expression}&page=${pageParam}&pageSize=15`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(
+      errorData.message || `HTTP error! status: ${response.status}`
+    );
+  }
+
+  return response.json();
+}
+
+export async function editProfile(userId: number, token: string, user: User) {
+  const response = await fetch(`${api}/users/${userId}/edit-profile`, {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      username: user.username,
+      nickname: user.nickname,
+      email: user.email,
+      profile_picture_url: user.profilePictureUrl,
+      proffesion: user.proffesion,
+      about: user.about,
+    }),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(
+      errorData.message || `HTTP error! status: ${response.status}`
+    );
+  }
+
+  return { success: true };
 }

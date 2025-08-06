@@ -1,7 +1,7 @@
 import Dialog from "./Dialog";
 import Button from "../forms/Button";
 import { useDeleteStore } from "../../../store/store";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 
 export default function DeleteDialog() {
   const { onDelete, setIsOpen, isOpen, dialogQuestion } = useDeleteStore();
@@ -13,17 +13,11 @@ export default function DeleteDialog() {
         onClick={() => {
           onDelete()
             .then(() => {
-              toast.success("Deleted successfully", {
-                position: "top-right",
-                autoClose: 5000,
-              });
+              toast.success("Deleted successfully");
               setIsOpen(false);
             })
             .catch((error) => {
-              toast.error("Failed : " + error.message, {
-                position: "top-right",
-                autoClose: 5000,
-              });
+              toast.error("Failed : " + error.message);
             });
         }}
       >
@@ -45,7 +39,6 @@ export default function DeleteDialog() {
       >
         <p className="text-2xl text-center py-2 text-text">{dialogQuestion}</p>
       </Dialog>
-      <ToastContainer />
     </>
   );
 }

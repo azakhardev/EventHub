@@ -2,7 +2,7 @@ import { Calendar, Home, LogOut, Settings, User, Users } from "lucide-react";
 import IconButton from "../ui/IconButton";
 import { usePageStore } from "../../store/store";
 import { useState } from "react";
-import ProfileDialog from "../ui/dialogs/ProfileDialog";
+import ProfileDialog from "../ui/dialogs/Profile/ProfileDialog";
 import SettingsDialog from "../ui/dialogs/SettingsDialog";
 
 export default function Sidebar() {

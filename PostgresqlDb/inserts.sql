@@ -1,3 +1,10 @@
+--TRUNCATE TABLES
+TRUNCATE TABLE notifications RESTART IDENTITY CASCADE;
+TRUNCATE TABLE events_participants RESTART IDENTITY CASCADE;
+TRUNCATE TABLE events RESTART IDENTITY CASCADE;
+TRUNCATE TABLE followed_users RESTART IDENTITY CASCADE;
+TRUNCATE TABLE users RESTART IDENTITY CASCADE;
+
 --CREATE USERS
 INSERT INTO users (username, password, nickname, profile_picture_url, proffesion, email, about)
 VALUES 
@@ -55,43 +62,50 @@ VALUES
   (1, 31), (1, 32), (1, 33), (1, 34); --Alice follows everybody
 
   --CREATE EVENTS
-  INSERT INTO events (title, body, owner_id, start_time, end_time, place, category, color, public, recurrence)
+INSERT INTO events (title, body, owner_id, start_time, end_time, place, category, color, public, recurrence, recurrence_end_date)
 VALUES 
-  ('Morning Run in the Park', 'Meet at the main entrance of Stromovka.', 2,
-   '2025-07-26 07:00:00', '2030-07-26 08:00:00', 'Stromovka Park, Prague', 'sports', '#00FF00', TRUE, 'weekly'),
-  ('Cybersecurity Talk', 'An online session for everyone interested in IT security.', 1,
-   '2025-07-27 18:00:00', '2029-07-27 19:30:00', 'Zoom', 'education', '#0000FF', TRUE, 'once'),
-  ('The Beatflowers Concert', 'A famous indie band performing live.', 3,
-   '2025-08-01 20:00:00', '2028-08-01 23:00:00', 'Lucerna Music Bar, Prague', 'music', '#FF00FF', TRUE, 'once'),
-   ('Community Meetup 6', 'Description for event 6.', 1, '2032-08-05 10:00:00', '2032-08-05 12:00:00', 'Ostrava', 'education', '#33FF57', TRUE, 'once'),
-('Community Meetup 7', 'Description for event 7.', 1, '2032-08-05 10:00:00', '2032-08-05 12:00:00', 'Ostrava', 'education', '#33FF57', TRUE, 'once'),
-('Community Meetup 8', 'Description for event 8.', 1, '2032-08-05 10:00:00', '2032-08-05 12:00:00', 'Ostrava', 'education', '#33FF57', TRUE, 'once'),
-('Community Meetup 9', 'Description for event 9.', 1, '2032-08-05 10:00:00', '2032-08-05 12:00:00', 'Ostrava', 'education', '#33FF57', TRUE, 'once'),
-('Community Meetup 10', 'Description for event 10.', 1, '2032-08-05 10:00:00', '2032-08-05 12:00:00', 'Ostrava', 'education', '#33FF57', TRUE, 'once'),
-('Community Meetup 11', 'Description for event 11.', 1, '2032-08-05 10:00:00', '2032-08-05 12:00:00', 'Ostrava', 'education', '#33FF57', TRUE, 'once'),
-('Community Meetup 12', 'Description for event 12.', 1, '2032-08-05 10:00:00', '2032-08-05 12:00:00', 'Ostrava', 'education', '#33FF57', TRUE, 'once'),
-('Community Meetup 13', 'Description for event 13.', 1, '2032-08-05 10:00:00', '2032-08-05 12:00:00', 'Ostrava', 'education', '#33FF57', TRUE, 'once'),
-('Community Meetup 14', 'Description for event 14.', 1, '2032-08-05 10:00:00', '2032-08-05 12:00:00', 'Ostrava', 'education', '#33FF57', TRUE, 'once'),
-('Community Meetup 15', 'Description for event 15.', 1, '2032-08-05 10:00:00', '2032-08-05 12:00:00', 'Ostrava', 'education', '#33FF57', TRUE, 'once'),
-('Community Meetup 16', 'Description for event 16.', 1, '2032-08-05 10:00:00', '2032-08-05 12:00:00', 'Ostrava', 'education', '#33FF57', TRUE, 'once'),
-('Community Meetup 17', 'Description for event 17.', 1, '2032-08-05 10:00:00', '2032-08-05 12:00:00', 'Ostrava', 'education', '#33FF57', TRUE, 'once'),
-('Community Meetup 18', 'Description for event 18.', 1, '2032-08-05 10:00:00', '2032-08-05 12:00:00', 'Ostrava', 'education', '#33FF57', TRUE, 'once'),
-('Community Meetup 19', 'Description for event 19.', 1, '2032-08-05 10:00:00', '2032-08-05 12:00:00', 'Ostrava', 'education', '#33FF57', TRUE, 'once'),
-('Community Meetup 20', 'Description for event 20.', 1, '2032-08-05 10:00:00', '2032-08-05 12:00:00', 'Ostrava', 'education', '#33FF57', TRUE, 'once'),
-('Community Meetup 21', 'Description for event 21.', 1, '2032-08-05 10:00:00', '2032-08-05 12:00:00', 'Ostrava', 'education', '#33FF57', TRUE, 'once'),
-('Community Meetup 22', 'Description for event 22.', 1, '2032-08-05 10:00:00', '2032-08-05 12:00:00', 'Ostrava', 'education', '#33FF57', TRUE, 'once'),
-('Community Meetup 23', 'Description for event 23.', 1, '2032-08-05 10:00:00', '2032-08-05 12:00:00', 'Ostrava', 'education', '#33FF57', TRUE, 'once'),
-('Community Meetup 24', 'Description for event 24.', 1, '2032-08-05 10:00:00', '2032-08-05 12:00:00', 'Ostrava', 'education', '#33FF57', TRUE, 'once'),
-('Community Meetup 25', 'Description for event 25.', 1, '2032-08-05 10:00:00', '2032-08-05 12:00:00', 'Ostrava', 'education', '#33FF57', TRUE, 'once'),
-('Community Meetup 26', 'Description for event 26.', 1, '2032-08-05 10:00:00', '2032-08-05 12:00:00', 'Ostrava', 'education', '#33FF57', TRUE, 'once'),
-('Community Meetup 27', 'Description for event 27.', 1, '2032-08-05 10:00:00', '2032-08-05 12:00:00', 'Ostrava', 'education', '#33FF57', TRUE, 'once'),
-('Community Meetup 28', 'Description for event 28.', 1, '2032-08-05 10:00:00', '2032-08-05 12:00:00', 'Ostrava', 'education', '#33FF57', TRUE, 'once'),
-('Community Meetup 29', 'Description for event 29.', 1, '2032-08-05 10:00:00', '2032-08-05 12:00:00', 'Ostrava', 'education', '#33FF57', TRUE, 'once'),
-('Community Meetup 30', 'Description for event 30.', 1, '2032-08-05 10:00:00', '2032-08-05 12:00:00', 'Ostrava', 'education', '#33FF57', TRUE, 'once'),
-('Community Meetup 31', 'Description for event 31.', 1, '2032-08-05 10:00:00', '2032-08-05 12:00:00', 'Ostrava', 'education', '#33FF57', TRUE, 'once'),
-('Community Meetup 32', 'Description for event 32.', 1, '2032-08-05 10:00:00', '2032-08-05 12:00:00', 'Ostrava', 'education', '#33FF57', TRUE, 'once'),
-('Community Meetup 33', 'Description for event 33.', 1, '2032-08-05 10:00:00', '2032-08-05 12:00:00', 'Ostrava', 'education', '#33FF57', TRUE, 'once'),
-('Community Meetup 34', 'Description for event 34.', 1, '2032-08-05 10:00:00', '2032-08-05 12:00:00', 'Ostrava', 'education', '#33FF57', TRUE, 'once');
+-- Události různorodé, většinou user 1
+('Morning Run in the Park', 'Meet at the main entrance of Stromovka.', 2,
+ '2025-07-26 07:00:00', '2025-07-26 08:00:00', 'Stromovka Park, Prague', 'sports', '#00FF00', TRUE, 'weekly', '2026-07-26'),
+('Cybersecurity Talk', 'An online session for everyone interested in IT security.', 1,
+ '2025-07-27 18:00:00', '2025-07-27 19:30:00', 'Zoom', 'education', '#0000FF', TRUE, 'once', NULL),
+('The Beatflowers Concert', 'A famous indie band performing live.', 1,
+ '2025-08-01 20:00:00', '2025-08-01 23:00:00', 'Lucerna Music Bar, Prague', 'music', '#FF00FF', FALSE, 'once', NULL),
+('Weekly Coding Meetup', 'Regular coding session with snacks.', 1,
+ '2025-08-03 17:00:00', '2025-08-03 20:00:00', 'Campus Library, Prague', 'education', '#FFA500', TRUE, 'weekly', '2026-08-03'),
+('Startup Pitch Night', 'Local startups pitch to investors.', 1,
+ '2025-08-10 19:00:00', '2025-08-10 21:00:00', 'Impact Hub, Prague', 'business', '#FF6347', TRUE, 'once', NULL),
+-- Community Meetups 6–29 (vše user 1)
+('Community Meetup 6', 'Description for event 6.', 1, '2025-09-01 10:00:00', '2025-09-01 12:00:00', 'Brno', 'education', '#33FF57', TRUE, 'once', NULL),
+('Community Meetup 7', 'Description for event 7.', 1, '2025-09-08 10:00:00', '2025-09-08 12:00:00', 'Brno', 'education', '#33CC33', FALSE, 'once', NULL),
+('Community Meetup 8', 'Description for event 8.', 1, '2025-09-15 14:00:00', '2025-09-15 16:00:00', 'Ostrava', 'education', '#339933', TRUE, 'once', NULL),
+('Community Meetup 9', 'Description for event 9.', 1, '2025-09-22 14:00:00', '2025-09-22 16:00:00', 'Ostrava', 'education', '#33FFAA', FALSE, 'once', NULL),
+('Community Meetup 10', 'Description for event 10.', 1, '2025-09-29 14:00:00', '2025-09-29 16:00:00', 'Ostrava', 'education', '#33FFDD', TRUE, 'monthly', '2026-09-29'),
+('Community Meetup 11', 'Description for event 11.', 1, '2025-10-06 10:00:00', '2025-10-06 12:00:00', 'Olomouc', 'education', '#77FF77', TRUE, 'once', NULL),
+('Community Meetup 12', 'Description for event 12.', 1, '2025-10-13 10:00:00', '2025-10-13 12:00:00', 'Olomouc', 'education', '#55FF88', TRUE, 'once', NULL),
+('Community Meetup 13', 'Description for event 13.', 1, '2025-10-20 10:00:00', '2025-10-20 12:00:00', 'Olomouc', 'education', '#44DD88', FALSE, 'once', NULL),
+('Community Meetup 14', 'Description for event 14.', 1, '2025-10-27 10:00:00', '2025-10-27 12:00:00', 'Zlín', 'education', '#33AA88', TRUE, 'once', NULL),
+('Community Meetup 15', 'Description for event 15.', 1, '2025-11-03 10:00:00', '2025-11-03 12:00:00', 'Zlín', 'education', '#33AA99', FALSE, 'once', NULL),
+('Community Meetup 16', 'Description for event 16.', 1, '2025-11-10 10:00:00', '2025-11-10 12:00:00', 'Zlín', 'education', '#33AAAA', TRUE, 'once', NULL),
+('Community Meetup 17', 'Description for event 17.', 1, '2025-11-17 10:00:00', '2025-11-17 12:00:00', 'Plzeň', 'education', '#33AABB', TRUE, 'once', NULL),
+('Community Meetup 18', 'Description for event 18.', 1, '2025-11-24 10:00:00', '2025-11-24 12:00:00', 'Plzeň', 'education', '#33AACC', FALSE, 'once', NULL),
+('Community Meetup 19', 'Description for event 19.', 1, '2025-12-01 10:00:00', '2025-12-01 12:00:00', 'Plzeň', 'education', '#33AADD', TRUE, 'once', NULL),
+('Community Meetup 20', 'Description for event 20.', 1, '2025-12-08 10:00:00', '2025-12-08 12:00:00', 'Praha', 'education', '#33AAEE', TRUE, 'once', NULL),
+('Community Meetup 21', 'Description for event 21.', 1, '2025-12-15 10:00:00', '2025-12-15 12:00:00', 'Praha', 'education', '#33AAFF', FALSE, 'once', NULL),
+('Community Meetup 22', 'Description for event 22.', 1, '2025-12-22 10:00:00', '2025-12-22 12:00:00', 'Praha', 'education', '#3399FF', TRUE, 'once', NULL),
+('Community Meetup 23', 'Description for event 23.', 1, '2025-12-29 10:00:00', '2025-12-29 12:00:00', 'Praha', 'education', '#3388FF', TRUE, 'once', NULL),
+('Community Meetup 24', 'Description for event 24.', 1, '2026-01-05 10:00:00', '2026-01-05 12:00:00', 'Praha', 'education', '#3377FF', TRUE, 'once', NULL),
+('Community Meetup 25', 'Description for event 25.', 1, '2026-01-12 10:00:00', '2026-01-12 12:00:00', 'Praha', 'education', '#3366FF', FALSE, 'once', NULL),
+('Community Meetup 26', 'Description for event 26.', 1, '2026-01-19 10:00:00', '2026-01-19 12:00:00', 'Praha', 'education', '#3355FF', TRUE, 'once', NULL),
+('Community Meetup 27', 'Description for event 27.', 1, '2026-01-26 10:00:00', '2026-01-26 12:00:00', 'Praha', 'education', '#3344FF', TRUE, 'once', NULL),
+('Community Meetup 28', 'Description for event 28.', 1, '2026-02-02 10:00:00', '2026-02-02 12:00:00', 'Praha', 'education', '#3333FF', FALSE, 'once', NULL),
+('Community Meetup 29', 'Description for event 29.', 1, '2026-02-09 10:00:00', '2026-02-09 12:00:00', 'Praha', 'education', '#3322FF', TRUE, 'once', NULL),
+-- Posledních 5 pro user 2 (jak chceš)
+('Community Meetup 30', 'Description for event 30.', 2, '2026-02-16 10:00:00', '2026-02-16 12:00:00', 'Brno', 'education', '#3311FF', TRUE, 'once', NULL),
+('Community Meetup 31', 'Description for event 31.', 2, '2026-02-23 10:00:00', '2026-02-23 12:00:00', 'Brno', 'education', '#3300FF', FALSE, 'once', NULL),
+('Community Meetup 32', 'Description for event 32.', 2, '2026-03-01 10:00:00', '2026-03-01 12:00:00', 'Brno', 'education', '#2299FF', TRUE, 'once', NULL),
+('Community Meetup 33', 'Description for event 33.', 2, '2026-03-08 10:00:00', '2026-03-08 12:00:00', 'Brno', 'education', '#11AAFF', TRUE, 'weekly', '2026-06-08'),
+('Community Meetup 34', 'Description for event 34.', 2, '2026-03-15 10:00:00', '2026-03-15 12:00:00', 'Brno', 'education', '#00BBFF', FALSE, 'once', NULL);
 
 -- ADD USER EVENTS
 INSERT INTO events_participants (user_id, event_id, accepted, important)
@@ -106,35 +120,35 @@ VALUES
 
   (1, 3, FALSE, FALSE),  -- Alice is invited to the concert
   (2, 3, FALSE, FALSE),  -- Bob is invited as well
-  (3, 3, TRUE, TRUE),  -- Carol is participant of her own event
+  (3, 3, TRUE, FALSE),  -- Carol is participant of her own event
   (1, 4, TRUE, TRUE),
   (1, 5, TRUE, FALSE),
-  (1, 6, TRUE, TRUE),  
+  (1, 6, TRUE, FALSE),  
   (1, 7, TRUE, FALSE),
-  (1, 8, TRUE, TRUE),
+  (1, 8, TRUE, FALSE),
   (1, 9, TRUE, FALSE),
-  (1, 10, TRUE, TRUE),
-  (1, 11, TRUE, TRUE),
-  (1, 12, TRUE, TRUE),
+  (1, 10, TRUE, FALSE),
+  (1, 11, TRUE, FALSE),
+  (1, 12, TRUE, FALSE),
   (1, 13, TRUE, FALSE),
-  (1, 14, TRUE, TRUE),
-  (1, 15, TRUE, TRUE),
-  (1, 16, TRUE, TRUE),
+  (1, 14, TRUE, FALSE),
+  (1, 15, TRUE, FALSE),
+  (1, 16, TRUE, FALSE),
   (1, 17, TRUE, FALSE),
-  (1, 18, TRUE, TRUE),
-  (1, 19, TRUE, TRUE),
+  (1, 18, TRUE, FALSE),
+  (1, 19, TRUE, FALSE),
   (1, 20, TRUE, FALSE),
-  (1, 21, TRUE, TRUE),
+  (1, 21, TRUE, FALSE),
   (1, 22, TRUE, TRUE),
   (1, 23, TRUE, FALSE),
   (1, 24, TRUE, TRUE),
   (1, 25, TRUE, TRUE),
   (1, 26, TRUE, FALSE),
-  (1, 27, TRUE, TRUE),
+  (1, 27, TRUE, FALSE),
   (1, 28, TRUE, FALSE),
-  (1, 29, TRUE, TRUE),
+  (1, 29, TRUE, FALSE),
   (1, 30, TRUE, FALSE),
-  (1, 31, TRUE, TRUE),
+  (1, 31, TRUE, FALSE),
   (1, 32, TRUE, FALSE), --Alice has 30 events
   (6, 2, TRUE, FALSE),
   (7, 2, FALSE, TRUE),

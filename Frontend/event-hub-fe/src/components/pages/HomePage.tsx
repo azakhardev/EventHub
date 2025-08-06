@@ -18,9 +18,7 @@ export default function HomePage() {
 
   const [event, setEvent] = useState<Event | null>(null);
 
-  console.log(event);
-
-  const { data, isLoading, error } = useQuery<Page<Event>>({
+  const eventsQuery = useQuery<Page<Event>>({
     queryKey: ["events", userId],
     queryFn: () =>
       fetch(`${api}/users/${userId}/my-events?page=1&pageSize=5`, {
@@ -34,8 +32,39 @@ export default function HomePage() {
     refetchOnMount: true,
   });
 
+  const importantEventsQuery = useQuery<Page<Event>>({
+    queryKey: ["events", "important", userId],
+    queryFn: () =>
+      fetch(
+        `${api}/users/${userId}/my-events?page=1&pageSize=5&important=true`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      ).then((res) => res.json()),
+    enabled: !!token && !!userId,
+    staleTime: 0,
+    refetchOnMount: true,
+  });
+
+  const ownEventsQuery = useQuery<Page<Event>>({
+    queryKey: ["events", "own", userId],
+    queryFn: () =>
+      fetch(`${api}/users/${userId}/my-events?page=1&pageSize=5&owned=true`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }).then((res) => res.json()),
+    enabled: !!token && !!userId,
+    staleTime: 0,
+    refetchOnMount: true,
+  });
+
   return (
-    <div className="flex flex-col w-full">
+    <div className="flex flex-col w-full py-4">
       <div className="flex flex-row items-center justify-between">
         <h3 className="text-text-on-light">Upcoming Events</h3>
         <div className="flex flex-row items-center gap-2">
@@ -43,11 +72,11 @@ export default function HomePage() {
         </div>
       </div>
       <Line />
-      {isLoading && <SyncLoader />}
-      {error && <ErrorAlert error={error.message} />}
-      {data && (
+      {eventsQuery.isLoading && <SyncLoader />}
+      {eventsQuery.error && <ErrorAlert error={eventsQuery.error.message} />}
+      {eventsQuery.data && (
         <div className="flex flex-col gap-2">
-          {data.data.map((event) => (
+          {eventsQuery.data.data.map((event) => (
             <EventListCard
               event={event}
               key={event.id}
@@ -56,7 +85,51 @@ export default function HomePage() {
           ))}
         </div>
       )}
-      {data && data.pageInfo.totalElements === 0 && <EmptyArray />}
+      {eventsQuery.data && eventsQuery.data.pageInfo.totalElements === 0 && (
+        <EmptyArray message="You don't participate in any events yet" />
+      )}
+      <h3 className="text-text-on-light mt-4">ImportantEvents</h3>
+      <Line />
+      {importantEventsQuery.isLoading && <SyncLoader />}
+      {importantEventsQuery.error && (
+        <ErrorAlert error={importantEventsQuery.error.message} />
+      )}
+      {importantEventsQuery.data && (
+        <div className="flex flex-col gap-2">
+          {importantEventsQuery.data.data.map((event) => (
+            <EventListCard
+              event={event}
+              key={event.id}
+              onClick={() => setEvent(event)}
+            />
+          ))}
+        </div>
+      )}
+      {importantEventsQuery.data &&
+        importantEventsQuery.data.pageInfo.totalElements === 0 && (
+          <EmptyArray message="You don't have any important events yet" />
+        )}
+      <h3 className="text-text-on-light mt-4">My Events</h3>
+      <Line />
+      {ownEventsQuery.isLoading && <SyncLoader />}
+      {ownEventsQuery.error && (
+        <ErrorAlert error={ownEventsQuery.error.message} />
+      )}
+      {ownEventsQuery.data && (
+        <div className="flex flex-col gap-2">
+          {ownEventsQuery.data.data.map((event) => (
+            <EventListCard
+              event={event}
+              key={event.id}
+              onClick={() => setEvent(event)}
+            />
+          ))}
+        </div>
+      )}
+      {ownEventsQuery.data &&
+        ownEventsQuery.data.pageInfo.totalElements === 0 && (
+          <EmptyArray message="Create your first event" />
+        )}
       <EventDialog isOpen={event !== null} setEvent={setEvent} event={event} />
     </div>
   );

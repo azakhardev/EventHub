@@ -5,7 +5,7 @@ import { useRef } from "react";
 import { useUserStore } from "../../store/store";
 import { useState } from "react";
 import type { User } from "../../types/user";
-import FriendCard from "../ui/FriendCard";
+import UserCard from "../ui/UeserCard";
 import { SyncLoader } from "../ui/loaders/SyncLoader";
 import EmptyArray from "../ui/alerts/EmptyArray";
 import type { Page } from "../../types/page";
@@ -50,7 +50,7 @@ export default function FriendsList() {
               return a.pinned ? -1 : 1;
             })
             .map((user: User) => (
-              <FriendCard type="following" key={user.id} user={user} />
+              <UserCard type="following" key={user.id} user={user} />
             ))}
         {isLoading && <SyncLoader />}
         {error && <div>Error: {error.message}</div>}

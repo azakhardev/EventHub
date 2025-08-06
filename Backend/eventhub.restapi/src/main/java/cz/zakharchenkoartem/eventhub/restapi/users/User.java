@@ -5,6 +5,9 @@ import com.fasterxml.jackson.annotation.JsonView;
 import cz.zakharchenkoartem.eventhub.restapi.dto.Views;
 import cz.zakharchenkoartem.eventhub.restapi.events.Event;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import org.hibernate.validator.constraints.Length;
 
 import java.util.List;
 import java.util.Objects;
@@ -19,12 +22,15 @@ public class User {
     private Long id;
 
     @JsonView(Views.Public.class)
+    @NotBlank
     private String username;
 
     @JsonIgnore
+    @Length(min = 4, max = 32)
     private String password;
 
     @JsonView(Views.Public.class)
+    @NotBlank
     private String nickname;
 
     @JsonView(Views.Public.class)
@@ -34,6 +40,7 @@ public class User {
     private String proffesion;
 
     @JsonView(Views.Public.class)
+    @Email
     private String email;
 
     @JsonView(Views.Public.class)

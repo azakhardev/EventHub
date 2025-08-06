@@ -1,6 +1,6 @@
-import type { User } from "../../types/user.tsx";
+import type { User } from "../../types/user.ts";
 import { Star, Trash2 } from "lucide-react";
-import { useDeleteStore, useUserStore } from "../../store/store";
+import { useDeleteStore, useUserStore } from "../../store/store.tsx";
 import { useMutation } from "@tanstack/react-query";
 import { queryClient } from "../../main.tsx";
 import { pinFriend, removeFollower, removeFriend } from "../../api/users.ts";
@@ -11,7 +11,7 @@ interface FriendCardProps extends React.HTMLAttributes<HTMLDivElement> {
   onClick?: () => void;
 }
 
-export default function FriendCard({
+export default function UserCard({
   user,
   type,
   onClick,

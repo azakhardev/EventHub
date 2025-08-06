@@ -6,7 +6,7 @@ import Button from "../ui/forms/Button";
 import { useInfiniteQuery, useMutation } from "@tanstack/react-query";
 import { useUserStore } from "../../store/store";
 import type { User } from "../../types/user";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import { SyncLoader } from "../ui/loaders/SyncLoader";
 import { api } from "../../utils/api";
 import { addFriend } from "../../api/users";
@@ -37,22 +37,10 @@ export default function AddFriendButton() {
     onSuccess: () => {
       setSelectedUser(null);
       setIsOpen(false);
-      toast.success("Friend added successfully", {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-      });
+      toast.success("Friend added successfully");
     },
     onError: (error) => {
-      toast.error("Failed : " + error.message, {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-      });
+      toast.error("Failed : " + error.message);
     },
   });
 
@@ -178,7 +166,6 @@ export default function AddFriendButton() {
           />
         )}
       </Dialog>
-      <ToastContainer />
     </>
   );
 }

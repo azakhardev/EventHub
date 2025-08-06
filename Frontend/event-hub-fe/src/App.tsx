@@ -7,6 +7,7 @@ import LoginPage from "./components/pages/LoginPage";
 import { isTokenExpired } from "./utils/utils";
 import { useThemeStore, useUserStore } from "./store/store";
 import DeleteDialog from "./components/ui/dialogs/DeleteDialog";
+import { ToastContainer } from "react-toastify";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -46,6 +47,14 @@ function App() {
         </div>
       </div>
       <DeleteDialog />
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick={true}
+        pauseOnHover={true}
+      />
     </div>
   );
 }

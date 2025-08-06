@@ -11,7 +11,7 @@ interface EventListCardProps extends React.HTMLAttributes<HTMLDivElement> {
   event: Event;
 }
 
-export default function EventListCard({ event, ...props }: EventListCardProps) {
+export default function EventListCard({ event, onClick }: EventListCardProps) {
   const { token, userId } = useUserStore();
   const {
     setIsOpen,
@@ -43,7 +43,7 @@ export default function EventListCard({ event, ...props }: EventListCardProps) {
 
   return (
     <div className="flex flex-row items-center w-full">
-      <EventCard event={event} />
+      <EventCard event={event} onClick={onClick} />
       <div className="flex-1 flex justify-around px-4">
         {event.owner.id === userId && (
           <>

@@ -64,6 +64,7 @@ public class Event {
     @Enumerated(EnumType.STRING)
     private RecurrenceType recurrence = RecurrenceType.once;
 
+    @Column(name = "recurrence_end_date" )
     private Date recurrenceEndDate;
 
     public enum RecurrenceType {
@@ -197,6 +198,14 @@ public class Event {
 
     public void setRecurrence(RecurrenceType recurrence) {
         this.recurrence = recurrence;
+    }
+
+    public Date getRecurrenceEndDate() {
+        return recurrenceEndDate;
+    }
+
+    public void setRecurrenceEndDate(Date recurrenceEndDate) {
+        this.recurrenceEndDate = recurrenceEndDate;
     }
 
     @Override

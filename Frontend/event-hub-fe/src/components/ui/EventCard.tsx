@@ -14,7 +14,7 @@ export default function EventCard({ event, ...props }: EventCardProps) {
   return (
     <div
       className={combineString([
-        "flex-[4] cursor-pointer relative rounded-lg border-2 flex flex-row bg-card pr-4 overflow-hidden hover:shadow-b-md hover:scale-[1.008] whitespace-nowrap text-ellipsis",
+        "flex-[4] cursor-pointer relative rounded-lg border-2 flex flex-row bg-card pr-4 overflow-hidden hover:shadow-b-md hover:shadow-md whitespace-nowrap text-ellipsis",
         props.className,
       ])}
       {...props}
@@ -29,7 +29,10 @@ export default function EventCard({ event, ...props }: EventCardProps) {
       ></div>
       <div className="flex flex-col gap-2 w-full pr-[10%] py-2">
         <div className="flex flex-row items-center justify-between">
-          <h4 className="text-text-on-light">{event.title}</h4>
+          <h4 className="text-text-on-light">
+            {event.important && "❗"}
+            {event.title}
+          </h4>
           <div>{startTime.toLocaleDateString()}</div>
         </div>
         <hr />
@@ -61,7 +64,7 @@ export default function EventCard({ event, ...props }: EventCardProps) {
         </div>
         <div className="flex flex-row items-center justify-end">
           <div className="relative top-[-15px] font-bold right-[-10%]">
-            {event.owner.username}
+            {event.owner.nickname}
           </div>
         </div>
       </div>

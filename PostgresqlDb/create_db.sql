@@ -39,7 +39,7 @@ CREATE TABLE events (
     public boolean DEFAULT TRUE,
     link_token UUID DEFAULT gen_random_uuid(),
     recurrence recurrence_type DEFAULT 'once',
-    recurrenceEndDate DATE DEFAULT NULL,
+    recurrence_end_date DATE DEFAULT NULL,
     FOREIGN KEY (owner_id) REFERENCES users(id) ON DELETE CASCADE
 );
 

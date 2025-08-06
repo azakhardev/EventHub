@@ -17,4 +17,9 @@ public interface FollowRelationsDataSource extends JpaRepository<FollowRelation,
     Page<FollowRelation> findByFollowerAndUsernameLike(@Param("owner") User owner, @Param("expression") String expression, Pageable pageable);
 
     Optional<FollowRelation> findByFollowedUserIdAndFollowerId(Long followedUserId, Long followerId);
+
+    Page<FollowRelation> findAllByFollowedUser(User user, Pageable pageable);
+
+    @Query("SELECT fr FROM FollowRelation fr WHERE fr.followedUser = :owner AND LOWER(fr.follower.username) LIKE LOWER(CONCAT('%', :expression, '%'))")
+    Page<FollowRelation> findByFollowedUserAndUsernameLike(@Param("owner") User owner, @Param("expression") String expression, Pageable pageable);
 }

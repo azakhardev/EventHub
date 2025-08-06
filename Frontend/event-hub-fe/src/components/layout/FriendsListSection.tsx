@@ -1,4 +1,4 @@
-import FriendCard from "../ui/FriendCard";
+import UserCard from "../ui/UeserCard.tsx";
 import { usePageStore, useUserStore } from "../../store/store";
 import { Search } from "lucide-react";
 import Input from "../ui/forms/Input";
@@ -85,7 +85,7 @@ export default function FriendsListSection() {
                     return a.pinned ? -1 : 1;
                   })
                   .map((user: User) => (
-                    <FriendCard
+                    <UserCard
                       type="following"
                       key={user.id}
                       user={user}

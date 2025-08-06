@@ -1,6 +1,7 @@
 package cz.zakharchenkoartem.eventhub.restapi.users;
 
 import cz.zakharchenkoartem.eventhub.restapi.events.Event;
+import cz.zakharchenkoartem.eventhub.restapi.events.dto.EventDto;
 import cz.zakharchenkoartem.eventhub.restapi.events_participants.EventParticipantRelation;
 import cz.zakharchenkoartem.eventhub.restapi.events_participants.EventsParticipantsDataSource;
 import cz.zakharchenkoartem.eventhub.restapi.follows.FollowRelation;
@@ -10,14 +11,17 @@ import cz.zakharchenkoartem.eventhub.restapi.follows.dto.PinFollowerRequest;
 import cz.zakharchenkoartem.eventhub.restapi.notifications.Notification;
 import cz.zakharchenkoartem.eventhub.restapi.notifications.NotificationsDataSource;
 
+import cz.zakharchenkoartem.eventhub.restapi.users.dto.ChangePassword;
 import cz.zakharchenkoartem.eventhub.restapi.users.dto.FollowedUser;
 import cz.zakharchenkoartem.eventhub.restapi.users.dto.FriendRequest;
+import cz.zakharchenkoartem.eventhub.restapi.users.dto.UserEditProfile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
@@ -33,18 +37,20 @@ public class UserService {
     private final NotificationsDataSource notificationsDataSource;
     private final EventsParticipantsDataSource eventsParticipantsDataSource;
     private final FollowRelationsDataSource followRelationsDataSource;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
     public UserService(
             UsersDataSource usersDataSource,
             FollowRelationsDataSource followersDataSource,
             NotificationsDataSource notificationsDataSource,
-            EventsParticipantsDataSource eventsParticipantsDataSource, FollowRelationsDataSource followRelationsDataSource) {
+            EventsParticipantsDataSource eventsParticipantsDataSource, FollowRelationsDataSource followRelationsDataSource, PasswordEncoder passwordEncoder) {
         this.usersDataSource = usersDataSource;
         this.followersDataSource = followersDataSource;
         this.notificationsDataSource = notificationsDataSource;
         this.eventsParticipantsDataSource = eventsParticipantsDataSource;
         this.followRelationsDataSource = followRelationsDataSource;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Transactional(readOnly = true)
@@ -87,6 +93,27 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
+    public Page<FollowedUser> getFollowers(Long id, String expression, int page, int pageSize) {
+        User user = getUser(id);
+        Page<FollowRelation> followRelations;
+
+        Pageable pageable = PageRequest.of(page, pageSize);
+
+        if (expression != null && !expression.isBlank()) {
+            followRelations = followersDataSource.findByFollowedUserAndUsernameLike(user, expression, pageable);
+        } else {
+            followRelations = followersDataSource.findAllByFollowedUser(user, pageable);
+        }
+
+        List<FollowedUser> followedUsers = new ArrayList<>();
+        for (FollowRelation relation : followRelations) {
+            followedUsers.add(new FollowedUser(relation.getFollower(), relation.isFavorite()));
+        }
+
+        return new PageImpl<>(followedUsers, pageable, followRelations.getTotalElements());
+    }
+
+    @Transactional(readOnly = true)
     public Page<Notification> getNotifications(Long id, int size, int pageSize) {
         User user = getUser(id);
 
@@ -96,38 +123,38 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public Page<Event> getMyEvents(Long id, int page, int pageSize, Boolean important, Boolean owned) {
+    public Page<EventDto> getMyEvents(Long id, int page, int pageSize, Boolean important, Boolean owned) {
         User user = getUser(id);
 
         Pageable pageable = PageRequest.of(page, pageSize);
 
         Page<EventParticipantRelation> participantRelations = eventsParticipantsDataSource.findByUserOrdered(user, important, owned, pageable);
 
-        List<Event> events = new ArrayList<>();
+        List<EventDto> events = new ArrayList<>();
 
         for (EventParticipantRelation relation : participantRelations) {
-            events.add(relation.getEvent());
+            events.add(new EventDto(relation.getEvent(), relation.isImportant()));
         }
 
-        return new PageImpl<Event>(events, pageable, participantRelations.getTotalElements());
+        return new PageImpl<EventDto>(events, pageable, participantRelations.getTotalElements());
     }
 
     @Transactional(readOnly = true)
-    public Page<Event> getForeignEvents(Long id, int page, int pageSize, Boolean important) {
+    public Page<EventDto> getForeignEvents(Long id, int page, int pageSize, Boolean important) {
         User user = getUser(id);
 
         Pageable pageable = PageRequest.of(page, pageSize);
 
         Page<EventParticipantRelation> participantRelations = eventsParticipantsDataSource.findByUserOrdered(user, important, null, pageable);
 
-        List<Event> events = new ArrayList<>();
+        List<EventDto> events = new ArrayList<>();
         for (EventParticipantRelation relation : participantRelations) {
             if (relation.getEvent().isPublic()) {
-                events.add(relation.getEvent());
+                events.add( new EventDto(relation.getEvent(), relation.isImportant()) );
             }
         }
 
-        return new PageImpl<Event>(events, pageable, participantRelations.getTotalElements());
+        return new PageImpl<EventDto>(events, pageable, participantRelations.getTotalElements());
     }
 
     @Transactional
@@ -192,5 +219,31 @@ public class UserService {
         FollowRelation followRelation = followersDataSource.findByFollowedUserIdAndFollowerId(userId, followerId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "You do not follow this user"));
 
         followersDataSource.delete(followRelation);
+    }
+
+    @Transactional
+    public User editProfile(Long userId, UserEditProfile user) {
+        User dbUser = usersDataSource.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+
+        dbUser.setUsername(user.getUsername());
+        dbUser.setEmail(user.getEmail());
+        dbUser.setNickname(user.getNickname());
+        dbUser.setAbout(user.getAbout());
+        dbUser.setNickname(user.getNickname());
+        dbUser.setProffesion(user.getProffesion());
+        dbUser.setProfile_picture_url(user.getProfile_picture_url());
+
+        return dbUser;
+    }
+
+    @Transactional
+    public void changePassword(Long userId, ChangePassword changePassword) {
+        User user = getUser(userId);
+
+        if (!passwordEncoder.matches(changePassword.getCurrentPassword(), user.getPassword())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Current password is incorrect");
+        }
+
+        user.setPassword(passwordEncoder.encode(changePassword.getNewPassword()));
     }
 }

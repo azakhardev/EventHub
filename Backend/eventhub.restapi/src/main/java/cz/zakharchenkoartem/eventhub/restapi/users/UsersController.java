@@ -5,12 +5,16 @@ import cz.zakharchenkoartem.eventhub.restapi.dto.PageInfo;
 import cz.zakharchenkoartem.eventhub.restapi.dto.PaginatedResponse;
 import cz.zakharchenkoartem.eventhub.restapi.dto.Views;
 import cz.zakharchenkoartem.eventhub.restapi.events.Event;
+import cz.zakharchenkoartem.eventhub.restapi.events.dto.EventDto;
 import cz.zakharchenkoartem.eventhub.restapi.follows.FollowRelation;
 import cz.zakharchenkoartem.eventhub.restapi.follows.dto.PinFollowerRequest;
 import cz.zakharchenkoartem.eventhub.restapi.login.JwtService;
 import cz.zakharchenkoartem.eventhub.restapi.notifications.Notification;
+import cz.zakharchenkoartem.eventhub.restapi.users.dto.ChangePassword;
 import cz.zakharchenkoartem.eventhub.restapi.users.dto.FollowedUser;
 import cz.zakharchenkoartem.eventhub.restapi.users.dto.FriendRequest;
+import cz.zakharchenkoartem.eventhub.restapi.users.dto.UserEditProfile;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -62,13 +66,28 @@ public class UsersController {
 
     @GetMapping("/{id}/following")
     @JsonView(Views.Public.class)
-    public PaginatedResponse<FollowedUser> getFollowers(@RequestHeader("Authorization") String authHeader, @PathVariable Long id, @RequestParam(required = false) String expression, @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "20") int pageSize) {
+    public PaginatedResponse<FollowedUser> getFollowedUsers(@RequestHeader("Authorization") String authHeader, @PathVariable Long id, @RequestParam(required = false) String expression, @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "20") int pageSize) {
         Long userId = jwtService.extractUserId(authHeader.replace("Bearer ", ""));
         if (!Objects.equals(userId, id)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access denied");
         }
 
         Page<FollowedUser> pageResult = userService.getFollowing(id, expression, page - 1, pageSize);
+
+        PageInfo pageInfo = new PageInfo(page, pageSize, pageResult.getTotalPages(), pageResult.getTotalElements());
+
+        return new PaginatedResponse<FollowedUser>(pageResult.getContent(), pageInfo);
+    }
+
+    @GetMapping("/{id}/followers")
+    @JsonView(Views.Public.class)
+    public PaginatedResponse<FollowedUser> getFollowers(@RequestHeader("Authorization") String authHeader, @PathVariable Long id, @RequestParam(required = false) String expression, @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "20") int pageSize) {
+        Long userId = jwtService.extractUserId(authHeader.replace("Bearer ", ""));
+        if (!Objects.equals(userId, id)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access denied");
+        }
+
+        Page<FollowedUser> pageResult = userService.getFollowers(id, expression, page - 1, pageSize);
 
         PageInfo pageInfo = new PageInfo(page, pageSize, pageResult.getTotalPages(), pageResult.getTotalElements());
 
@@ -85,26 +104,26 @@ public class UsersController {
     }
 
     @GetMapping("/{id}/my-events")
-    public PaginatedResponse<Event> getMyEvents(@RequestHeader("Authorization") String authHeader, @PathVariable Long id, @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "20") int pageSize, @RequestParam(required = false) Boolean important, @RequestParam(required = false) Boolean owned) {
+    public PaginatedResponse<EventDto> getMyEvents(@RequestHeader("Authorization") String authHeader, @PathVariable Long id, @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "20") int pageSize, @RequestParam(required = false) Boolean important, @RequestParam(required = false) Boolean owned) {
         Long userId = jwtService.extractUserId(authHeader.replace("Bearer ", ""));
         if (!Objects.equals(userId, id)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access denied");
         }
 
-        Page<Event> pageResult = userService.getMyEvents(id, page - 1, pageSize, important, owned);
+        Page<EventDto> pageResult = userService.getMyEvents(id, page - 1, pageSize, important, owned);
 
         PageInfo pageInfo = new PageInfo(page, pageSize, pageResult.getTotalPages(), pageResult.getTotalElements());
 
-        return new PaginatedResponse<Event>(pageResult.getContent(), pageInfo);
+        return new PaginatedResponse<EventDto>(pageResult.getContent(), pageInfo);
     }
 
     @GetMapping("/{id}/foreign-events")
-    public PaginatedResponse<Event> getForeignEvents(@PathVariable Long id, @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "20") int pageSize, @RequestParam(required = false) Boolean important) {
-        Page<Event> pageResult = userService.getForeignEvents(id, page - 1, pageSize, important);
+    public PaginatedResponse<EventDto> getForeignEvents(@PathVariable Long id, @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "20") int pageSize, @RequestParam(required = false) Boolean important) {
+        Page<EventDto> pageResult = userService.getForeignEvents(id, page - 1, pageSize, important);
 
         PageInfo pageInfo = new PageInfo(page, pageSize, pageResult.getTotalPages(), pageResult.getTotalElements());
 
-        return new PaginatedResponse<Event>(pageResult.getContent(), pageInfo);
+        return new PaginatedResponse<EventDto>(pageResult.getContent(), pageInfo);
     }
 
     @PostMapping("/{id}/add-friend")
@@ -137,10 +156,30 @@ public class UsersController {
         return ResponseEntity.ok(followerId);
     }
 
-
-    @PutMapping("/pin-follower")
+    @PutMapping("/pin-followed")
     public ResponseEntity<FollowedUser> pinFollower(@RequestBody PinFollowerRequest request) {
         FollowedUser user = userService.pinFollower(request);
         return ResponseEntity.ok(user);
+    }
+
+    @PutMapping("{id}/edit-profile")
+    public User editProfile(@RequestHeader("Authorization") String authHeader, @PathVariable Long id, @RequestBody @Valid UserEditProfile user) {
+        Long userId = jwtService.extractUserId(authHeader.replace("Bearer ", ""));
+        if (!Objects.equals(userId, id)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access denied");
+        }
+
+        return userService.editProfile(id, user);
+    }
+
+    @PutMapping("{id}/change-password")
+    public ResponseEntity<?> changePassword(@RequestHeader("Authorization") String authHeader, @PathVariable Long id, @RequestBody @Valid ChangePassword changePassword) {
+        Long userId = jwtService.extractUserId(authHeader.replace("Bearer ", ""));
+        if (!Objects.equals(userId, id)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access denied");
+        }
+
+        userService.changePassword(id, changePassword);
+        return ResponseEntity.ok().build();
     }
 }
