@@ -7,6 +7,7 @@ import cz.zakharchenkoartem.eventhub.restapi.events.Event;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import org.hibernate.validator.constraints.Length;
 
 import java.util.List;
@@ -26,7 +27,7 @@ public class User {
     private String username;
 
     @JsonIgnore
-    @Length(min = 4, max = 32)
+    @Size(min = 4, max = 100)
     private String password;
 
     @JsonView(Views.Public.class)

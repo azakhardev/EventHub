@@ -69,7 +69,10 @@ export default function FriendDetailDialog({
               <div className="flex-[2] flex flex-col items-center justify-center">
                 <div className="flex-1 w-36 h-36 flex items-center justify-center">
                   <img
-                    src={friend.profilePictureUrl}
+                    src={
+                      friend.profilePictureUrl ??
+                      "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+                    }
                     alt="profile_picture"
                     className="rounded-full"
                   />

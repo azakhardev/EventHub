@@ -18,7 +18,7 @@ export async function inviteFriends(
   if (!response.ok) {
     const errorData = await response.json();
     throw new Error(
-      errorData.message || `HTTP error! status: ${response.status}`
+      errorData.message || `An error occured: ${response.status}`
     );
   }
 
@@ -43,7 +43,7 @@ export async function getForeignEvents(
   if (!response.ok) {
     const errorData = await response.json();
     throw new Error(
-      errorData.message || `HTTP error! status: ${response.status}`
+      errorData.message || `An error occured: ${response.status}`
     );
   }
 
@@ -63,9 +63,9 @@ export async function deleteEvent(token: string, eventId: number) {
     try {
       const errorData = await response.json();
       errorMessage =
-        errorData.message || `HTTP error! status: ${response.status}`;
+        errorData.message || `An error occured: ${response.status}`;
     } catch {
-      errorMessage = `HTTP error! status: ${response.status}`;
+      errorMessage = `An error occured: ${response.status}`;
     }
     throw new Error(errorMessage);
   }

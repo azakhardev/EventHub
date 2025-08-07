@@ -8,6 +8,7 @@ import { useUserStore } from "../../../../store/store";
 import { apiRequest } from "../../../../utils/api";
 import { api } from "../../../../utils/api";
 import { useQuery } from "@tanstack/react-query";
+import PasswordDialog from "./PasswordDialog";
 
 interface ProfileDialogProps {
   isOpen: boolean;
@@ -20,6 +21,8 @@ export default function ProfileDialog({
 }: ProfileDialogProps) {
   const [editing, setEditing] = useState(false);
   const { token, userId } = useUserStore();
+
+  const [passwordDialogOpen, setPasswordDialogOpen] = useState(false);
 
   const { data, isLoading, error } = useQuery<User>({
     queryKey: ["profile"],
@@ -56,7 +59,12 @@ export default function ProfileDialog({
                 </Button>
               </>
             ) : (
-              <Button onClick={() => setEditing(true)}>Edit</Button>
+              <>
+                <Button onClick={() => setPasswordDialogOpen(true)}>
+                  Change Password
+                </Button>
+                <Button onClick={() => setEditing(true)}>Edit</Button>
+              </>
             )}
           </div>
         }
@@ -71,6 +79,10 @@ export default function ProfileDialog({
           />
         )}
       </Dialog>
+      <PasswordDialog
+        isOpen={passwordDialogOpen}
+        setIsOpen={setPasswordDialogOpen}
+      />
     </div>
   );
 }

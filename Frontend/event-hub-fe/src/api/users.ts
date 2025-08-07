@@ -22,7 +22,10 @@ export async function pinFriend(
   });
 
   if (!response.ok) {
-    throw new Error("Failed to pin friend");
+    const errorData = await response.json();
+    throw new Error(
+      errorData.message || `An error occured: ${response.status}`
+    );
   }
 
   return await response.json();
@@ -47,7 +50,10 @@ export async function addFriend(
   });
 
   if (!response.ok) {
-    throw new Error("Failed to add friend");
+    const errorData = await response.json();
+    throw new Error(
+      errorData.message || `An error occured: ${response.status}`
+    );
   }
 
   return await response.json();
@@ -75,9 +81,9 @@ export async function removeFriend(
     try {
       const errorData = await response.json();
       errorMessage =
-        errorData.message || `HTTP error! status: ${response.status}`;
+        errorData.message || `An error occured: ${response.status}`;
     } catch {
-      errorMessage = `HTTP error! status: ${response.status}`;
+      errorMessage = `An error occured: ${response.status}`;
     }
     throw new Error(errorMessage);
   }
@@ -139,7 +145,7 @@ export async function getParticipants(
   if (!response.ok) {
     const errorData = await response.json();
     throw new Error(
-      errorData.message || `HTTP error! status: ${response.status}`
+      errorData.message || `An error occured: ${response.status}`
     );
   }
 
@@ -165,7 +171,7 @@ export async function getFriends(
   if (!response.ok) {
     const errorData = await response.json();
     throw new Error(
-      errorData.message || `HTTP error! status: ${response.status}`
+      errorData.message || `An error occured: ${response.status}`
     );
   }
 
@@ -191,7 +197,7 @@ export async function getFollowers(
   if (!response.ok) {
     const errorData = await response.json();
     throw new Error(
-      errorData.message || `HTTP error! status: ${response.status}`
+      errorData.message || `An error occured: ${response.status}`
     );
   }
 
@@ -218,7 +224,35 @@ export async function editProfile(userId: number, token: string, user: User) {
   if (!response.ok) {
     const errorData = await response.json();
     throw new Error(
-      errorData.message || `HTTP error! status: ${response.status}`
+      errorData.message || `An error occured: ${response.status}`
+    );
+  }
+
+  return { success: true };
+}
+
+export async function changePassword(
+  userId: number,
+  token: string,
+  currentPassword: string,
+  newPassword: string
+) {
+  const response = await fetch(`${api}/users/${userId}/change-password`, {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      currentPassword: currentPassword,
+      newPassword: newPassword,
+    }),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(
+      errorData.message || `An error occured: ${response.status}`
     );
   }
 

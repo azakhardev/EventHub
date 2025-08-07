@@ -88,7 +88,10 @@ export default function UserCard({
       >
         <div className="group-hover:scale-[1.1]">
           <img
-            src={user.profilePictureUrl}
+            src={
+              user.profilePictureUrl ??
+              "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+            }
             alt={user.nickname}
             className="w-14 h-14 rounded-full"
           />
