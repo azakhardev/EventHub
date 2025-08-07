@@ -6,6 +6,7 @@ import { useMutation } from "@tanstack/react-query";
 import { deleteEvent } from "../../api/events.ts";
 import { queryClient } from "../../main.tsx";
 import EventCard from "./EventCard.tsx";
+import Tooltip from "./Tooltip.tsx";
 
 interface EventListCardProps extends React.HTMLAttributes<HTMLDivElement> {
   event: Event;
@@ -47,21 +48,25 @@ export default function EventListCard({ event, onClick }: EventListCardProps) {
       <div className="flex-1 flex justify-around px-4">
         {event.owner.id === userId && (
           <>
-            <Button className="bg-transparent hover:bg-transparent hover:scale-[1.03] px-4 py-6 border-2 border-icon rounded-md">
-              <Pencil className="text-primary" size={32} />
-            </Button>
-            <Button
-              className="bg-transparent hover:bg-transparent hover:scale-[1.03] px-4 py-6 border-2 border-red-300 rounded-md"
-              onClick={() => {
-                setIsOpen(true);
-                setDeletedItem(
-                  "Are you sure you want to delete event " + event.title + "?"
-                );
-                setOnDelete(onDelete);
-              }}
-            >
-              <Trash className="text-red-500" size={32} />
-            </Button>
+            <Tooltip text="Edit event">
+              <Button className="bg-transparent hover:bg-transparent hover:scale-[1.03] px-4 py-6 border-2 border-icon rounded-md">
+                <Pencil className="text-primary" size={32} />
+              </Button>
+            </Tooltip>
+            <Tooltip text="Delete event">
+              <Button
+                className="bg-transparent hover:bg-transparent hover:scale-[1.03] px-4 py-6 border-2 border-red-300 rounded-md"
+                onClick={() => {
+                  setIsOpen(true);
+                  setDeletedItem(
+                    "Are you sure you want to delete event " + event.title + "?"
+                  );
+                  setOnDelete(onDelete);
+                }}
+              >
+                <Trash className="text-red-500" size={32} />
+              </Button>
+            </Tooltip>
           </>
         )}
       </div>

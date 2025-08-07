@@ -5,6 +5,7 @@ import { Calendar, Clock, Eye, MapPin, Repeat, Share2 } from "lucide-react";
 import Button from "../forms/Button";
 import { useState } from "react";
 import ParticipantsDialog from "./ParticipantsDialog";
+import Tooltip from "../Tooltip";
 
 interface EventDialogProps {
   isOpen: boolean;
@@ -87,14 +88,16 @@ export default function EventDialog({
             </div>
           </div>
           <div className="flex flex-row items-center justify-end gap-2 mb-2 mt-6 ">
-            <Button
-              onClick={() => {
-                navigator.clipboard.writeText(event?.linkToken ?? "");
-                alert("Event token copied to clipboard");
-              }}
-            >
-              <Share2 size={24} />
-            </Button>
+            <Tooltip text="Copy event token">
+              <Button
+                onClick={() => {
+                  navigator.clipboard.writeText(event?.linkToken ?? "");
+                  alert("Event token copied to clipboard");
+                }}
+              >
+                <Share2 size={24} />
+              </Button>
+            </Tooltip>
             <Button onClick={() => setShowParticipants(true)}>
               Participants
             </Button>
