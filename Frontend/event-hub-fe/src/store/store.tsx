@@ -27,6 +27,21 @@ type ThemeState = {
   setTheme: (theme: "green" | "purple" | "blue" | "black") => void;
 };
 
+export type Filter = {
+  expression: string;
+  owned: boolean;
+  important: boolean;
+  private: boolean;
+  startDate: Date;
+  endDate: Date;
+  order: "asc" | "desc";
+};
+
+type FilterState = {
+  filter: Filter;
+  setFilter: (filter: Filter | ((prev: Filter) => Filter)) => void;
+};
+
 export const usePageStore = create<PageState>((set) => ({
   selectedPage: "home",
   setSelectedPage: (page: SELECTED_PAGE) => set({ selectedPage: page }),
@@ -53,4 +68,20 @@ export const useThemeStore = create<ThemeState>((set) => ({
     (localStorage.getItem("theme") as "green" | "purple" | "blue" | "black") ||
     "green",
   setTheme: (theme: "green" | "purple" | "blue" | "black") => set({ theme }),
+}));
+
+export const useFilterStore = create<FilterState>((set) => ({
+  filter: {
+    expression: "",
+    owned: false,
+    important: false,
+    private: false,
+    startDate: new Date(),
+    endDate: new Date(new Date().setFullYear(new Date().getFullYear() + 1)),
+    order: "desc",
+  },
+  setFilter: (filter) =>
+    set((state) => ({
+      filter: typeof filter === "function" ? filter(state.filter) : filter,
+    })),
 }));
