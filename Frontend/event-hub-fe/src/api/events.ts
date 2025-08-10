@@ -80,3 +80,20 @@ export async function deleteEvent(token: string, eventId: number) {
     return { success: true };
   }
 }
+
+export async function myEvents(
+  token: string,
+  userId: number,
+  owned?: boolean,
+  important?: boolean
+) {
+  const response = await fetch(
+    `${api}/users/${userId}/my-events?owned=${owned}&important=${important}`,
+    {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+}

@@ -32,8 +32,8 @@ export type Filter = {
   owned: boolean;
   important: boolean;
   private: boolean;
-  startDate: Date;
-  endDate: Date;
+  startDate: string;
+  endDate: string;
   order: "asc" | "desc";
 };
 
@@ -76,8 +76,10 @@ export const useFilterStore = create<FilterState>((set) => ({
     owned: false,
     important: false,
     private: false,
-    startDate: new Date(),
-    endDate: new Date(new Date().setFullYear(new Date().getFullYear() + 1)),
+    startDate: new Date().toISOString(),
+    endDate: new Date(
+      new Date().setFullYear(new Date().getFullYear() + 1)
+    ).toISOString(),
     order: "desc",
   },
   setFilter: (filter) =>

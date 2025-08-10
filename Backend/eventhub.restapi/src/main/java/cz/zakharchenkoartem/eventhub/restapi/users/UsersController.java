@@ -4,9 +4,8 @@ import com.fasterxml.jackson.annotation.JsonView;
 import cz.zakharchenkoartem.eventhub.restapi.dto.PageInfo;
 import cz.zakharchenkoartem.eventhub.restapi.dto.PaginatedResponse;
 import cz.zakharchenkoartem.eventhub.restapi.dto.Views;
-import cz.zakharchenkoartem.eventhub.restapi.events.Event;
 import cz.zakharchenkoartem.eventhub.restapi.events.dto.EventDto;
-import cz.zakharchenkoartem.eventhub.restapi.follows.FollowRelation;
+import cz.zakharchenkoartem.eventhub.restapi.events.dto.EventFilter;
 import cz.zakharchenkoartem.eventhub.restapi.follows.dto.PinFollowerRequest;
 import cz.zakharchenkoartem.eventhub.restapi.login.JwtService;
 import cz.zakharchenkoartem.eventhub.restapi.notifications.Notification;
@@ -22,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
@@ -104,13 +104,13 @@ public class UsersController {
     }
 
     @GetMapping("/{id}/my-events")
-    public PaginatedResponse<EventDto> getMyEvents(@RequestHeader("Authorization") String authHeader, @PathVariable Long id, @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "20") int pageSize, @RequestParam(required = false) Boolean important, @RequestParam(required = false) Boolean owned) {
+    public PaginatedResponse<EventDto> getMyEvents(@RequestHeader("Authorization") String authHeader, @PathVariable Long id, @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "20") int pageSize, EventFilter filter) {
         Long userId = jwtService.extractUserId(authHeader.replace("Bearer ", ""));
         if (!Objects.equals(userId, id)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access denied");
         }
 
-        Page<EventDto> pageResult = userService.getMyEvents(id, page - 1, pageSize, important, owned);
+        Page<EventDto> pageResult = userService.getMyEvents(id, page - 1, pageSize, filter.getImportant(), filter.getOwned(), filter.getPrivate(), filter.getFrom(), filter.getTo(), filter.getExpression());
 
         PageInfo pageInfo = new PageInfo(page, pageSize, pageResult.getTotalPages(), pageResult.getTotalElements());
 

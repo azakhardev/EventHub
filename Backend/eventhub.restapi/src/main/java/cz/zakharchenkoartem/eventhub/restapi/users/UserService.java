@@ -26,6 +26,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -123,12 +124,12 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public Page<EventDto> getMyEvents(Long id, int page, int pageSize, Boolean important, Boolean owned) {
+    public Page<EventDto> getMyEvents(Long id, int page, int pageSize, Boolean important, Boolean owned, Boolean isPrivate, LocalDateTime from, LocalDateTime to, String expression) {
         User user = getUser(id);
 
         Pageable pageable = PageRequest.of(page, pageSize);
 
-        Page<EventParticipantRelation> participantRelations = eventsParticipantsDataSource.findByUserOrdered(user, important, owned, pageable);
+        Page<EventParticipantRelation> participantRelations = eventsParticipantsDataSource.findByUserOrdered(user, important, owned, isPrivate, from, to, expression, pageable);
 
         List<EventDto> events = new ArrayList<>();
 
@@ -145,7 +146,7 @@ public class UserService {
 
         Pageable pageable = PageRequest.of(page, pageSize);
 
-        Page<EventParticipantRelation> participantRelations = eventsParticipantsDataSource.findByUserOrdered(user, important, null, pageable);
+        Page<EventParticipantRelation> participantRelations = eventsParticipantsDataSource.findByUserOrdered(user, important, null, null, null, null, null, pageable);
 
         List<EventDto> events = new ArrayList<>();
         for (EventParticipantRelation relation : participantRelations) {
