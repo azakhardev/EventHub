@@ -2,16 +2,15 @@ import { Search } from "lucide-react";
 import { useFilterStore, type Filter } from "../../store/store";
 import Checkbox from "./forms/Checkbox";
 import Input from "./forms/Input";
-import { Field, Label } from "@headlessui/react";
+import { Field, Label, Select } from "@headlessui/react";
+import Button from "./forms/Button";
 
 interface FilterProps extends React.HTMLAttributes<HTMLDivElement> {
-  onFilter?: () => void;
+  onFilter: () => void;
 }
 
 export default function Filter(props: FilterProps) {
   const { filter, setFilter } = useFilterStore();
-
-  console.log(filter);
 
   return (
     <div className="w-full flex flex-row justify-between mt-1">
@@ -54,10 +53,26 @@ export default function Filter(props: FilterProps) {
       </div>
       <div className="flex flex-row gap-4">
         <Field className="flex flex-row items-center gap-2">
+          <Label>Order:</Label>
+          <Select
+            onChange={(e) => {
+              setFilter((old) => ({
+                ...old,
+                order: e.target.value as "asc" | "desc",
+              }));
+            }}
+            value={filter.order}
+            className="flex-1 w-auto p-2 rounded-md cursor-pointer border"
+          >
+            <option value="asc">Ascending</option>
+            <option value="desc">Descending</option>
+          </Select>
+        </Field>
+        <Field className="flex flex-row items-center gap-2">
           <Label>From:</Label>
           <input
             type="date"
-            className="p-1 rounded-md border-text-muted border"
+            className="p-1 rounded-md border"
             onChange={(e) =>
               setFilter((old) => ({
                 ...old,
@@ -71,7 +86,7 @@ export default function Filter(props: FilterProps) {
           <Label>To:</Label>
           <input
             type="date"
-            className="p-1 rounded-md border-text-muted border"
+            className="p-1 rounded-md border"
             onChange={(e) =>
               setFilter((old) => ({
                 ...old,
@@ -80,6 +95,8 @@ export default function Filter(props: FilterProps) {
             }
           />
         </Field>
+
+        <Button onClick={() => props.onFilter()}>Filter</Button>
       </div>
     </div>
   );

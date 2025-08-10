@@ -85,10 +85,14 @@ export async function myEvents(
   token: string,
   userId: number,
   owned?: boolean,
-  important?: boolean
+  important?: boolean,
+  isPrivate?: boolean,
+  from?: Date,
+  to?: Date,
+  expression?: string
 ) {
   const response = await fetch(
-    `${api}/users/${userId}/my-events?owned=${owned}&important=${important}`,
+    `${api}/users/${userId}/my-events?owned=${owned}&important=${important}&private=${isPrivate}&from=${from}&to=${to}&expression=${expression}`,
     {
       method: "GET",
       headers: {
@@ -96,4 +100,18 @@ export async function myEvents(
       },
     }
   );
+
+  if (!response.ok) {
+    let errorMessage: string;
+    try {
+      const errorData = await response.json();
+      errorMessage =
+        errorData.message || `An error occured: ${response.status}`;
+    } catch {
+      errorMessage = `An error occured: ${response.status}`;
+    }
+    throw new Error(errorMessage);
+  }
+
+  return await response.json();
 }

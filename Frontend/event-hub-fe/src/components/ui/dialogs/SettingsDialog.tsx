@@ -7,7 +7,6 @@ import {
 } from "@headlessui/react";
 import Dialog from "./Dialog";
 import { useThemeStore } from "../../../store/store";
-import { Fragment } from "react/jsx-runtime";
 import { useState } from "react";
 import { Check, ChevronDown } from "lucide-react";
 

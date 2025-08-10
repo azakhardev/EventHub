@@ -29,7 +29,9 @@ public interface EventsParticipantsDataSource extends JpaRepository<EventPartici
                   AND (:expression IS NULL OR :expression = '' OR LOWER(e.title) LIKE LOWER(CONCAT('%', :expression, '%')))
                   AND e.startTime >= :from
                   AND e.startTime <= :to
-                ORDER BY e.startTime ASC
+                ORDER BY
+                      CASE WHEN :order = 'desc' THEN e.startTime END DESC,
+                      CASE WHEN :order <> 'desc' OR :order IS NULL THEN e.startTime END ASC
             """)
     Page<EventParticipantRelation> findByUserOrdered(
             @Param("user") User user,
@@ -39,6 +41,7 @@ public interface EventsParticipantsDataSource extends JpaRepository<EventPartici
             @Param("from") LocalDateTime from,
             @Param("to") LocalDateTime to,
             @Param("expression") String expression,
+            @Param("order") String order,
             Pageable pageable
     );
 }

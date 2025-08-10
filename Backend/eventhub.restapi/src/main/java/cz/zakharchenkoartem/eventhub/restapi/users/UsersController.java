@@ -110,7 +110,7 @@ public class UsersController {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access denied");
         }
 
-        Page<EventDto> pageResult = userService.getMyEvents(id, page - 1, pageSize, filter.getImportant(), filter.getOwned(), filter.getPrivate(), filter.getFrom(), filter.getTo(), filter.getExpression());
+        Page<EventDto> pageResult = userService.getMyEvents(id, page - 1, pageSize, filter.getImportant(), filter.getOwned(), filter.getPrivate(), filter.getFrom(), filter.getTo(), filter.getExpression(), filter.getOrder());
 
         PageInfo pageInfo = new PageInfo(page, pageSize, pageResult.getTotalPages(), pageResult.getTotalElements());
 

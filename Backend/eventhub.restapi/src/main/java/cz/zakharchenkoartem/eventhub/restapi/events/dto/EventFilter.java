@@ -10,6 +10,7 @@ public class EventFilter {
     private Boolean owned;
     private Boolean isPrivate;
     private String expression;
+    private String order;
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime from;
@@ -68,5 +69,13 @@ public class EventFilter {
 
     public void setTo(LocalDateTime to) {
         this.to = to;
+    }
+
+    public String getOrder() {
+        return order;
+    }
+
+    public void setOrder(String order) {
+        this.order = order;
     }
 }
