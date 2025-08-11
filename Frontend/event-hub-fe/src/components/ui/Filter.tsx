@@ -6,7 +6,7 @@ import { Field, Label, Select } from "@headlessui/react";
 import Button from "./forms/Button";
 
 interface FilterProps extends React.HTMLAttributes<HTMLDivElement> {
-  onFilter: () => void;
+  onFilter?: () => void;
 }
 
 export default function Filter(props: FilterProps) {
@@ -76,7 +76,7 @@ export default function Filter(props: FilterProps) {
             onChange={(e) =>
               setFilter((old) => ({
                 ...old,
-                startDate: e.target.valueAsDate!.toISOString(),
+                from: e.target.valueAsDate!.toISOString(),
               }))
             }
           />
@@ -90,13 +90,15 @@ export default function Filter(props: FilterProps) {
             onChange={(e) =>
               setFilter((old) => ({
                 ...old,
-                endDate: e.target.valueAsDate!.toISOString(),
+                to: e.target.valueAsDate!.toISOString(),
               }))
             }
           />
         </Field>
 
-        <Button onClick={() => props.onFilter()}>Filter</Button>
+        {props.onFilter && (
+          <Button onClick={() => props.onFilter!()}>Filter</Button>
+        )}
       </div>
     </div>
   );

@@ -81,18 +81,25 @@ export async function deleteEvent(token: string, eventId: number) {
   }
 }
 
-export async function myEvents(
+export async function getMyEvents(
   token: string,
   userId: number,
+  page: number,
+  pageSize: number,
   owned?: boolean,
   important?: boolean,
   isPrivate?: boolean,
-  from?: Date,
-  to?: Date,
-  expression?: string
+  from?: string,
+  to?: string,
+  expression?: string,
+  order?: string
 ) {
   const response = await fetch(
-    `${api}/users/${userId}/my-events?owned=${owned}&important=${important}&private=${isPrivate}&from=${from}&to=${to}&expression=${expression}`,
+    `${api}/users/${userId}/my-events?page=${page}&pageSize=${pageSize}&owned=${
+      owned ? owned : ""
+    }&important=${important ? important : ""}&private=${
+      isPrivate ? isPrivate : ""
+    }&from=${from}&to=${to}&expression=${expression}&order=${order}`,
     {
       method: "GET",
       headers: {
