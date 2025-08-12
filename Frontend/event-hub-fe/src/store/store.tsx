@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import type { SELECTED_PAGE } from "../types/helpers";
+import type { Filter } from "../types/filter";
 
 type PageState = {
   selectedPage: SELECTED_PAGE;
@@ -25,16 +26,6 @@ type DeleteState = {
 type ThemeState = {
   theme: "green" | "purple" | "blue" | "black";
   setTheme: (theme: "green" | "purple" | "blue" | "black") => void;
-};
-
-export type Filter = {
-  expression: string;
-  owned: boolean;
-  important: boolean;
-  private: boolean;
-  from: string;
-  to: string;
-  order: "asc" | "desc";
 };
 
 type FilterState = {

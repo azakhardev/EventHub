@@ -117,9 +117,9 @@ public class UsersController {
         return new PaginatedResponse<EventDto>(pageResult.getContent(), pageInfo);
     }
 
-    @GetMapping("/{id}/foreign-events")
-    public PaginatedResponse<EventDto> getForeignEvents(@PathVariable Long id, @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "20") int pageSize, @RequestParam(required = false) Boolean important) {
-        Page<EventDto> pageResult = userService.getForeignEvents(id, page - 1, pageSize, important);
+    @GetMapping("/{ownerId}/foreign-events")
+    public PaginatedResponse<EventDto> getForeignEvents(@PathVariable Long ownerId, @RequestParam(defaultValue = "1") int page, @RequestParam Long requesterId , @RequestParam(defaultValue = "20") int pageSize) {
+        Page<EventDto> pageResult = userService.getForeignEvents(ownerId, page - 1, pageSize, requesterId);
 
         PageInfo pageInfo = new PageInfo(page, pageSize, pageResult.getTotalPages(), pageResult.getTotalElements());
 

@@ -8,10 +8,12 @@ import java.util.Date;
 
 public class EventDto extends Event {
     private boolean important;
+    private boolean participates;
 
-    public EventDto(Event event, boolean important) {
+    public EventDto(Event event, boolean important,  boolean participates) {
         super(event.getId(), event.getTitle(), event.getBody(), event.getOwner(), event.getCreationDate(), event.getStartTime(), event.getEndTime(), event.getPlace(), event.getCategory(), event.getColor(), event.isPublic(), event.getLinkToken(), event.getRecurrence(), event.getRecurrenceEndDate());
         this.important = important;
+        this.participates = participates;
     }
 
     public boolean isImportant() {
@@ -20,5 +22,13 @@ public class EventDto extends Event {
 
     public void setImportant(boolean important) {
         this.important = important;
+    }
+
+    public boolean isParticipates() {
+        return participates;
+    }
+
+    public void setParticipates(boolean participates) {
+        this.participates = participates;
     }
 }

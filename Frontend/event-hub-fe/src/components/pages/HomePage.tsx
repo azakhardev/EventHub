@@ -18,15 +18,20 @@ export default function HomePage() {
 
   const [event, setEvent] = useState<Event | null>(null);
 
-  const eventsQuery = useQuery<Page<Event>>({
-    queryKey: ["events", userId],
+  const upcomingEventsQuery = useQuery<Page<Event>>({
+    queryKey: ["events", "upcoming", userId],
     queryFn: () =>
-      fetch(`${api}/users/${userId}/my-events?page=1&pageSize=5`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      }).then((res) => res.json()),
+      fetch(
+        `${api}/users/${userId}/my-events?page=1&pageSize=100&from=${new Date().toISOString()}&to=${new Date(
+          new Date().setDate(new Date().getDate() + 7)
+        ).toISOString()}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      ).then((res) => res.json()),
     enabled: !!token && !!userId,
     staleTime: 0,
     refetchOnMount: true,
@@ -72,11 +77,13 @@ export default function HomePage() {
         </div>
       </div>
       <Line />
-      {eventsQuery.isLoading && <SyncLoader />}
-      {eventsQuery.error && <ErrorAlert error={eventsQuery.error.message} />}
-      {eventsQuery.data && (
+      {upcomingEventsQuery.isLoading && <SyncLoader />}
+      {upcomingEventsQuery.error && (
+        <ErrorAlert error={upcomingEventsQuery.error.message} />
+      )}
+      {upcomingEventsQuery.data && (
         <div className="flex flex-col gap-2">
-          {eventsQuery.data.data.map((event) => (
+          {upcomingEventsQuery.data.data.map((event) => (
             <EventListCard
               event={event}
               key={event.id}
@@ -85,9 +92,10 @@ export default function HomePage() {
           ))}
         </div>
       )}
-      {eventsQuery.data && eventsQuery.data.pageInfo.totalElements === 0 && (
-        <EmptyArray message="You don't participate in any events yet" />
-      )}
+      {upcomingEventsQuery.data &&
+        upcomingEventsQuery.data.pageInfo.totalElements === 0 && (
+          <EmptyArray message="You don't have any events this week" />
+        )}
       <h3 className="text-text-on-light mt-4">ImportantEvents</h3>
       <Line />
       {importantEventsQuery.isLoading && <SyncLoader />}

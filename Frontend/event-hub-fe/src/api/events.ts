@@ -28,10 +28,11 @@ export async function inviteFriends(
 export async function getForeignEvents(
   token: string,
   userId: number,
-  page: number
+  page: number,
+  requesterId: number
 ) {
   const response = await fetch(
-    `${api}/users/${userId}/foreign-events?page=${page}&pageSize=10`,
+    `${api}/users/${userId}/foreign-events?page=${page}&pageSize=10&requesterId=${requesterId}`,
     {
       headers: {
         Authorization: `Bearer ${token}`,

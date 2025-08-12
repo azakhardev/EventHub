@@ -44,4 +44,6 @@ public interface EventsParticipantsDataSource extends JpaRepository<EventPartici
             @Param("order") String order,
             Pageable pageable
     );
+
+    EventParticipantRelation getByEventAndUser(Event event, User user);
 }

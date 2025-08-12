@@ -16,6 +16,7 @@ export type Event = {
   recurrence: EventRecurrence;
   recurrenceEndDate?: string;
   important?: boolean;
+  participates?: boolean;
 };
 
 export const EventRecurrence = {

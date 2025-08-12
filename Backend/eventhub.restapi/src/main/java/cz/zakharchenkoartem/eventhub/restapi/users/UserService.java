@@ -134,24 +134,27 @@ public class UserService {
         List<EventDto> events = new ArrayList<>();
 
         for (EventParticipantRelation relation : participantRelations) {
-            events.add(new EventDto(relation.getEvent(), relation.isImportant()));
+            events.add(new EventDto(relation.getEvent(), relation.isImportant(), true));
         }
 
         return new PageImpl<EventDto>(events, pageable, participantRelations.getTotalElements());
     }
 
     @Transactional(readOnly = true)
-    public Page<EventDto> getForeignEvents(Long id, int page, int pageSize, Boolean important) {
-        User user = getUser(id);
-
+    public Page<EventDto> getForeignEvents(Long id, int page, int pageSize, Long requesterId) {
+        User owner = getUser(id);
+        User requester = getUser(requesterId);
         Pageable pageable = PageRequest.of(page, pageSize);
 
-        Page<EventParticipantRelation> participantRelations = eventsParticipantsDataSource.findByUserOrdered(user, important, null, null, null, null, null, null, pageable);
+        Page<EventParticipantRelation> participantRelations = eventsParticipantsDataSource.findByUserOrdered(owner, null, null, false, LocalDateTime.now(), LocalDateTime.now().plusYears(1), null, null, pageable);
+
+        System.out.println(participantRelations);
 
         List<EventDto> events = new ArrayList<>();
         for (EventParticipantRelation relation : participantRelations) {
             if (relation.getEvent().isPublic()) {
-                events.add( new EventDto(relation.getEvent(), relation.isImportant()) );
+                EventParticipantRelation rel = eventsParticipantsDataSource.getByEventAndUser(relation.getEvent(), requester);
+                events.add( new EventDto(relation.getEvent(), relation.isImportant(), rel != null));
             }
         }
 

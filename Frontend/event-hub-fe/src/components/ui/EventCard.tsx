@@ -7,15 +7,19 @@ interface EventCardProps extends React.HTMLAttributes<HTMLDivElement> {
   event: Event;
 }
 
-export default function EventCard({ event, ...props }: EventCardProps) {
+export default function EventCard({
+  event,
+  className,
+  ...props
+}: EventCardProps) {
   const startTime = new Date(event.startTime);
   const endTime = new Date(event.endTime);
 
   return (
     <div
       className={combineString([
-        "flex-[4] cursor-pointer relative rounded-lg border-2 flex flex-row bg-card pr-4 overflow-hidden hover:shadow-b-md hover:shadow-md whitespace-nowrap text-ellipsis",
-        props.className,
+        "flex-[4] cursor-pointer relative rounded-lg border-2 flex flex-row bg-card pr-4 hover:shadow-b-md hover:shadow-md overflow-hidden",
+        className,
       ])}
       {...props}
     >

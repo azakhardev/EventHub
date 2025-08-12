@@ -101,6 +101,9 @@ export default function EventDialog({
             <Button onClick={() => setShowParticipants(true)}>
               Participants
             </Button>
+            {!event?.participates && (
+              <Button onClick={() => alert("PLEASE ENTER TOKEN")}>Join</Button>
+            )}
           </div>
         </div>
       </Dialog>

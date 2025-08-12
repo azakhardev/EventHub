@@ -22,7 +22,7 @@ export default function FriendDetailDialog({
   friend,
   setFriend,
 }: FriendDetailDialogProps) {
-  const { token } = useUserStore();
+  const { token, userId } = useUserStore();
   const { ref, inView } = useInView({ threshold: 0, triggerOnce: false });
 
   const [event, setEvent] = useState<Event | null>(null);
@@ -30,7 +30,7 @@ export default function FriendDetailDialog({
   const foreignEventsQuery = useInfiniteQuery<Page<Event>>({
     queryKey: ["events", "foreign-events", friend?.id],
     queryFn: ({ pageParam = 1 }) =>
-      getForeignEvents(token, friend?.id ?? 0, pageParam as number),
+      getForeignEvents(token, friend?.id ?? 0, pageParam as number, userId),
     getNextPageParam: (lastPage) =>
       lastPage.pageInfo.page < lastPage.pageInfo.totalPages
         ? lastPage.pageInfo.page + 1
@@ -100,7 +100,7 @@ export default function FriendDetailDialog({
               <Description text={friend.about ?? ""} />
             </div>
           </div>
-          <div className="flex-[2] flex flex-col gap-4">
+          <div className="flex-[2] flex flex-col gap-4 ">
             <h3 className="text-center">Participates in:</h3>
             <div className="flex flex-col gap-2 max-h-[28vh] overflow-y-scroll scrollbar-hide">
               {!foreignEventsQuery.isFetchingNextPage &&
@@ -111,6 +111,7 @@ export default function FriendDetailDialog({
                       key={event.id}
                       event={event}
                       onClick={() => setEvent(event)}
+                      className="min-h-[150px]"
                     />
                   ))}
               <div className="h-4" ref={ref}></div>
