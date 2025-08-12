@@ -58,16 +58,13 @@ export default function CalendarPage() {
       <Filter />
       <Line />
       <div className="flex flex-col gap-2 mt-4">
-        {!eventsQuery.isFetchingNextPage && eventsQuery.isFetching && (
-          <SyncLoader />
-        )}
         {eventsQuery.isSuccess &&
           populatedEvents.map((event, i) => (
             <EventListCard key={`${i}_${event.id}`} event={event} />
           ))}
       </div>
       {eventsQuery.isError && <ErrorAlert error={eventsQuery.error.message} />}
-      {eventsQuery.isFetchingNextPage && <SyncLoader />}
+      {eventsQuery.isFetching && <SyncLoader />}
       {eventsQuery.isSuccess && populatedEvents.length === 0 && <EmptyArray />}
       <div className="h-6" ref={ref}></div>
     </div>

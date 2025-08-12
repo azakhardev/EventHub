@@ -53,6 +53,32 @@ export default function Filter(props: FilterProps) {
       </div>
       <div className="flex flex-row gap-4">
         <Field className="flex flex-row items-center gap-2">
+          <Label>From:</Label>
+          <input
+            type="date"
+            className="p-1 rounded-md border"
+            onChange={(e) =>
+              setFilter((old) => ({
+                ...old,
+                from: e.target.valueAsDate!.toISOString(),
+              }))
+            }
+          />
+        </Field>
+        <Field className="flex flex-row items-center gap-2">
+          <Label>To:</Label>
+          <input
+            type="date"
+            className="p-1 rounded-md border"
+            onChange={(e) =>
+              setFilter((old) => ({
+                ...old,
+                to: e.target.valueAsDate!.toISOString(),
+              }))
+            }
+          />
+        </Field>
+        <Field className="flex flex-row items-center gap-2">
           <Label>Order:</Label>
           <Select
             onChange={(e) => {
@@ -68,34 +94,6 @@ export default function Filter(props: FilterProps) {
             <option value="desc">Descending</option>
           </Select>
         </Field>
-        <Field className="flex flex-row items-center gap-2">
-          <Label>From:</Label>
-          <input
-            type="date"
-            className="p-1 rounded-md border"
-            onChange={(e) =>
-              setFilter((old) => ({
-                ...old,
-                from: e.target.valueAsDate!.toISOString(),
-              }))
-            }
-          />
-        </Field>
-
-        <Field className="flex flex-row items-center gap-2">
-          <Label>To:</Label>
-          <input
-            type="date"
-            className="p-1 rounded-md border"
-            onChange={(e) =>
-              setFilter((old) => ({
-                ...old,
-                to: e.target.valueAsDate!.toISOString(),
-              }))
-            }
-          />
-        </Field>
-
         {props.onFilter && (
           <Button onClick={() => props.onFilter!()}>Filter</Button>
         )}

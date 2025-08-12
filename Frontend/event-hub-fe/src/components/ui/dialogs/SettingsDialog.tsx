@@ -7,7 +7,7 @@ import {
 } from "@headlessui/react";
 import Dialog from "./Dialog";
 import { useThemeStore } from "../../../store/store";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Check, ChevronDown } from "lucide-react";
 
 interface SettingsDialogProps {
@@ -15,11 +15,16 @@ interface SettingsDialogProps {
   setIsOpen: (isOpen: boolean) => void;
 }
 
-const options = [
-  { id: 1, name: "Week" },
-  { id: 2, name: "Day" },
-  { id: 3, name: "Hour" },
-  { id: 4, name: "10 min" },
+type Option = {
+  id: number;
+  value: string;
+};
+
+const options: Option[] = [
+  { id: 1, value: "Week" },
+  { id: 2, value: "Day" },
+  { id: 3, value: "Hour" },
+  { id: 4, value: "10 min" },
 ];
 
 export default function SettingsDialog({
@@ -31,9 +36,17 @@ export default function SettingsDialog({
     []
   );
 
-  // function selectReminder(value: string){
-  //   setSelectedReminders((old)=> [...old, value as (typeof options)])
-  // }
+  useEffect(() => {
+    const reminders = JSON.parse(
+      localStorage.getItem("reminders-interval") ?? "[]"
+    );
+    setSelectedReminders(reminders);
+  }, []);
+
+  function selectReminders(reminders: Option[]) {
+    localStorage.setItem("reminders-interval", JSON.stringify(reminders));
+    setSelectedReminders(reminders);
+  }
 
   return (
     <Dialog
@@ -65,30 +78,34 @@ export default function SettingsDialog({
 
       <div className="flex flex-row items-center gap-2 mt-2 mb-6">
         <h4 className="w-auto">Set reminders:</h4>
-        <Listbox
-          value={selectedReminders}
-          onChange={setSelectedReminders}
-          multiple
-        >
-          <div className="flex-1 relative flex flex-col gap-0">
-            <ListboxButton className="w-auto p-2 flex flex-row rounded-md cursor-pointer border bg-white justify-between">
+        <Listbox value={selectedReminders} onChange={selectReminders} multiple>
+          <div className="flex-1 relative flex flex-col gap-0 overflow-visible">
+            <ListboxButton
+              className="w-auto p-2 flex flex-row rounded-md cursor-pointer border bg-white justify-between"
+              as="button"
+            >
               <div>
                 {selectedReminders.length === 0
                   ? "Select categories"
-                  : selectedReminders.map((s) => s.name).join(", ")}
+                  : selectedReminders.map((s) => s.value).join(", ")}
               </div>
               <ChevronDown />
             </ListboxButton>
 
-            <ListboxOptions className="absolute top-[88%] mt-1 max-h-60 w-full overflow-scroll border-black border-1 bg-white py-1 z-60 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-50 scrollbar-hide">
+            <ListboxOptions
+              className="w-[25vw] overflow-scroll border-black border-1 bg-white py-1 shadow-lg focus:outline-none"
+              anchor="bottom"
+            >
               {options.map((option) => (
                 <ListboxOption
                   key={option.id}
                   value={option}
-                  className="data-focus:bg-blue-100 px-2 cursor-pointer hover:bg-[#2196f3] hover:text-white flex flex-row gap-1"
+                  className="px-2 cursor-pointer data-[focus]:bg-[#2196f3] data-[focus]:text-white flex flex-row gap-1"
                 >
-                  {selectedReminders.includes(option) && <Check />}
-                  {option.name}
+                  {selectedReminders.some((r) => r.id === option.id) && (
+                    <Check />
+                  )}
+                  {option.value}
                 </ListboxOption>
               ))}
             </ListboxOptions>

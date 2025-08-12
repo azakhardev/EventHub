@@ -30,6 +30,7 @@ export default function FriendsListSection() {
 
   const {
     data,
+    isFetching,
     isFetchingNextPage,
     hasNextPage,
     fetchNextPage,
@@ -99,7 +100,11 @@ export default function FriendsListSection() {
                   ))}
               <div ref={ref}></div>
             </>
-            {isFetchingNextPage && <SyncLoader />}
+            {isFetching && (
+              <div className="mb-2">
+                <SyncLoader />
+              </div>
+            )}
             {error && <ErrorAlert error={error.message} />}
             {data?.pages.flatMap((page) => page.data).length === 0 && (
               <EmptyArray />
