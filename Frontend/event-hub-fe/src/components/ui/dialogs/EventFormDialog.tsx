@@ -17,7 +17,7 @@ import { queryClient } from "../../../main.tsx";
 interface EventFormDialogProps {
   event: Event | null;
   submitMethod: "POST" | "PUT";
-  opened: boolean;
+  isOpen: boolean;
   setIsOpened: (opened: boolean) => void;
 }
 
@@ -62,6 +62,7 @@ export default function EventFormDialog(props: EventFormDialogProps) {
     const data = Object.fromEntries(formData.entries());
 
     const newEvent: Event = {
+      id: event?.id ?? 0,
       title: data.title as string,
       body: (data.body as string) || undefined,
       startTime: new Date(data.startTime as string).toISOString(),
@@ -83,7 +84,7 @@ export default function EventFormDialog(props: EventFormDialogProps) {
     <Dialog
       title={props.submitMethod === "POST" ? "Create Event" : "Edit Event"}
       description="Specify information about the event"
-      isOpen={props.opened}
+      isOpen={props.isOpen}
       setIsOpen={props.setIsOpened}
       height="h-auto"
       width="lg:min-w-[70vw] xl:min-w-[50vw]"
@@ -185,7 +186,7 @@ export default function EventFormDialog(props: EventFormDialogProps) {
             />
 
             <Field className="flex-1 flex flex-col gap-1">
-              <ColorPickerField />
+              <ColorPickerField defaultColor={event?.color} />
             </Field>
           </div>
           <div className="flex items-center justify-center">

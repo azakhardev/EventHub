@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import Button from "../ui/forms/Button";
+import EventFormDialog from "../ui/dialogs/EventFormDialog.tsx";
 import Line from "../ui/Line";
 import { useUserStore } from "../../store/store";
 import EventListCard from "../ui/EventListCard.tsx";
@@ -17,7 +17,8 @@ const api = import.meta.env.VITE_API_URL;
 export default function HomePage() {
   const { token, userId } = useUserStore();
 
-  const [event, setEvent] = useState<Event | null>(null);
+  const [viewedEvent, setViewedEvent] = useState<Event | null>(null);
+  const [editedEvent, setEditedEvent] = useState<Event | null>(null);
 
   const upcomingEventsQuery = useQuery<Page<Event>>({
     queryKey: ["events", "upcoming", userId],
@@ -86,7 +87,8 @@ export default function HomePage() {
             <EventListCard
               event={event}
               key={event.id}
-              onClick={() => setEvent(event)}
+              onClick={() => setViewedEvent(event)}
+              onEditClick={setViewedEvent}
             />
           ))}
         </div>
@@ -110,7 +112,8 @@ export default function HomePage() {
             <EventListCard
               event={event}
               key={event.id}
-              onClick={() => setEvent(event)}
+              onClick={() => setViewedEvent(event)}
+              onEditClick={setViewedEvent}
             />
           ))}
         </div>
@@ -134,7 +137,8 @@ export default function HomePage() {
             <EventListCard
               event={event}
               key={event.id}
-              onClick={() => setEvent(event)}
+              onClick={() => setViewedEvent(event)}
+              onEditClick={setViewedEvent}
             />
           ))}
         </div>
@@ -143,7 +147,17 @@ export default function HomePage() {
         ownEventsQuery.data.pageInfo.totalElements === 0 && (
           <EmptyArray align="left" message="Create your first event" />
         )}
-      <EventDialog isOpen={event !== null} setEvent={setEvent} event={event} />
+      <EventDialog
+        isOpen={viewedEvent !== null}
+        setEvent={setViewedEvent}
+        event={viewedEvent}
+      />
+      <EventFormDialog
+        event={editedEvent}
+        isOpen={editedEvent != null}
+        setIsOpened={() => setEditedEvent(null)}
+        submitMethod="PUT"
+      />
     </div>
   );
 }

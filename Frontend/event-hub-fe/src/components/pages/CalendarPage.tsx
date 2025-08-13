@@ -13,12 +13,14 @@ import { useInView } from "react-intersection-observer";
 import { useEffect, useState } from "react";
 import EmptyArray from "../ui/alerts/EmptyArray";
 import EventDialog from "../ui/dialogs/EventDialog";
+import EventFormDialog from "../ui/dialogs/EventFormDialog";
 
 export default function CalendarPage() {
   const { token, userId } = useUserStore();
   const { filter } = useFilterStore();
   const { ref, inView } = useInView({ threshold: 0, triggerOnce: false });
-  const [event, setEvent] = useState<Event | null>(null);
+  const [viewedEvent, setViewedEvent] = useState<Event | null>(null);
+  const [editedEvent, setEditedEvent] = useState<Event | null>(null);
 
   const eventsQuery = useInfiniteQuery<Page<Event>>({
     queryKey: ["events", filter],
@@ -66,7 +68,8 @@ export default function CalendarPage() {
               <EventListCard
                 key={`${i}_${event.id}`}
                 event={event}
-                onClick={() => setEvent(event)}
+                onClick={() => setViewedEvent(event)}
+                onEditClick={setEditedEvent}
               />
             ))}
         </div>
@@ -79,7 +82,17 @@ export default function CalendarPage() {
         )}
         <div className="h-6" ref={ref}></div>
       </div>
-      <EventDialog event={event} isOpen={event != null} setEvent={setEvent} />
+      <EventDialog
+        event={viewedEvent}
+        isOpen={viewedEvent != null}
+        setEvent={setViewedEvent}
+      />
+      <EventFormDialog
+        event={editedEvent}
+        isOpen={editedEvent != null}
+        setIsOpened={() => setEditedEvent(null)}
+        submitMethod="PUT"
+      />
     </>
   );
 }

@@ -194,12 +194,13 @@ export async function createEvent(token: string, userId: number, event: Event) {
 
 export async function editEvent(token: string, userId: number, event: Event) {
   const response = await fetch(`${api}/events/${event.id}/edit`, {
-    method: "POST",
+    method: "PUT",
     headers: {
       Authorization: `Bearer ${token}`,
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
+      id: event.id,
       title: event.title,
       body: event.body,
       ownerId: userId,

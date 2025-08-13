@@ -11,7 +11,7 @@ export default function CreateEventButton() {
         <Button onClick={() => setIsOpen(true)}>Create Event</Button>
       </div>
       <EventFormDialog
-        opened={isOpen}
+        isOpen={isOpen}
         setIsOpened={() => setIsOpen(false)}
         submitMethod="POST"
         event={null}

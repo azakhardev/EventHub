@@ -7,14 +7,17 @@ import { deleteEvent } from "../../api/events.ts";
 import { queryClient } from "../../main.tsx";
 import EventCard from "./EventCard.tsx";
 import Tooltip from "./Tooltip.tsx";
-import { useState } from "react";
-import EventFormDialog from "./dialogs/EventFormDialog.tsx";
 
 interface EventListCardProps extends React.HTMLAttributes<HTMLDivElement> {
   event: Event;
+  onEditClick: (event: Event) => void;
 }
 
-export default function EventListCard({ event, onClick }: EventListCardProps) {
+export default function EventListCard({
+  event,
+  onClick,
+  onEditClick,
+}: EventListCardProps) {
   const { token, userId } = useUserStore();
   const {
     setIsOpen,
@@ -25,8 +28,6 @@ export default function EventListCard({ event, onClick }: EventListCardProps) {
   const { mutate: deleteEventMutation } = useMutation({
     mutationFn: async () => await deleteEvent(token, event?.id ?? 0),
   });
-
-  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
 
   const onDelete = async () => {
     return new Promise<void>((resolve, reject) => {
@@ -54,12 +55,11 @@ export default function EventListCard({ event, onClick }: EventListCardProps) {
           {event.owner!.id === userId && (
             <>
               <Tooltip text="Edit event">
-                <Button className="bg-transparent hover:bg-transparent hover:scale-[1.03] px-4 py-6 border-2 border-icon rounded-md">
-                  <Pencil
-                    className="text-primary"
-                    size={32}
-                    onClick={() => setSelectedEvent(event)}
-                  />
+                <Button
+                  className="bg-transparent hover:bg-transparent hover:scale-[1.03] px-4 py-6 border-2 border-icon rounded-md"
+                  onClick={() => onEditClick(event)}
+                >
+                  <Pencil className="text-primary" size={32} />
                 </Button>
               </Tooltip>
               <Tooltip text="Delete event">
@@ -82,12 +82,6 @@ export default function EventListCard({ event, onClick }: EventListCardProps) {
           )}
         </div>
       </div>
-      <EventFormDialog
-        event={selectedEvent}
-        opened={selectedEvent != null}
-        setIsOpened={() => setSelectedEvent(null)}
-        submitMethod="PUT"
-      />
     </>
   );
 }
