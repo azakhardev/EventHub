@@ -81,7 +81,13 @@ public class EventService {
     public Event createEvent(CRUDEventDto event, User owner) {
         Event newEvent = new Event(event.getTitle(), event.getBody(), owner, event.getStartTime(), event.getEndTime(), event.getPlace(), event.getCategory(), event.getColor(), event.isPublic(), event.getRecurrence(), event.getRecurrenceEndDate());
 
-        return  eventsDataSource.save(newEvent);
+        Event e = eventsDataSource.save(newEvent);
+
+        eventsParticipantsDataSource.save(new EventParticipantRelation(new EventParticipantId(owner.getId(), e.getId()), owner, e, true, false));
+
+        //TODO: Add notifications to db about the change
+
+        return e;
     }
 
     @Transactional
@@ -97,12 +103,16 @@ public class EventService {
         existingEvent.setRecurrence(event.getRecurrence());
         existingEvent.setRecurrenceEndDate(event.getRecurrenceEndDate());
 
+        //TODO: Add notifications to db about the change
+
         return eventsDataSource.save(existingEvent);
     }
 
     @Transactional
     public void deleteEvent(Long eventId) {
         eventsDataSource.deleteById(eventId);
+
+        //TODO: Add notifications to db about the change
     }
 
     @Transactional

@@ -70,7 +70,7 @@ export default function EventCard({
         </div>
         <div className="flex flex-row items-center justify-end">
           <div className="relative top-[-15px] font-bold right-[-10%]">
-            {event.owner.nickname}
+            {event.owner!.nickname}
           </div>
         </div>
       </div>

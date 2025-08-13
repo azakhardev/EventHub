@@ -1,5 +1,5 @@
-import type { NumberMap } from "framer-motion";
 import type { User } from "../types/user";
+import type { Event } from "../types/event";
 import { api } from "../utils/api";
 
 export async function inviteFriends(
@@ -155,4 +155,76 @@ export async function joinEvent(
   if (response.status === 204) {
     return { success: true };
   }
+}
+
+export async function createEvent(token: string, userId: number, event: Event) {
+  const response = await fetch(`${api}/events/create`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      title: event.title,
+      body: event.body,
+      ownerId: userId,
+      startTime: event.startTime,
+      endTime: event.endTime,
+      place: event.place,
+      category: event.category,
+      color: event.color,
+      isPublic: event.public,
+      reccurence: event.recurrence,
+      recurrenceEndDate: event.recurrenceEndDate,
+    }),
+  });
+
+  if (!response.ok) {
+    let errorData: any;
+    try {
+      errorData = await response.json();
+    } catch {
+      throw { general: `An error occurred: ${response.status}` };
+    }
+    throw errorData;
+  }
+
+  return await response.json();
+}
+
+export async function editEvent(token: string, userId: number, event: Event) {
+  const response = await fetch(`${api}/events/${event.id}/edit`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      title: event.title,
+      body: event.body,
+      ownerId: userId,
+      startTime: event.startTime,
+      endTime: event.endTime,
+      category: event.category,
+      place: event.place,
+      color: event.color,
+      isPublic: event.public,
+      reccurence: event.recurrence,
+      recurrenceEndDate: event.recurrenceEndDate,
+    }),
+  });
+
+  if (!response.ok) {
+    let errorMessage: string;
+    try {
+      const errorData = await response.json();
+      errorMessage =
+        errorData.message || `An error occured: ${response.status}`;
+    } catch {
+      errorMessage = `An error occured: ${response.status}`;
+    }
+    throw new Error(errorMessage);
+  }
+
+  return await response.json();
 }

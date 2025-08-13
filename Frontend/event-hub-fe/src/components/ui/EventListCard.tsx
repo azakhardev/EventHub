@@ -51,7 +51,7 @@ export default function EventListCard({ event, onClick }: EventListCardProps) {
       <div className="flex flex-row items-center w-full">
         <EventCard event={event} onClick={onClick} />
         <div className="flex-1 flex justify-around px-4">
-          {event.owner.id === userId && (
+          {event.owner!.id === userId && (
             <>
               <Tooltip text="Edit event">
                 <Button className="bg-transparent hover:bg-transparent hover:scale-[1.03] px-4 py-6 border-2 border-icon rounded-md">
@@ -84,7 +84,7 @@ export default function EventListCard({ event, onClick }: EventListCardProps) {
       </div>
       <EventFormDialog
         event={selectedEvent}
-        opened={event != null}
+        opened={selectedEvent != null}
         setIsOpened={() => setSelectedEvent(null)}
         submitMethod="PUT"
       />

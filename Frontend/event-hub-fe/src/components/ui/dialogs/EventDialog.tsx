@@ -41,7 +41,7 @@ export default function EventDialog({
 
   const { mutate } = useMutation({
     mutationFn: async () =>
-      await joinEvent(token, userId, event!.id, tokenInputRef?.current?.value),
+      await joinEvent(token, userId, event!.id!, tokenInputRef?.current?.value),
     onSuccess: () => {
       setShowTokenInput(false);
       setEvent(null);
@@ -121,13 +121,13 @@ export default function EventDialog({
                 <div className="flex flex-row items-center gap-2">
                   <img
                     src={
-                      event?.owner.profilePictureUrl ??
+                      event?.owner!.profilePictureUrl ??
                       "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
                     }
                     alt="profile_picture"
                     className="w-8 h-8 rounded-full"
                   />
-                  <p className="font-bold">{event?.owner.nickname}</p>
+                  <p className="font-bold">{event?.owner!.nickname}</p>
                 </div>
                 <Description text={event?.body ?? ""} />
                 <div className="flex flex-row items-center gap-2 justify-between mx-[5%]">

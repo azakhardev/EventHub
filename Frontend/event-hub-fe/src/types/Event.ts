@@ -1,10 +1,10 @@
 import type { User } from "./user.tsx";
 
 export type Event = {
-  id: number;
+  id?: number;
   title: string;
   body?: string;
-  owner: User;
+  owner?: User;
   creationDate?: string;
   startTime: string;
   endTime: string;
@@ -20,6 +20,7 @@ export type Event = {
 };
 
 export const EventRecurrence = {
+  ONCE: "once",
   DAILY: "daily",
   WEEKLY: "weekly",
   BI_WEEKLY: "biweekly",

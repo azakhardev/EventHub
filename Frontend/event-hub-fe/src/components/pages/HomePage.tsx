@@ -10,6 +10,7 @@ import { useState } from "react";
 import EventDialog from "../ui/dialogs/EventDialog.tsx";
 import ErrorAlert from "../ui/alerts/ErrorAlert.tsx";
 import type { Page } from "../../types/page.ts";
+import CreateEventButton from "../buttons/CreateEventButton.tsx";
 
 const api = import.meta.env.VITE_API_URL;
 
@@ -72,9 +73,7 @@ export default function HomePage() {
     <div className="flex flex-col w-full py-4">
       <div className="flex flex-row items-center justify-between">
         <h3 className="text-text-on-light">Upcoming Events</h3>
-        <div className="flex flex-row items-center gap-2">
-          <Button>Add Event</Button>
-        </div>
+        <CreateEventButton />
       </div>
       <Line />
       {upcomingEventsQuery.isLoading && <SyncLoader />}
@@ -94,7 +93,10 @@ export default function HomePage() {
       )}
       {upcomingEventsQuery.data &&
         upcomingEventsQuery.data.pageInfo.totalElements === 0 && (
-          <EmptyArray message="You don't have any events this week" />
+          <EmptyArray
+            align="left"
+            message="You don't have any events this week"
+          />
         )}
       <h3 className="text-text-on-light mt-4">ImportantEvents</h3>
       <Line />
@@ -115,7 +117,10 @@ export default function HomePage() {
       )}
       {importantEventsQuery.data &&
         importantEventsQuery.data.pageInfo.totalElements === 0 && (
-          <EmptyArray message="You don't have any important events yet" />
+          <EmptyArray
+            align="left"
+            message="You don't have any important events yet"
+          />
         )}
       <h3 className="text-text-on-light mt-4">My Events</h3>
       <Line />
@@ -136,7 +141,7 @@ export default function HomePage() {
       )}
       {ownEventsQuery.data &&
         ownEventsQuery.data.pageInfo.totalElements === 0 && (
-          <EmptyArray message="Create your first event" />
+          <EmptyArray align="left" message="Create your first event" />
         )}
       <EventDialog isOpen={event !== null} setEvent={setEvent} event={event} />
     </div>
