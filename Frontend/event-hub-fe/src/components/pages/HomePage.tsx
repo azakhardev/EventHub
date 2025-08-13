@@ -88,7 +88,7 @@ export default function HomePage() {
               event={event}
               key={event.id}
               onClick={() => setViewedEvent(event)}
-              onEditClick={setViewedEvent}
+              onEditClick={setEditedEvent}
             />
           ))}
         </div>
@@ -113,7 +113,7 @@ export default function HomePage() {
               event={event}
               key={event.id}
               onClick={() => setViewedEvent(event)}
-              onEditClick={setViewedEvent}
+              onEditClick={setEditedEvent}
             />
           ))}
         </div>
@@ -138,7 +138,7 @@ export default function HomePage() {
               event={event}
               key={event.id}
               onClick={() => setViewedEvent(event)}
-              onEditClick={setViewedEvent}
+              onEditClick={setEditedEvent}
             />
           ))}
         </div>

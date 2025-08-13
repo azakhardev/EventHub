@@ -9,6 +9,7 @@ import jakarta.persistence.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -34,13 +35,13 @@ public class Event {
     private User owner;
 
     @Column(name = "creation_date", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP", updatable = false, insertable = false)
-    private LocalDateTime creationDate;
+    private OffsetDateTime creationDate;
 
     @Column(name = "start_time", nullable = false)
-    private LocalDateTime startTime;
+    private OffsetDateTime startTime;
 
     @Column(name = "end_time", nullable = false)
-    private LocalDateTime endTime;
+    private OffsetDateTime endTime;
 
     private String place;
 
@@ -66,7 +67,7 @@ public class Event {
     private RecurrenceType recurrence = RecurrenceType.once;
 
     @Column(name = "recurrence_end_date" )
-    private LocalDate recurrenceEndDate;
+    private OffsetDateTime recurrenceEndDate;
 
     public enum RecurrenceType {
         once,
@@ -80,7 +81,7 @@ public class Event {
     public Event() {
     }
 
-    public Event(String title, String body, User owner, LocalDateTime startTime, LocalDateTime endTime, String place, String category, String color, boolean isPublic, RecurrenceType recurrence, LocalDate recurrenceEndDate) {
+    public Event(String title, String body, User owner, OffsetDateTime startTime, OffsetDateTime endTime, String place, String category, String color, boolean isPublic, RecurrenceType recurrence, OffsetDateTime recurrenceEndDate) {
         this.title = title;
         this.body = body;
         this.owner = owner;
@@ -94,7 +95,7 @@ public class Event {
         this.recurrenceEndDate = recurrenceEndDate;
     }
 
-    public Event(Long id, String title, String body, User owner, LocalDateTime creationDate, LocalDateTime startTime, LocalDateTime endTime, String place, String category, String color, boolean isPublic, UUID linkToken, RecurrenceType recurrence, LocalDate recurrenceEndDate) {
+    public Event(Long id, String title, String body, User owner, OffsetDateTime creationDate, OffsetDateTime startTime, OffsetDateTime endTime, String place, String category, String color, boolean isPublic, UUID linkToken, RecurrenceType recurrence, OffsetDateTime recurrenceEndDate) {
         this.id = id;
         this.title = title;
         this.body = body;
@@ -143,27 +144,27 @@ public class Event {
         this.owner = owner;
     }
 
-    public LocalDateTime getCreationDate() {
+    public OffsetDateTime getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(LocalDateTime creationDate) {
+    public void setCreationDate(OffsetDateTime creationDate) {
         this.creationDate = creationDate;
     }
 
-    public LocalDateTime getStartTime() {
+    public OffsetDateTime getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(LocalDateTime startTime) {
+    public void setStartTime(OffsetDateTime startTime) {
         this.startTime = startTime;
     }
 
-    public LocalDateTime getEndTime() {
+    public OffsetDateTime getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(LocalDateTime endTime) {
+    public void setEndTime(OffsetDateTime endTime) {
         this.endTime = endTime;
     }
 
@@ -215,11 +216,11 @@ public class Event {
         this.recurrence = recurrence;
     }
 
-    public LocalDate getRecurrenceEndDate() {
+    public OffsetDateTime getRecurrenceEndDate() {
         return recurrenceEndDate;
     }
 
-    public void setRecurrenceEndDate(LocalDate recurrenceEndDate) {
+    public void setRecurrenceEndDate(OffsetDateTime recurrenceEndDate) {
         this.recurrenceEndDate = recurrenceEndDate;
     }
 

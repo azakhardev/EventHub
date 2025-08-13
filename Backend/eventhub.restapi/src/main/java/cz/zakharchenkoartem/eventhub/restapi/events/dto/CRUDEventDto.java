@@ -10,6 +10,7 @@ import org.springframework.context.annotation.DependsOn;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.Date;
 
 public class CRUDEventDto {
@@ -24,10 +25,10 @@ public class CRUDEventDto {
 
     @NotNull
     @Future
-    private LocalDateTime startTime;
+    private OffsetDateTime startTime;
 
     @NotNull
-    private LocalDateTime endTime;
+    private OffsetDateTime endTime;
 
     private String place;
 
@@ -40,14 +41,14 @@ public class CRUDEventDto {
     private Event.RecurrenceType recurrence = Event.RecurrenceType.once;
 
     @Future
-    private LocalDate recurrenceEndDate;
+    private OffsetDateTime recurrenceEndDate;
 
     @AssertTrue(message = "Recurrence End Date must be in the future and not null when recurrence is not 'once'")
     public boolean isRecurrenceEndDateValid() {
         if (recurrence == null || recurrence == Event.RecurrenceType.once) {
             return true;
         }
-        return recurrenceEndDate != null && recurrenceEndDate.isAfter(LocalDate.now());
+        return recurrenceEndDate != null && recurrenceEndDate.isAfter(OffsetDateTime.now());
     }
 
     public String getTitle() {
@@ -74,19 +75,19 @@ public class CRUDEventDto {
         this.ownerId = ownerId;
     }
 
-    public LocalDateTime getStartTime() {
+    public OffsetDateTime getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(LocalDateTime startTime) {
+    public void setStartTime(OffsetDateTime startTime) {
         this.startTime = startTime;
     }
 
-    public LocalDateTime getEndTime() {
+    public OffsetDateTime getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(LocalDateTime endTime) {
+    public void setEndTime(OffsetDateTime endTime) {
         this.endTime = endTime;
     }
 
@@ -130,11 +131,11 @@ public class CRUDEventDto {
         this.recurrence = recurrence;
     }
 
-    public LocalDate getRecurrenceEndDate() {
+    public OffsetDateTime getRecurrenceEndDate() {
         return recurrenceEndDate;
     }
 
-    public void setRecurrenceEndDate(LocalDate recurrenceEndDate) {
+    public void setRecurrenceEndDate(OffsetDateTime recurrenceEndDate) {
         this.recurrenceEndDate = recurrenceEndDate;
     }
 }

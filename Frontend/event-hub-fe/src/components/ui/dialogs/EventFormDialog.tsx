@@ -70,8 +70,8 @@ export default function EventFormDialog(props: EventFormDialogProps) {
       place: (data.place as string) || undefined,
       category: (data.category as string) || undefined,
       color: (data.color as string) || "#000000",
-      public: data.public === "on",
-      recurrence: data.recurrence as Event["recurrence"],
+      public: isPublic,
+      recurrence: selectedRecurrence,
       recurrenceEndDate: data.recurrenceEndDate
         ? new Date(data.recurrenceEndDate as string).toISOString()
         : undefined,
@@ -132,7 +132,7 @@ export default function EventFormDialog(props: EventFormDialogProps) {
               <Label htmlFor="startTime">Start Time</Label>
               <Input
                 name="startTime"
-                defaultValue={event?.startTime}
+                defaultValue={event?.startTime.slice(0, 19)}
                 type="datetime-local"
                 error={fieldErrors.startTime}
               />
@@ -141,7 +141,7 @@ export default function EventFormDialog(props: EventFormDialogProps) {
               <Label htmlFor="endTime">End Time</Label>
               <Input
                 name="endTime"
-                defaultValue={event?.endTime}
+                defaultValue={event?.endTime.slice(0, 19)}
                 type="datetime-local"
                 error={fieldErrors.endTime}
               />
@@ -167,7 +167,7 @@ export default function EventFormDialog(props: EventFormDialogProps) {
             <div className="flex-1 flex flex-row">
               <Input
                 name="recurrenceEndDate"
-                defaultValue={event?.recurrenceEndDate}
+                defaultValue={event?.recurrenceEndDate?.slice(0, 19)}
                 type="date"
                 className="flex-1"
                 error={fieldErrors.recurrenceEndDate}

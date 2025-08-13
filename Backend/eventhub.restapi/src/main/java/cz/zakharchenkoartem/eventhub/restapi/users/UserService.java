@@ -28,6 +28,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.*;
 
 @Service
@@ -124,7 +125,7 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public Page<EventDto> getMyEvents(Long id, int page, int pageSize, Boolean important, Boolean owned, Boolean isPrivate, LocalDateTime from, LocalDateTime to, String expression, String order) {
+    public Page<EventDto> getMyEvents(Long id, int page, int pageSize, Boolean important, Boolean owned, Boolean isPrivate, OffsetDateTime from, OffsetDateTime to, String expression, String order) {
         User user = getUser(id);
 
         Pageable pageable = PageRequest.of(page, pageSize);
@@ -146,7 +147,7 @@ public class UserService {
         User requester = getUser(requesterId);
         Pageable pageable = PageRequest.of(page, pageSize);
 
-        Page<EventParticipantRelation> participantRelations = eventsParticipantsDataSource.findByUserOrdered(owner, null, null, null, LocalDateTime.now(), LocalDateTime.now().plusYears(1), null, null, pageable);
+        Page<EventParticipantRelation> participantRelations = eventsParticipantsDataSource.findByUserOrdered(owner, null, null, null, OffsetDateTime.now(), OffsetDateTime.now().plusYears(1), null, null, pageable);
 
         System.out.println(participantRelations);
 

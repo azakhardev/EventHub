@@ -137,7 +137,13 @@ export default function EventDialog({
                   </div>
                   <div className="flex flex-row items-center gap-2">
                     <Repeat size={32} className="text-primary" />
-                    <p className="capitalize">{event?.recurrence}</p>
+                    <p className="capitalize">
+                      {event?.recurrence}{" "}
+                      {event.recurrence != "once" &&
+                        ` - until ${new Date(
+                          event.recurrenceEndDate!
+                        ).toDateString()}`}
+                    </p>
                   </div>
                 </div>
               </>

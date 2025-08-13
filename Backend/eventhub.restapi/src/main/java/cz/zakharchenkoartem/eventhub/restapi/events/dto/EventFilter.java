@@ -4,6 +4,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 public class EventFilter {
     private Boolean important;
@@ -13,14 +14,14 @@ public class EventFilter {
     private String order;
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-    private LocalDateTime from;
+    private OffsetDateTime from;
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-    private LocalDateTime to;
+    private OffsetDateTime to;
 
     public EventFilter() {
-        this.from = LocalDateTime.now();
-        this.to = LocalDateTime.now().plusYears(1);
+        this.from = OffsetDateTime.now();
+        this.to = OffsetDateTime.now().plusYears(1);
     }
 
     public Boolean getImportant() {
@@ -55,19 +56,19 @@ public class EventFilter {
         this.expression = expression;
     }
 
-    public LocalDateTime getFrom() {
-        return from != null ? from : LocalDateTime.now();
+    public OffsetDateTime getFrom() {
+        return from != null ? from : OffsetDateTime.now();
     }
 
-    public void setFrom(LocalDateTime from) {
+    public void setFrom(OffsetDateTime from) {
         this.from = from;
     }
 
-    public LocalDateTime getTo() {
-        return to != null ? to : LocalDateTime.now().plusYears(1);
+    public OffsetDateTime getTo() {
+        return to != null ? to : OffsetDateTime.now().plusYears(1);
     }
 
-    public void setTo(LocalDateTime to) {
+    public void setTo(OffsetDateTime to) {
         this.to = to;
     }
 

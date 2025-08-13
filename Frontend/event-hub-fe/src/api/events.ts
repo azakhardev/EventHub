@@ -173,8 +173,8 @@ export async function createEvent(token: string, userId: number, event: Event) {
       place: event.place,
       category: event.category,
       color: event.color,
-      isPublic: event.public,
-      reccurence: event.recurrence,
+      public: event.public,
+      recurrence: event.recurrence,
       recurrenceEndDate: event.recurrenceEndDate,
     }),
   });
@@ -209,22 +209,20 @@ export async function editEvent(token: string, userId: number, event: Event) {
       category: event.category,
       place: event.place,
       color: event.color,
-      isPublic: event.public,
-      reccurence: event.recurrence,
+      public: event.public,
+      recurrence: event.recurrence,
       recurrenceEndDate: event.recurrenceEndDate,
     }),
   });
 
   if (!response.ok) {
-    let errorMessage: string;
+    let errorData: any;
     try {
-      const errorData = await response.json();
-      errorMessage =
-        errorData.message || `An error occured: ${response.status}`;
+      errorData = await response.json();
     } catch {
-      errorMessage = `An error occured: ${response.status}`;
+      throw { general: `An error occurred: ${response.status}` };
     }
-    throw new Error(errorMessage);
+    throw errorData;
   }
 
   return await response.json();

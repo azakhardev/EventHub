@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 public interface EventsParticipantsDataSource extends JpaRepository<EventParticipantRelation, Long> {
@@ -38,8 +39,8 @@ public interface EventsParticipantsDataSource extends JpaRepository<EventPartici
             @Param("important") Boolean important,
             @Param("owned") Boolean owned,
             @Param("private") Boolean isPrivate,
-            @Param("from") LocalDateTime from,
-            @Param("to") LocalDateTime to,
+            @Param("from") OffsetDateTime from,
+            @Param("to") OffsetDateTime to,
             @Param("expression") String expression,
             @Param("order") String order,
             Pageable pageable
