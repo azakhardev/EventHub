@@ -1,5 +1,6 @@
 package cz.zakharchenkoartem.eventhub.restapi.events;
 
+import cz.zakharchenkoartem.eventhub.restapi.events.dto.CRUDEventDto;
 import cz.zakharchenkoartem.eventhub.restapi.events_participants.EventParticipantId;
 import cz.zakharchenkoartem.eventhub.restapi.events_participants.EventParticipantRelation;
 import cz.zakharchenkoartem.eventhub.restapi.events_participants.EventsParticipantsDataSource;
@@ -77,6 +78,29 @@ public class EventService {
     }
 
     @Transactional
+    public Event createEvent(CRUDEventDto event, User owner) {
+        Event newEvent = new Event(event.getTitle(), event.getBody(), owner, event.getStartTime(), event.getEndTime(), event.getPlace(), event.getCategory(), event.getColor(), event.isPublic(), event.getRecurrence(), event.getRecurrenceEndDate());
+
+        return  eventsDataSource.save(newEvent);
+    }
+
+    @Transactional
+    public Event editEvent(Event existingEvent, CRUDEventDto event) {
+        existingEvent.setTitle(event.getTitle());
+        existingEvent.setBody(event.getBody());
+        existingEvent.setStartTime(event.getStartTime());
+        existingEvent.setEndTime(event.getEndTime());
+        existingEvent.setPlace(event.getPlace());
+        existingEvent.setCategory(event.getCategory());
+        existingEvent.setColor(event.getColor());
+        existingEvent.setPublic(event.isPublic());
+        existingEvent.setRecurrence(event.getRecurrence());
+        existingEvent.setRecurrenceEndDate(event.getRecurrenceEndDate());
+
+        return eventsDataSource.save(existingEvent);
+    }
+
+    @Transactional
     public void deleteEvent(Long eventId) {
         eventsDataSource.deleteById(eventId);
     }
@@ -95,7 +119,7 @@ public class EventService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User already participates in this event");
         }
 
-        if(!event.isPublic() && !Objects.equals(token, event.getLinkToken().toString())) {
+        if (!event.isPublic() && !Objects.equals(token, event.getLinkToken().toString())) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Incorrect token");
         }
 

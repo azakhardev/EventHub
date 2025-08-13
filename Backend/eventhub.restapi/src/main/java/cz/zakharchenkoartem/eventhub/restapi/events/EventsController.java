@@ -2,11 +2,15 @@ package cz.zakharchenkoartem.eventhub.restapi.events;
 
 import cz.zakharchenkoartem.eventhub.restapi.dto.PageInfo;
 import cz.zakharchenkoartem.eventhub.restapi.dto.PaginatedResponse;
+import cz.zakharchenkoartem.eventhub.restapi.events.dto.CRUDEventDto;
+import cz.zakharchenkoartem.eventhub.restapi.events.dto.EventDto;
 import cz.zakharchenkoartem.eventhub.restapi.events.dto.InvitationResponse;
 import cz.zakharchenkoartem.eventhub.restapi.events.dto.JoinEventRequestBody;
 import cz.zakharchenkoartem.eventhub.restapi.login.JwtService;
 import cz.zakharchenkoartem.eventhub.restapi.notifications.NotificationService;
 import cz.zakharchenkoartem.eventhub.restapi.users.User;
+import cz.zakharchenkoartem.eventhub.restapi.users.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -21,15 +25,17 @@ import java.util.Objects;
 @RequestMapping("/events")
 public class EventsController {
 
+    private final UserService userService;
     EventService eventService;
     NotificationService notificationsService;
     JwtService jwtService;
 
     @Autowired
-    public EventsController(EventService eventService, NotificationService notificationsService, JwtService jwtService) {
+    public EventsController(EventService eventService, NotificationService notificationsService, JwtService jwtService, UserService userService) {
         this.eventService = eventService;
         this.notificationsService = notificationsService;
         this.jwtService = jwtService;
+        this.userService = userService;
     }
 
     @GetMapping
@@ -76,6 +82,34 @@ public class EventsController {
         eventService.joinEvent(id, body.getToken(), body.getUserId());
 
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/create")
+    public ResponseEntity<Event> createEvent(@RequestHeader("Authorization") String authHeader, @Valid @RequestBody CRUDEventDto event) {
+        Long userId = jwtService.extractUserId(authHeader.replace("Bearer ", ""));
+
+        if (!Objects.equals(userId, event.getOwnerId())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access denied");
+        }
+        User owner = userService.getUser(event.getOwnerId());
+
+        Event createdEvent = eventService.createEvent(event, owner);
+
+        return new ResponseEntity<>(createdEvent, HttpStatus.CREATED);
+    }
+
+    @PutMapping("/{id}/edit")
+    public ResponseEntity<Event> editEvent(@RequestHeader("Authorization") String authHeader, @PathVariable Long id, @Valid @RequestBody CRUDEventDto event) {
+        Long userId = jwtService.extractUserId(authHeader.replace("Bearer ", ""));
+
+        if (!Objects.equals(userId, event.getOwnerId())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access denied");
+        }
+
+        Event existingEvent = getEvent(id);
+        Event e = eventService.editEvent(existingEvent, event);
+
+        return ResponseEntity.ok(e);
     }
 
     @DeleteMapping("/{id}")

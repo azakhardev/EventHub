@@ -7,6 +7,7 @@ import cz.zakharchenkoartem.eventhub.restapi.notifications.Notification;
 import cz.zakharchenkoartem.eventhub.restapi.users.User;
 import jakarta.persistence.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
@@ -65,7 +66,7 @@ public class Event {
     private RecurrenceType recurrence = RecurrenceType.once;
 
     @Column(name = "recurrence_end_date" )
-    private Date recurrenceEndDate;
+    private LocalDate recurrenceEndDate;
 
     public enum RecurrenceType {
         once,
@@ -79,7 +80,21 @@ public class Event {
     public Event() {
     }
 
-    public Event(Long id, String title, String body, User owner, LocalDateTime creationDate, LocalDateTime startTime, LocalDateTime endTime, String place, String category, String color, boolean isPublic, UUID linkToken, RecurrenceType recurrence, Date recurrenceEndDate) {
+    public Event(String title, String body, User owner, LocalDateTime startTime, LocalDateTime endTime, String place, String category, String color, boolean isPublic, RecurrenceType recurrence, LocalDate recurrenceEndDate) {
+        this.title = title;
+        this.body = body;
+        this.owner = owner;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.place = place;
+        this.category = category;
+        this.color = color;
+        this.isPublic = isPublic;
+        this.recurrence = recurrence;
+        this.recurrenceEndDate = recurrenceEndDate;
+    }
+
+    public Event(Long id, String title, String body, User owner, LocalDateTime creationDate, LocalDateTime startTime, LocalDateTime endTime, String place, String category, String color, boolean isPublic, UUID linkToken, RecurrenceType recurrence, LocalDate recurrenceEndDate) {
         this.id = id;
         this.title = title;
         this.body = body;
@@ -200,11 +215,11 @@ public class Event {
         this.recurrence = recurrence;
     }
 
-    public Date getRecurrenceEndDate() {
+    public LocalDate getRecurrenceEndDate() {
         return recurrenceEndDate;
     }
 
-    public void setRecurrenceEndDate(Date recurrenceEndDate) {
+    public void setRecurrenceEndDate(LocalDate recurrenceEndDate) {
         this.recurrenceEndDate = recurrenceEndDate;
     }
 
