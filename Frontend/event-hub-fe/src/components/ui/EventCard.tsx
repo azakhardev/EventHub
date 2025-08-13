@@ -42,9 +42,11 @@ export default function EventCard({
         <hr />
         <div className="flex flex-col">
           <div className="flex flex-row items-center gap-2">
-            <div>
-              <MapPin size={16} />
-            </div>
+            {event.place && (
+              <div>
+                <MapPin size={16} />
+              </div>
+            )}
             <div>{event.place}</div>
           </div>
           <div className="flex flex-row items-center gap-2">

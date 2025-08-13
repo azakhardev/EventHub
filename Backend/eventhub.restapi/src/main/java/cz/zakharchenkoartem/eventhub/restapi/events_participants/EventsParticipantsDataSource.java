@@ -45,5 +45,5 @@ public interface EventsParticipantsDataSource extends JpaRepository<EventPartici
             Pageable pageable
     );
 
-    EventParticipantRelation getByEventAndUser(Event event, User user);
+    boolean existsByUserAndEvent(User user, Event event);
 }

@@ -1,3 +1,4 @@
+import type { NumberMap } from "framer-motion";
 import type { User } from "../types/user";
 import { api } from "../utils/api";
 
@@ -122,4 +123,36 @@ export async function getMyEvents(
   }
 
   return await response.json();
+}
+
+export async function joinEvent(
+  token: string,
+  userId: number,
+  eventId: number,
+  eventToken?: string
+) {
+  const response = await fetch(`${api}/events/${eventId}/join`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ userId: userId, token: eventToken ?? "" }),
+  });
+
+  if (!response.ok) {
+    let errorMessage: string;
+    try {
+      const errorData = await response.json();
+      errorMessage =
+        errorData.message || `An error occured: ${response.status}`;
+    } catch {
+      errorMessage = `An error occured: ${response.status}`;
+    }
+    throw new Error(errorMessage);
+  }
+
+  if (response.status === 204) {
+    return { success: true };
+  }
 }

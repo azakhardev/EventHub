@@ -69,7 +69,7 @@ public class UserService {
     @Transactional(readOnly = true)
     public User getUser(Long id) {
         return usersDataSource.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "User not found"));
     }
 
     @Transactional(readOnly = true)
@@ -146,15 +146,18 @@ public class UserService {
         User requester = getUser(requesterId);
         Pageable pageable = PageRequest.of(page, pageSize);
 
-        Page<EventParticipantRelation> participantRelations = eventsParticipantsDataSource.findByUserOrdered(owner, null, null, false, LocalDateTime.now(), LocalDateTime.now().plusYears(1), null, null, pageable);
+        Page<EventParticipantRelation> participantRelations = eventsParticipantsDataSource.findByUserOrdered(owner, null, null, null, LocalDateTime.now(), LocalDateTime.now().plusYears(1), null, null, pageable);
 
         System.out.println(participantRelations);
 
         List<EventDto> events = new ArrayList<>();
         for (EventParticipantRelation relation : participantRelations) {
-            if (relation.getEvent().isPublic()) {
-                EventParticipantRelation rel = eventsParticipantsDataSource.getByEventAndUser(relation.getEvent(), requester);
-                events.add( new EventDto(relation.getEvent(), relation.isImportant(), rel != null));
+            Event e = relation.getEvent();
+            boolean exists = eventsParticipantsDataSource.existsByUserAndEvent(requester, relation.getEvent());
+            if (e.isPublic() || exists) {
+                events.add(new EventDto(relation.getEvent(), relation.isImportant(), exists));
+            } else {
+                events.add(new EventDto(e.getId(), e.getTitle(), owner, e.getStartTime(), e.getEndTime(), e.getColor(), relation.isImportant(), false));
             }
         }
 
@@ -164,9 +167,9 @@ public class UserService {
     @Transactional
     public FollowedUser pinFollower(PinFollowerRequest request) {
         User follower = usersDataSource.findById(request.getFollowerId())
-                .orElseThrow(() -> new RuntimeException("User (follower) not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "User (follower) not found"));
         User followed = usersDataSource.findById(request.getFollowedUserId())
-                .orElseThrow(() -> new RuntimeException("Followed user not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Followed user not found"));
 
         FollowRelation relation = followersDataSource
                 .findByFollowedUserIdAndFollowerId(request.getFollowedUserId(), request.getFollowerId())

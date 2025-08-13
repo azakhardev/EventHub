@@ -102,8 +102,8 @@ export default function FriendDetailDialog({
           </div>
           <div className="flex-[2] flex flex-col gap-4 ">
             <h3 className="text-center">Participates in:</h3>
-            <div className="flex flex-col gap-2 max-h-[28vh] overflow-y-scroll scrollbar-hide">
-              {!foreignEventsQuery.isFetchingNextPage &&
+            <div className="flex flex-col gap-2 max-h-[35vh] overflow-y-scroll scrollbar-hide">
+              {foreignEventsQuery.isSuccess &&
                 foreignEventsQuery.data?.pages
                   .flatMap((page) => page.data)
                   .map((event) => (
@@ -115,8 +115,8 @@ export default function FriendDetailDialog({
                     />
                   ))}
               <div className="h-4" ref={ref}></div>
-              {foreignEventsQuery.isFetchingNextPage && <BounceLoader />}
-              {!foreignEventsQuery.isFetchingNextPage &&
+              {foreignEventsQuery.isFetching && <BounceLoader />}
+              {!foreignEventsQuery.isFetching &&
                 foreignEventsQuery.data?.pages.flatMap((page) => page.data)
                   .length === 0 && <EmptyArray />}
             </div>

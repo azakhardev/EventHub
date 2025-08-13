@@ -16,6 +16,12 @@ public class EventDto extends Event {
         this.participates = participates;
     }
 
+    public EventDto(Long id, String title, User owner, LocalDateTime startTime, LocalDateTime endTime, String color, boolean important, boolean participates) {
+        super(id, title, null, owner, null, startTime, endTime, null, null, color, false, null, null, null);
+        this.important = important;
+        this.participates = participates;
+    }
+
     public boolean isImportant() {
         return important;
     }

@@ -15,6 +15,12 @@ public class EventParticipantId implements Serializable {
     @Column(name = "event_id")
     private Long eventId;
 
+    public EventParticipantId() {}
+
+    public EventParticipantId(Long userId, Long eventId) {
+        this.userId = userId;
+        this.eventId = eventId;
+    }
 
     public Long getUserId() {
         return userId;

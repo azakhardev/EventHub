@@ -3,6 +3,7 @@ package cz.zakharchenkoartem.eventhub.restapi.events;
 import cz.zakharchenkoartem.eventhub.restapi.dto.PageInfo;
 import cz.zakharchenkoartem.eventhub.restapi.dto.PaginatedResponse;
 import cz.zakharchenkoartem.eventhub.restapi.events.dto.InvitationResponse;
+import cz.zakharchenkoartem.eventhub.restapi.events.dto.JoinEventRequestBody;
 import cz.zakharchenkoartem.eventhub.restapi.login.JwtService;
 import cz.zakharchenkoartem.eventhub.restapi.notifications.NotificationService;
 import cz.zakharchenkoartem.eventhub.restapi.users.User;
@@ -70,6 +71,13 @@ public class EventsController {
         return ResponseEntity.ok(response);
     }
 
+    @PostMapping("/{id}/join")
+    public ResponseEntity<Void> joinEvent(@PathVariable Long id, @RequestBody JoinEventRequestBody body){
+        eventService.joinEvent(id, body.getToken(), body.getUserId());
+
+        return ResponseEntity.noContent().build();
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteEvent(@RequestHeader("Authorization") String authHeader, @PathVariable Long id) {
         Long userId = jwtService.extractUserId(authHeader.replace("Bearer ", ""));
@@ -84,4 +92,5 @@ public class EventsController {
 
         return ResponseEntity.noContent().build();
     }
+
 }
