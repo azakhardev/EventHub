@@ -227,3 +227,30 @@ export async function editEvent(token: string, userId: number, event: Event) {
 
   return await response.json();
 }
+
+export async function toggleImportant(
+  token: string,
+  eventId: number,
+  body: { important: boolean; userId: number }
+) {
+  const response = await fetch(`${api}/events/${eventId}/important`, {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
+  });
+
+  if (!response.ok) {
+    let errorData: any;
+    try {
+      errorData = await response.json();
+    } catch {
+      throw { general: `An error occurred: ${response.status}` };
+    }
+    throw errorData;
+  }
+
+  return await response.json();
+}

@@ -2,10 +2,8 @@ package cz.zakharchenkoartem.eventhub.restapi.events;
 
 import cz.zakharchenkoartem.eventhub.restapi.dto.PageInfo;
 import cz.zakharchenkoartem.eventhub.restapi.dto.PaginatedResponse;
-import cz.zakharchenkoartem.eventhub.restapi.events.dto.CRUDEventDto;
-import cz.zakharchenkoartem.eventhub.restapi.events.dto.EventDto;
-import cz.zakharchenkoartem.eventhub.restapi.events.dto.InvitationResponse;
-import cz.zakharchenkoartem.eventhub.restapi.events.dto.JoinEventRequestBody;
+import cz.zakharchenkoartem.eventhub.restapi.events.dto.*;
+import cz.zakharchenkoartem.eventhub.restapi.events_participants.EventParticipantRelation;
 import cz.zakharchenkoartem.eventhub.restapi.login.JwtService;
 import cz.zakharchenkoartem.eventhub.restapi.notifications.NotificationService;
 import cz.zakharchenkoartem.eventhub.restapi.users.User;
@@ -108,6 +106,19 @@ public class EventsController {
 
         Event existingEvent = getEvent(id);
         Event e = eventService.editEvent(existingEvent, event);
+
+        return ResponseEntity.ok(e);
+    }
+
+    @PutMapping("/{id}/important")
+    public ResponseEntity<EventParticipantRelation> toggleImportant(@RequestHeader("Authorization") String authHeader, @PathVariable Long id, @RequestBody ToggleImportantRequestBody body) {
+        Long userId = jwtService.extractUserId(authHeader.replace("Bearer ", ""));
+
+        if (!Objects.equals(userId, body.getUserId())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access denied");
+        }
+
+        EventParticipantRelation e = eventService.toggleImportant(id, body);
 
         return ResponseEntity.ok(e);
     }

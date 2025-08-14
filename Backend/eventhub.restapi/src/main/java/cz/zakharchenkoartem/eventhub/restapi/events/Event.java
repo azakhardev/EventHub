@@ -34,7 +34,7 @@ public class Event {
     @JsonIgnoreProperties("events")
     private User owner;
 
-    @Column(name = "creation_date", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP", updatable = false, insertable = false)
+    @Column(name = "creation_date", updatable = false, insertable = false)
     private OffsetDateTime creationDate;
 
     @Column(name = "start_time", nullable = false)

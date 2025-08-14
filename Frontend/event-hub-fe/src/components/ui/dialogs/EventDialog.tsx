@@ -18,7 +18,7 @@ import ParticipantsDialog from "./ParticipantsDialog";
 import Tooltip from "../Tooltip";
 import Input from "../forms/Input";
 import { useMutation } from "@tanstack/react-query";
-import { joinEvent } from "../../../api/events";
+import { joinEvent, toggleImportant } from "../../../api/events";
 import { useUserStore } from "../../../store/store";
 import { toast } from "react-toastify";
 import { queryClient } from "../../../main.tsx";
@@ -36,10 +36,27 @@ export default function EventDialog({
 }: EventDialogProps) {
   const [showParticipants, setShowParticipants] = useState(false);
   const [showTokenInput, setShowTokenInput] = useState(false);
+  const [important, setImportant] = useState(event?.important);
   const tokenInputRef = useRef<HTMLInputElement>(null);
   const { token, userId } = useUserStore();
 
-  const { mutate } = useMutation({
+  const { mutate: imoprtantMutation } = useMutation({
+    mutationFn: async () =>
+      await toggleImportant(token, event!.id!, {
+        userId,
+        important: !important,
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["events"] });
+      toast.success("State changed successfuly");
+      setImportant((old) => !old);
+    },
+    onError: (error) => {
+      toast.error("Failed to change state: " + error.message);
+    },
+  });
+
+  const { mutate: joinMutation } = useMutation({
     mutationFn: async () =>
       await joinEvent(token, userId, event!.id!, tokenInputRef?.current?.value),
     onSuccess: () => {
@@ -77,7 +94,7 @@ export default function EventDialog({
           showTokenInput && (
             <Button
               onClick={() => {
-                mutate();
+                joinMutation();
               }}
             >
               <CirclePlus size={24} />
@@ -155,6 +172,15 @@ export default function EventDialog({
             <div className="flex flex-row items-center justify-end gap-2 mb-2 mt-6 ">
               {(event?.participates || event?.public) && (
                 <>
+                  {event.participates && (
+                    <Button
+                      onClick={() => {
+                        imoprtantMutation();
+                      }}
+                    >
+                      {important ? "Important" : "Unimportant"}{" "}
+                    </Button>
+                  )}
                   <Tooltip text="Copy event token">
                     <Button
                       onClick={() => {
@@ -173,7 +199,7 @@ export default function EventDialog({
               {!event?.participates && (
                 <Button
                   onClick={() => {
-                    event?.public ? mutate() : setShowTokenInput(true);
+                    event?.public ? joinMutation() : setShowTokenInput(true);
                   }}
                 >
                   Join

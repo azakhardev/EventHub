@@ -1,6 +1,7 @@
 package cz.zakharchenkoartem.eventhub.restapi.events;
 
 import cz.zakharchenkoartem.eventhub.restapi.events.dto.CRUDEventDto;
+import cz.zakharchenkoartem.eventhub.restapi.events.dto.ToggleImportantRequestBody;
 import cz.zakharchenkoartem.eventhub.restapi.events_participants.EventParticipantId;
 import cz.zakharchenkoartem.eventhub.restapi.events_participants.EventParticipantRelation;
 import cz.zakharchenkoartem.eventhub.restapi.events_participants.EventsParticipantsDataSource;
@@ -142,6 +143,19 @@ public class EventService {
         );
 
         eventsParticipantsDataSource.save(relation);
+    }
+
+    @Transactional
+    public EventParticipantRelation toggleImportant(Long eventId, ToggleImportantRequestBody body) {
+        Event event = getEvent(eventId);
+        User user = userService.getUser(body.getUserId());
+
+        EventParticipantRelation relation = eventsParticipantsDataSource
+                .findByUserAndEvent(user, event)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Relation not found"));
+
+        relation.setImportant(body.isImportant());
+        return eventsParticipantsDataSource.save(relation);
     }
 
 }

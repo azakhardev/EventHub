@@ -149,16 +149,14 @@ public class UserService {
 
         Page<EventParticipantRelation> participantRelations = eventsParticipantsDataSource.findByUserOrdered(owner, null, null, null, OffsetDateTime.now(), OffsetDateTime.now().plusYears(1), null, null, pageable);
 
-        System.out.println(participantRelations);
-
         List<EventDto> events = new ArrayList<>();
         for (EventParticipantRelation relation : participantRelations) {
             Event e = relation.getEvent();
-            boolean exists = eventsParticipantsDataSource.existsByUserAndEvent(requester, relation.getEvent());
-            if (e.isPublic() || exists) {
-                events.add(new EventDto(relation.getEvent(), relation.isImportant(), exists));
+            Optional<EventParticipantRelation> rel = eventsParticipantsDataSource.findByUserAndEvent(requester, relation.getEvent());
+            if (e.isPublic() || rel.isPresent()) {
+                events.add(new EventDto(relation.getEvent(), rel.map(EventParticipantRelation::isImportant).orElse(false), rel.isPresent()));
             } else {
-                events.add(new EventDto(e.getId(), e.getTitle(), owner, e.getStartTime(), e.getEndTime(), e.getColor(), relation.isImportant(), false));
+                events.add(new EventDto(e.getId(), e.getTitle(), owner, e.getStartTime(), e.getEndTime(), e.getColor(), false, false));
             }
         }
 

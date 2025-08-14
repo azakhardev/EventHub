@@ -12,6 +12,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.Optional;
 
 public interface EventsParticipantsDataSource extends JpaRepository<EventParticipantRelation, Long> {
     Page<EventParticipantRelation> findByEvent(Event event, Pageable pageable);
@@ -47,4 +48,6 @@ public interface EventsParticipantsDataSource extends JpaRepository<EventPartici
     );
 
     boolean existsByUserAndEvent(User user, Event event);
+
+    Optional<EventParticipantRelation> findByUserAndEvent(User user, Event event);
 }
