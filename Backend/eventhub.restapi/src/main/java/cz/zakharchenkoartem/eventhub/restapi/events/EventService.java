@@ -5,6 +5,7 @@ import cz.zakharchenkoartem.eventhub.restapi.events.dto.ToggleImportantRequestBo
 import cz.zakharchenkoartem.eventhub.restapi.events_participants.EventParticipantId;
 import cz.zakharchenkoartem.eventhub.restapi.events_participants.EventParticipantRelation;
 import cz.zakharchenkoartem.eventhub.restapi.events_participants.EventsParticipantsDataSource;
+import cz.zakharchenkoartem.eventhub.restapi.notifications.NotificationService;
 import cz.zakharchenkoartem.eventhub.restapi.users.User;
 import cz.zakharchenkoartem.eventhub.restapi.users.UserService;
 import org.springframework.data.domain.Page;
@@ -25,16 +26,18 @@ import java.util.Optional;
 
 @Service
 public class EventService {
+    private final NotificationService notificationService;
     EventsDataSource eventsDataSource;
     UserService userService;
 
     EventsParticipantsDataSource eventsParticipantsDataSource;
 
     @Autowired
-    public EventService(EventsDataSource eventsDataSource, EventsParticipantsDataSource eventsParticipantsDataSource, UserService userService) {
+    public EventService(EventsDataSource eventsDataSource, EventsParticipantsDataSource eventsParticipantsDataSource, UserService userService, NotificationService notificationService) {
         this.eventsDataSource = eventsDataSource;
         this.eventsParticipantsDataSource = eventsParticipantsDataSource;
         this.userService = userService;
+        this.notificationService = notificationService;
     }
 
     @Transactional(readOnly = true)
@@ -111,9 +114,11 @@ public class EventService {
 
     @Transactional
     public void deleteEvent(Long eventId) {
-        eventsDataSource.deleteById(eventId);
+        Event event = getEvent(eventId);
 
-        //TODO: Add notifications to db about the change
+        notificationService.notifyDeletion(event);
+
+        eventsDataSource.delete(event);
     }
 
     @Transactional

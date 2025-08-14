@@ -116,10 +116,10 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public Page<Notification> getNotifications(Long id, int size, int pageSize) {
+    public Page<Notification> getNotifications(Long id, int page, int pageSize) {
         User user = getUser(id);
 
-        Pageable pageable = PageRequest.of(pageSize, size);
+        Pageable pageable = PageRequest.of(page, pageSize);
 
         return notificationsDataSource.findByUser(user, pageable);
     }

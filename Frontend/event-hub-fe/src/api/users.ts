@@ -258,3 +258,29 @@ export async function changePassword(
 
   return { success: true };
 }
+
+export async function getNotifications(
+  userId: number,
+  token: string,
+  page: number
+) {
+  const response = await fetch(
+    `${api}/users/${userId}/notifications?page=${page}&pageSize=20`,
+    {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(
+      errorData.message || `An error occured: ${response.status}`
+    );
+  }
+
+  return response.json();
+}

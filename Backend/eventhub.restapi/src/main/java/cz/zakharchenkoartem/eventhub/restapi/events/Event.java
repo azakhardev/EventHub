@@ -220,6 +220,22 @@ public class Event {
         return recurrenceEndDate;
     }
 
+    public List<EventParticipantRelation> getParticipants() {
+        return participants;
+    }
+
+    public void setParticipants(List<EventParticipantRelation> participants) {
+        this.participants = participants;
+    }
+
+    public List<Notification> getNotifications() {
+        return notifications;
+    }
+
+    public void setNotifications(List<Notification> notifications) {
+        this.notifications = notifications;
+    }
+
     public void setRecurrenceEndDate(OffsetDateTime recurrenceEndDate) {
         this.recurrenceEndDate = recurrenceEndDate;
     }

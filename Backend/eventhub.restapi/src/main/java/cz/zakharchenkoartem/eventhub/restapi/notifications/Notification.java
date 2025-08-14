@@ -32,18 +32,26 @@ public class Notification {
     @Column(name = "created_at")
     private LocalDateTime timestamp;
 
-    private boolean is_read;
+    @Column(name = "is_read")
+    private boolean isRead;
 
     public Notification() {}
 
-    public Notification(Long id, User user, Event event, String type, String message, LocalDateTime timestamp, boolean is_read) {
+    public Notification(User user, Event event, String type, String message) {
+        this.user = user;
+        this.event = event;
+        this.type = type;
+        this.message = message;
+    }
+
+    public Notification(Long id, User user, Event event, String type, String message, LocalDateTime timestamp, boolean isRead) {
         this.id = id;
         this.user = user;
         this.event = event;
         this.type = type;
         this.message = message;
         this.timestamp = timestamp;
-        this.is_read = is_read;
+        this.isRead = isRead;
     }
 
     public Long getId() {
@@ -94,12 +102,12 @@ public class Notification {
         this.timestamp = timestamp;
     }
 
-    public boolean isIs_read() {
-        return is_read;
+    public boolean isIsRead() {
+        return isRead;
     }
 
-    public void setIs_read(boolean is_read) {
-        this.is_read = is_read;
+    public void setIsRead(boolean is_read) {
+        this.isRead = is_read;
     }
 
     @Override
@@ -111,7 +119,7 @@ public class Notification {
                 ", type='" + type + '\'' +
                 ", message='" + message + '\'' +
                 ", timestamp=" + timestamp +
-                ", is_read=" + is_read +
+                ", is_read=" + isRead +
                 '}';
     }
 
@@ -119,11 +127,11 @@ public class Notification {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Notification that = (Notification) o;
-        return is_read == that.is_read && Objects.equals(id, that.id) && Objects.equals(user, that.user) && Objects.equals(event, that.event) && Objects.equals(type, that.type) && Objects.equals(message, that.message) && Objects.equals(timestamp, that.timestamp);
+        return isRead == that.isRead && Objects.equals(id, that.id) && Objects.equals(user, that.user) && Objects.equals(event, that.event) && Objects.equals(type, that.type) && Objects.equals(message, that.message) && Objects.equals(timestamp, that.timestamp);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, user, event, type, message, timestamp, is_read);
+        return Objects.hash(id, user, event, type, message, timestamp, isRead);
     }
 }
