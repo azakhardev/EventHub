@@ -41,6 +41,7 @@ export default function EventFormDialog(props: EventFormDialogProps) {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["events"] });
+      props.setIsOpened(false);
       toast.success(
         props.submitMethod === "POST"
           ? "Event created successfully"

@@ -146,6 +146,20 @@ public class EventService {
     }
 
     @Transactional
+    public void leaveEvent(Long eventId, Long userId) {
+        Event event = getEvent(eventId);
+        User user = userService.getUser(userId);
+
+        if (Objects.equals(event.getOwner().getId(), user.getId())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Owners can't leave their events, please delete it.");
+        }
+
+        EventParticipantRelation relation = eventsParticipantsDataSource.findByUserAndEvent(user, event).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Relation not found"));
+
+        eventsParticipantsDataSource.delete(relation);
+    }
+
+    @Transactional
     public EventParticipantRelation toggleImportant(Long eventId, ToggleImportantRequestBody body) {
         Event event = getEvent(eventId);
         User user = userService.getUser(body.getUserId());

@@ -26,63 +26,6 @@ export async function inviteFriends(
   return response.json();
 }
 
-export async function getForeignEvents(
-  token: string,
-  userId: number,
-  page: number,
-  requesterId: number
-) {
-  const response = await fetch(
-    `${api}/users/${userId}/foreign-events?page=${page}&pageSize=10&requesterId=${requesterId}`,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    }
-  );
-
-  if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(
-      errorData.message || `An error occured: ${response.status}`
-    );
-  }
-
-  return await response.json();
-}
-
-export async function deleteEvent(token: string, eventId: number) {
-  const response = await fetch(`${api}/events/${eventId}`, {
-    method: "DELETE",
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-
-  if (!response.ok) {
-    let errorMessage: string;
-    try {
-      const errorData = await response.json();
-      errorMessage =
-        errorData.message || `An error occured: ${response.status}`;
-    } catch {
-      errorMessage = `An error occured: ${response.status}`;
-    }
-    throw new Error(errorMessage);
-  }
-
-  if (response.status === 204) {
-    return { success: true };
-  }
-
-  try {
-    return await response.json();
-  } catch {
-    return { success: true };
-  }
-}
-
 export async function getMyEvents(
   token: string,
   userId: number,
@@ -125,36 +68,30 @@ export async function getMyEvents(
   return await response.json();
 }
 
-export async function joinEvent(
+export async function getForeignEvents(
   token: string,
   userId: number,
-  eventId: number,
-  eventToken?: string
+  page: number,
+  requesterId: number
 ) {
-  const response = await fetch(`${api}/events/${eventId}/join`, {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ userId: userId, token: eventToken ?? "" }),
-  });
+  const response = await fetch(
+    `${api}/users/${userId}/foreign-events?page=${page}&pageSize=10&requesterId=${requesterId}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    }
+  );
 
   if (!response.ok) {
-    let errorMessage: string;
-    try {
-      const errorData = await response.json();
-      errorMessage =
-        errorData.message || `An error occured: ${response.status}`;
-    } catch {
-      errorMessage = `An error occured: ${response.status}`;
-    }
-    throw new Error(errorMessage);
+    const errorData = await response.json();
+    throw new Error(
+      errorData.message || `An error occured: ${response.status}`
+    );
   }
 
-  if (response.status === 204) {
-    return { success: true };
-  }
+  return await response.json();
 }
 
 export async function createEvent(token: string, userId: number, event: Event) {
@@ -226,6 +163,98 @@ export async function editEvent(token: string, userId: number, event: Event) {
   }
 
   return await response.json();
+}
+
+export async function deleteEvent(token: string, eventId: number) {
+  const response = await fetch(`${api}/events/${eventId}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    let errorMessage: string;
+    try {
+      const errorData = await response.json();
+      errorMessage =
+        errorData.message || `An error occured: ${response.status}`;
+    } catch {
+      errorMessage = `An error occured: ${response.status}`;
+    }
+    throw new Error(errorMessage);
+  }
+
+  if (response.status === 204) {
+    return { success: true };
+  }
+
+  try {
+    return await response.json();
+  } catch {
+    return { success: true };
+  }
+}
+
+export async function joinEvent(
+  token: string,
+  userId: number,
+  eventId: number,
+  eventToken?: string
+) {
+  const response = await fetch(`${api}/events/${eventId}/join`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ userId: userId, token: eventToken ?? "" }),
+  });
+
+  if (!response.ok) {
+    let errorMessage: string;
+    try {
+      const errorData = await response.json();
+      errorMessage =
+        errorData.message || `An error occured: ${response.status}`;
+    } catch {
+      errorMessage = `An error occured: ${response.status}`;
+    }
+    throw new Error(errorMessage);
+  }
+
+  if (response.status === 204) {
+    return { success: true };
+  }
+}
+
+export async function leaveEvent(
+  token: string,
+  eventId: number,
+  userId: number
+) {
+  const response = await fetch(
+    `${api}/events/${eventId}/leave?userId=${userId}`,
+    {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  if (!response.ok) {
+    let errorData: any;
+    try {
+      errorData = await response.json();
+    } catch {
+      throw { general: `An error occurred: ${response.status}` };
+    }
+    throw errorData;
+  }
+
+  return { succes: 204 };
 }
 
 export async function toggleImportant(

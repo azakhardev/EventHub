@@ -18,7 +18,7 @@ import ParticipantsDialog from "./ParticipantsDialog";
 import Tooltip from "../Tooltip";
 import Input from "../forms/Input";
 import { useMutation } from "@tanstack/react-query";
-import { joinEvent, toggleImportant } from "../../../api/events";
+import { joinEvent, leaveEvent, toggleImportant } from "../../../api/events";
 import { useUserStore } from "../../../store/store";
 import { toast } from "react-toastify";
 import { queryClient } from "../../../main.tsx";
@@ -67,6 +67,18 @@ export default function EventDialog({
     },
     onError: (error) => {
       toast.error("Failed to join : " + error.message);
+    },
+  });
+
+  const { mutate: leaveMutation } = useMutation({
+    mutationFn: async () => await leaveEvent(token, event!.id!, userId),
+    onSuccess: () => {
+      toast.success("Event left");
+      setEvent(null);
+      queryClient.invalidateQueries({ queryKey: ["events"] });
+    },
+    onError: (error) => {
+      toast.error("Failed to leave event: " + error.message);
     },
   });
 
@@ -194,6 +206,15 @@ export default function EventDialog({
                   <Button onClick={() => setShowParticipants(true)}>
                     Participants
                   </Button>
+                  {event?.owner?.id !== userId && (
+                    <Button
+                      onClick={() => {
+                        leaveMutation();
+                      }}
+                    >
+                      Leave
+                    </Button>
+                  )}
                 </>
               )}
               {!event?.participates && (

@@ -82,6 +82,13 @@ public class EventsController {
         return ResponseEntity.noContent().build();
     }
 
+    @DeleteMapping("/{id}/leave")
+    public ResponseEntity<Void> leaveEvent(@PathVariable Long id, @RequestParam Long userId){
+        eventService.leaveEvent(id, userId);
+
+        return ResponseEntity.noContent().build();
+    }
+
     @PostMapping("/create")
     public ResponseEntity<Event> createEvent(@RequestHeader("Authorization") String authHeader, @Valid @RequestBody CRUDEventDto event) {
         Long userId = jwtService.extractUserId(authHeader.replace("Bearer ", ""));
