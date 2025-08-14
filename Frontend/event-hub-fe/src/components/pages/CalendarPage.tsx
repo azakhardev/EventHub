@@ -5,7 +5,7 @@ import { getMyEvents } from "../../api/events";
 import type { Page } from "../../types/page";
 import EventListCard from "../ui/EventListCard";
 import type { Event } from "../../types/event";
-import { populateWithReccurenceEvents } from "../../types/helpers";
+import { populateWithReccurenceEvents } from "../../utils/utils";
 import { SyncLoader } from "../ui/loaders/SyncLoader";
 import ErrorAlert from "../ui/alerts/ErrorAlert";
 import Line from "../ui/Line";

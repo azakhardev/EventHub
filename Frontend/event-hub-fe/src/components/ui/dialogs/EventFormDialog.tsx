@@ -14,6 +14,8 @@ import ColorPickerField from "../forms/ColorPicker";
 import { useState } from "react";
 import { queryClient } from "../../../main.tsx";
 
+import { formatForDatetimeLocal } from "../../../utils/utils.ts";
+
 interface EventFormDialogProps {
   event: Event | null;
   submitMethod: "POST" | "PUT";
@@ -133,7 +135,7 @@ export default function EventFormDialog(props: EventFormDialogProps) {
               <Label htmlFor="startTime">Start Time</Label>
               <Input
                 name="startTime"
-                defaultValue={event?.startTime.slice(0, 19)}
+                defaultValue={formatForDatetimeLocal(event?.startTime)}
                 type="datetime-local"
                 error={fieldErrors.startTime}
               />
@@ -142,7 +144,7 @@ export default function EventFormDialog(props: EventFormDialogProps) {
               <Label htmlFor="endTime">End Time</Label>
               <Input
                 name="endTime"
-                defaultValue={event?.endTime.slice(0, 19)}
+                defaultValue={formatForDatetimeLocal(event?.endTime)}
                 type="datetime-local"
                 error={fieldErrors.endTime}
               />
@@ -168,7 +170,7 @@ export default function EventFormDialog(props: EventFormDialogProps) {
             <div className="flex-1 flex flex-row">
               <Input
                 name="recurrenceEndDate"
-                defaultValue={event?.recurrenceEndDate?.slice(0, 19)}
+                defaultValue={formatForDatetimeLocal(event?.recurrenceEndDate)}
                 type="date"
                 className="flex-1"
                 error={fieldErrors.recurrenceEndDate}
