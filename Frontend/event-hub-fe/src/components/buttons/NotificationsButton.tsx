@@ -1,16 +1,22 @@
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useMutation } from "@tanstack/react-query";
 import { Bell } from "lucide-react";
 import { getNotifications } from "../../api/users";
 import { useUserStore } from "../../store/store";
 import type { Page } from "../../types/page";
 import type { Notification } from "../../types/notification";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useInView } from "react-intersection-observer";
+import { SyncLoader } from "../ui/loaders/SyncLoader";
+import ErrorAlert from "../ui/alerts/ErrorAlert";
+import NotificationCard from "../ui/NotificationCard";
+import Tooltip from "../ui/Tooltip";
 
 export default function NotificationsButton() {
   const { token, userId } = useUserStore();
   const [opened, setIsOpened] = useState(false);
+  const [ref, inView] = useInView({ triggerOnce: false, threshold: 0 });
 
-  useInfiniteQuery<Page<Notification>>({
+  const notificationsQuery = useInfiniteQuery<Page<Notification>>({
     queryKey: ["notifications"],
     queryFn: async ({ pageParam = 1 }) =>
       getNotifications(userId, token, pageParam as number),
@@ -22,12 +28,62 @@ export default function NotificationsButton() {
     enabled: opened,
   });
 
+  const { mutate: updateStatus } = useMutation({
+    mutationFn: async () => {},
+    onSuccess: () => {},
+    onError: () => {},
+  });
+
+  //TODO: Dispay notifications and set them as viewed (except invites)
+  async function handleOnBellClick() {
+    updateStatus();
+    setIsOpened((old) => !old);
+  }
+
+  useEffect(() => {
+    if (
+      notificationsQuery.hasNextPage &&
+      inView &&
+      !notificationsQuery.isFetchingNextPage
+    ) {
+      notificationsQuery.fetchNextPage();
+    }
+  }, [
+    notificationsQuery.hasNextPage,
+    inView,
+    notificationsQuery.isFetchingNextPage,
+  ]);
+
   return (
-    <div
-      className="rounded-full bg-primary p-2 cursor-pointer hover:bg-button-hover"
-      onClick={() => setIsOpened(true)}
-    >
-      <Bell size={28} className="text-onSurface" />
-    </div>
+    <>
+      <Tooltip text="Notifications">
+        <div
+          className="rounded-full bg-primary p-2 cursor-pointer hover:bg-button-hover"
+          onClick={handleOnBellClick}
+        >
+          <Bell size={28} className="text-onSurface" />
+        </div>
+      </Tooltip>
+      {opened && (
+        <div className="absolute top-[90px] right-[28px] flex flex-col z-50 bg-dialog py-4 px-2 rounded-md border-2 border-primary">
+          {notificationsQuery.isSuccess &&
+            notificationsQuery.data.pages
+              .flatMap((p) => p.data)
+              .map((n) => <NotificationCard notification={n} />)}
+          {notificationsQuery.isSuccess &&
+            notificationsQuery.data.pages.flatMap((p) => p.data).length ===
+              0 && (
+              <div className="w-full text-bold text-center py-2">
+                You don't have any notifications yet.
+              </div>
+            )}
+          {notificationsQuery.isError && (
+            <ErrorAlert error={notificationsQuery.error.message} />
+          )}
+          {notificationsQuery.isFetching && <SyncLoader />}
+          <div ref={ref} className="h-4"></div>
+        </div>
+      )}
+    </>
   );
 }

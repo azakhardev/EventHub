@@ -252,4 +252,6 @@ public class UserService {
 
         user.setPassword(passwordEncoder.encode(changePassword.getNewPassword()));
     }
+
+    //TODO: Function for populating Events with upcoming events
 }

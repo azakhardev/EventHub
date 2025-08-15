@@ -77,10 +77,6 @@ export default function HomePage() {
         <CreateEventButton />
       </div>
       <Line />
-      {upcomingEventsQuery.isLoading && <SyncLoader />}
-      {upcomingEventsQuery.error && (
-        <ErrorAlert error={upcomingEventsQuery.error.message} />
-      )}
       {upcomingEventsQuery.data && (
         <div className="flex flex-col gap-2">
           {upcomingEventsQuery.data.data.map((event) => (
@@ -100,12 +96,12 @@ export default function HomePage() {
             message="You don't have any events this week"
           />
         )}
+      {upcomingEventsQuery.isLoading && <SyncLoader />}
+      {upcomingEventsQuery.error && (
+        <ErrorAlert error={upcomingEventsQuery.error.message} />
+      )}
       <h3 className="text-text-on-light mt-4">ImportantEvents</h3>
       <Line />
-      {importantEventsQuery.isLoading && <SyncLoader />}
-      {importantEventsQuery.error && (
-        <ErrorAlert error={importantEventsQuery.error.message} />
-      )}
       {importantEventsQuery.data && (
         <div className="flex flex-col gap-2">
           {importantEventsQuery.data.data.map((event) => (
@@ -125,12 +121,12 @@ export default function HomePage() {
             message="You don't have any important events yet"
           />
         )}
+      {importantEventsQuery.isLoading && <SyncLoader />}
+      {importantEventsQuery.error && (
+        <ErrorAlert error={importantEventsQuery.error.message} />
+      )}
       <h3 className="text-text-on-light mt-4">My Events</h3>
       <Line />
-      {ownEventsQuery.isLoading && <SyncLoader />}
-      {ownEventsQuery.error && (
-        <ErrorAlert error={ownEventsQuery.error.message} />
-      )}
       {ownEventsQuery.data && (
         <div className="flex flex-col gap-2">
           {ownEventsQuery.data.data.map((event) => (
@@ -147,6 +143,10 @@ export default function HomePage() {
         ownEventsQuery.data.pageInfo.totalElements === 0 && (
           <EmptyArray align="left" message="Create your first event" />
         )}
+      {ownEventsQuery.isLoading && <SyncLoader />}
+      {ownEventsQuery.error && (
+        <ErrorAlert error={ownEventsQuery.error.message} />
+      )}
       <EventDialog
         isOpen={viewedEvent !== null}
         setEvent={setViewedEvent}

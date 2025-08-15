@@ -207,6 +207,7 @@ export default function ParticipantsDialog({
                   {participantsQuery.isSuccess &&
                     participantsQuery.data.pages.flatMap((page) => page.data)
                       .length === 0 && <EmptyArray />}
+                  {participantsQuery.isLoading && <BounceLoader />}
                   {participantsQuery.hasNextPage && (
                     <div ref={participantsRef} className="h-4"></div>
                   )}
@@ -214,10 +215,6 @@ export default function ParticipantsDialog({
               )}
               {expression !== "" && (
                 <div className="flex flex-col gap-2">
-                  {friendsQuery.isLoading && <BounceLoader />}
-                  {friendsQuery.error && (
-                    <ErrorAlert error={friendsQuery.error.message} />
-                  )}
                   {friendsQuery.isSuccess &&
                     friendsQuery.data.pages
                       .flatMap((page) => page.data)
@@ -242,6 +239,10 @@ export default function ParticipantsDialog({
                           user={friend}
                         />
                       ))}
+                  {friendsQuery.error && (
+                    <ErrorAlert error={friendsQuery.error.message} />
+                  )}
+                  {friendsQuery.isLoading && <BounceLoader />}
                   {friendsQuery.hasNextPage && (
                     <div ref={friendsRef} className="h-4"></div>
                   )}

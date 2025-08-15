@@ -58,59 +58,58 @@ export default function FriendsListSection() {
   return (
     <>
       {selectedPage !== "friends" && (
-        <div className="flex flex-col gap-2 items-center border-l-2 max-h-[100vh] overflow-y-scroll scrollbar-hide">
-          <div className="flex flex-row items-center justify-between w-full pr-2 px-4 mt-10">
+        <>
+          <div className="flex flex-row items-center justify-between w-full pr-8 pl-6 mt-10 max-h-[7vh]">
             <h3 className="text-text-on-light">Friends</h3>
             <div className="flex flex-row gap-2">
               <Tooltip text="Add friend">
                 <AddFriendButton />
               </Tooltip>
-              <Tooltip text="Notifications">
-                <NotificationsButton />
-              </Tooltip>
+              <NotificationsButton />
             </div>
           </div>
-          <div className="w-full px-1 lg:w-2/3 lg:px-4 my-2">
-            <Input
-              placeholder="Search for a friend"
-              icon={<Search size={24} />}
-              ref={searchRef}
-              onChange={() => {
-                setExpression(searchRef.current?.value ?? "");
-              }}
-            />
+          <div className="flex flex-col gap-2 items-center border-l-2 max-h-[93vh] overflow-y-scroll scrollbar-hide">
+            <div className="w-full px-1 lg:w-2/3 lg:px-4 my-2">
+              <Input
+                placeholder="Search for a friend"
+                icon={<Search size={24} />}
+                ref={searchRef}
+                onChange={() => {
+                  setExpression(searchRef.current?.value ?? "");
+                }}
+              />
+            </div>
+            <div className="flex flex-col gap-4 w-full px-4">
+              <>
+                {isSuccess &&
+                  data?.pages
+                    .flatMap((page) => page.data)
+                    .sort((a: User, b: User) => {
+                      if (a.pinned === b.pinned) return 0;
+                      return a.pinned ? -1 : 1;
+                    })
+                    .map((user: User) => (
+                      <UserCard
+                        type="following"
+                        key={user.id}
+                        user={user}
+                        onClick={() => setFriend(user)}
+                      />
+                    ))}
+                <div ref={ref}></div>
+              </>
+              {isFetching && (
+                <div className="mb-2">
+                  <SyncLoader />
+                </div>
+              )}
+              {error && <ErrorAlert error={error.message} />}
+              {data?.pages.flatMap((page) => page.data).length === 0 && (
+                <EmptyArray />
+              )}
+            </div>
           </div>
-
-          <div className="flex flex-col gap-4 w-full px-4">
-            <>
-              {isSuccess &&
-                data?.pages
-                  .flatMap((page) => page.data)
-                  .sort((a: User, b: User) => {
-                    if (a.pinned === b.pinned) return 0;
-                    return a.pinned ? -1 : 1;
-                  })
-                  .map((user: User) => (
-                    <UserCard
-                      type="following"
-                      key={user.id}
-                      user={user}
-                      onClick={() => setFriend(user)}
-                    />
-                  ))}
-              <div ref={ref}></div>
-            </>
-            {isFetching && (
-              <div className="mb-2">
-                <SyncLoader />
-              </div>
-            )}
-            {error && <ErrorAlert error={error.message} />}
-            {data?.pages.flatMap((page) => page.data).length === 0 && (
-              <EmptyArray />
-            )}
-          </div>
-        </div>
+        </>
       )}
       <FriendDetailDialog friend={friend} setFriend={setFriend} />
     </>
