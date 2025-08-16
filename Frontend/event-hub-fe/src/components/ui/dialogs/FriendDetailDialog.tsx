@@ -23,7 +23,7 @@ export default function FriendDetailDialog({
   setFriend,
 }: FriendDetailDialogProps) {
   const { token, userId } = useUserStore();
-  const { ref, inView } = useInView({ threshold: 0, triggerOnce: false });
+  const { ref, inView } = useInView({ threshold: 0.1, triggerOnce: false });
 
   const [event, setEvent] = useState<Event | null>(null);
 
@@ -114,7 +114,7 @@ export default function FriendDetailDialog({
                       className="min-h-[150px]"
                     />
                   ))}
-              <div className="h-4" ref={ref}></div>
+              <div className="min-h-[10px]" ref={ref}></div>
               {foreignEventsQuery.isFetching && <BounceLoader />}
               {!foreignEventsQuery.isFetching &&
                 foreignEventsQuery.data?.pages.flatMap((page) => page.data)

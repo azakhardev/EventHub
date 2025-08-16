@@ -83,9 +83,6 @@ export default function EventFormDialog(props: EventFormDialogProps) {
     mutate(newEvent);
   }
 
-  console.log("START TIME:", formatForDatetimeLocal(event?.startTime));
-  console.log("ENDF TIME:", formatForDatetimeLocal(event?.endTime));
-
   return (
     <Dialog
       title={props.submitMethod === "POST" ? "Create Event" : "Edit Event"}

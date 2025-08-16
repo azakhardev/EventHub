@@ -76,7 +76,7 @@ export default function CalendarPage() {
           eventsQuery.data.pages.flatMap((p) => p.data).length === 0 && (
             <EmptyArray />
           )}
-        <div className="h-6" ref={ref}></div>
+        <div className="min-h-[10px]" ref={ref}></div>
       </div>
       <EventDialog
         event={viewedEvent}

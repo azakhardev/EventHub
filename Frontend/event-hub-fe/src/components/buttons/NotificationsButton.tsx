@@ -110,7 +110,7 @@ export default function NotificationsButton() {
             <ErrorAlert error={notificationsQuery.error.message} />
           )}
           {notificationsQuery.isFetching && <BounceLoader />}
-          <div ref={ref} className="h-4"></div>
+          <div className="min-h-[10px]" ref={ref}></div>
         </div>
       )}
     </>

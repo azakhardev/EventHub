@@ -142,7 +142,9 @@ export default function AddFriendButton() {
                           <span>{user.username}</span>
                         </div>
                       ))}
-                    {hasNextPage && <div ref={ref}></div>}
+                    {hasNextPage && (
+                      <div className="min-h-[10px]" ref={ref}></div>
+                    )}
                   </div>
                 )}
               </div>

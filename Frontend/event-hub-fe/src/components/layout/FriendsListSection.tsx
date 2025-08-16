@@ -96,7 +96,7 @@ export default function FriendsListSection() {
                         onClick={() => setFriend(user)}
                       />
                     ))}
-                <div ref={ref}></div>
+                <div className="min-h-[10px]" ref={ref}></div>
               </>
               {isFetching && (
                 <div className="mb-2">

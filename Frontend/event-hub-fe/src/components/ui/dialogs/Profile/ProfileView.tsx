@@ -144,7 +144,7 @@ export default function ProfileView({
                 <ErrorAlert error={followersQuery.error.message} />
               )}
               {followersQuery.isFetching && <SyncLoader />}
-              <div className="h-4" ref={ref}></div>
+              <div className="min-h-[10px]" ref={ref}></div>
             </div>
           </div>
         </div>
