@@ -2,7 +2,11 @@ import { useMutation } from "@tanstack/react-query";
 import type { Notification } from "../../types/notification";
 import Button from "./forms/Button";
 import Line from "./Line";
-import { acceptInvitation, updateStatus } from "../../api/notifications";
+import {
+  acceptInvitation,
+  updateStatus,
+  deleteNotification,
+} from "../../api/notifications";
 import { useUserStore } from "../../store/store";
 import { toast } from "react-toastify";
 import { queryClient } from "../../main";
@@ -20,6 +24,7 @@ export default function NotificationCard({
   const { token } = useUserStore();
 
   const [isRead, setIsRead] = useState(notification.isRead);
+  const [isDismissed, setIsDismissed] = useState(false);
 
   const { mutate: acceptMutation } = useMutation({
     mutationFn: async () => acceptInvitation(token, notification.id),
@@ -37,6 +42,16 @@ export default function NotificationCard({
     mutationFn: async () => updateStatus([notification.id], token),
     onSuccess: () => {
       setIsRead(true);
+    },
+  });
+
+  const { mutate: mutateDismiss } = useMutation({
+    mutationFn: async () => deleteNotification(token, notification.id),
+    onSuccess: () => {
+      setIsDismissed(true);
+    },
+    onError: (e) => {
+      toast.error("Failed to dissmis notification: " + e.message);
     },
   });
 
@@ -78,8 +93,8 @@ export default function NotificationCard({
                 </Button>
               </>
             )
-          : notification.type.toUpperCase() !== "DELETE" && (
-              <Button onClick={() => alert("Open event dialog")}>View</Button>
+          : !isDismissed && (
+              <Button onClick={() => mutateDismiss()}>Dismiss</Button>
             )}
       </div>
       <Line />

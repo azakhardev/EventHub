@@ -51,11 +51,6 @@ public class EventsController {
         return new PaginatedResponse<Event>(pageResult.getContent(), pageInfo);
     }
 
-    @GetMapping("{id}")
-    public Event getEvent(@PathVariable Long id) {
-        return eventService.getEvent(id);
-    }
-
     @GetMapping("{id}/participants")
     public PaginatedResponse<User> getParticipatedUsers(@PathVariable Long id, @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "20") int pageSize) {
 
@@ -111,7 +106,7 @@ public class EventsController {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access denied");
         }
 
-        Event existingEvent = getEvent(id);
+        Event existingEvent = eventService.getEvent(id);
         Event e = eventService.editEvent(existingEvent, event);
 
         return ResponseEntity.ok(e);

@@ -7,6 +7,8 @@ import cz.zakharchenkoartem.eventhub.restapi.events.dto.InvitationResponse;
 import cz.zakharchenkoartem.eventhub.restapi.events_participants.EventParticipantId;
 import cz.zakharchenkoartem.eventhub.restapi.events_participants.EventParticipantRelation;
 import cz.zakharchenkoartem.eventhub.restapi.events_participants.EventsParticipantsDataSource;
+import cz.zakharchenkoartem.eventhub.restapi.follows.FollowRelation;
+import cz.zakharchenkoartem.eventhub.restapi.follows.FollowRelationsDataSource;
 import cz.zakharchenkoartem.eventhub.restapi.users.User;
 import cz.zakharchenkoartem.eventhub.restapi.users.UsersDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,22 +19,25 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 public class NotificationService {
+    private final FollowRelationsDataSource followRelationsDataSource;
     NotificationsDataSource notificationsDataSource;
     EventsDataSource eventsDataSource;
     UsersDataSource usersDataSource;
     EventsParticipantsDataSource eventsParticipantsDataSource;
 
     @Autowired
-    public NotificationService(NotificationsDataSource notificationsDataSource, EventsDataSource eventsDataSource, UsersDataSource usersDataSource, EventsParticipantsDataSource eventsParticipantsDataSource) {
+    public NotificationService(NotificationsDataSource notificationsDataSource, EventsDataSource eventsDataSource, UsersDataSource usersDataSource, EventsParticipantsDataSource eventsParticipantsDataSource, FollowRelationsDataSource followRelationsDataSource) {
         this.notificationsDataSource = notificationsDataSource;
         this.eventsDataSource = eventsDataSource;
         this.usersDataSource = usersDataSource;
         this.eventsParticipantsDataSource = eventsParticipantsDataSource;
+        this.followRelationsDataSource = followRelationsDataSource;
     }
 
     @Transactional
@@ -67,6 +72,17 @@ public class NotificationService {
         }
 
         return new InvitationResponse(invited, alreadyInvited);
+    }
+
+    @Transactional
+    public void deleteNotification(Long notificationId, Long userId) {
+        Notification notification = notificationsDataSource.findById(notificationId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Notification does not exist"));
+
+        if (!notification.getUser().getId().equals(userId)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You can't delete foreign notifications");
+        }
+
+        notificationsDataSource.deleteById(notificationId);
     }
 
     @Transactional
@@ -114,11 +130,27 @@ public class NotificationService {
         notificationsDataSource.saveAll(notifications);
     }
 
+    @Transactional
     public void notifyEdit(Event event) {
+        List<EventParticipantRelation> relations = eventsParticipantsDataSource.findByEvent(event);
 
+        List<Notification> notifications = relations.stream()
+                .map(EventParticipantRelation::getUser)
+                .filter(user -> !Objects.equals(user.getId(), event.getOwner().getId()))
+                .map(user -> new Notification(user, event, "UPDATE", "Information about event " + event.getTitle() + " was changed, please check new details"))
+                .collect(Collectors.toList());
+
+        notificationsDataSource.saveAll(notifications);
     }
 
-    public void notifyCreation(Event event) {
+    @Transactional
+    public void notifyCreation(User user, Event event) {
+        List<FollowRelation> followers = followRelationsDataSource.findAllByFollowedUser(user);
 
+        List<Notification> notifications = followers.stream()
+                .map(fol -> new Notification(fol.getFollower(), event, "CREATE", "User " + user.getNickname() + " created a new event " + event.getTitle()))
+                .collect(Collectors.toList());
+
+        notificationsDataSource.saveAll(notifications);
     }
 }

@@ -79,7 +79,7 @@ export default function NotificationsButton() {
       {opened && (
         <div
           ref={notificationsRef}
-          className="absolute top-[90px] right-[28px] flex flex-col z-50 bg-dialog py-4 px-2 rounded-md border-2 border-primary"
+          className="absolute top-[90px] right-[28px] flex flex-col z-50 bg-dialog py-4 px-2 rounded-md border-2 border-primary max-h-[30vh] overflow-y-scroll scrollbar-hide"
         >
           {notificationsQuery.isSuccess &&
             notificationsQuery.data.pages

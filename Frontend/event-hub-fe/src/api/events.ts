@@ -121,9 +121,11 @@ export async function createEvent(token: string, userId: number, event: Event) {
     try {
       errorData = await response.json();
     } catch {
-      throw { general: `An error occurred: ${response.status}` };
+      throw new Error(`An error occurred: ${response.status}`);
     }
-    throw errorData;
+    throw new Error(
+      errorData.message || `An error occurred: ${response.status}`
+    );
   }
 
   return await response.json();
@@ -157,9 +159,11 @@ export async function editEvent(token: string, userId: number, event: Event) {
     try {
       errorData = await response.json();
     } catch {
-      throw { general: `An error occurred: ${response.status}` };
+      throw new Error(`An error occurred: ${response.status}`);
     }
-    throw errorData;
+    throw new Error(
+      errorData.message || `An error occurred: ${response.status}`
+    );
   }
 
   return await response.json();
@@ -249,9 +253,11 @@ export async function leaveEvent(
     try {
       errorData = await response.json();
     } catch {
-      throw { general: `An error occurred: ${response.status}` };
+      throw new Error(`An error occurred: ${response.status}`);
     }
-    throw errorData;
+    throw new Error(
+      errorData.message || `An error occurred: ${response.status}`
+    );
   }
 
   return { succes: 204 };
@@ -276,9 +282,11 @@ export async function toggleImportant(
     try {
       errorData = await response.json();
     } catch {
-      throw { general: `An error occurred: ${response.status}` };
+      throw new Error(`An error occurred: ${response.status}`);
     }
-    throw errorData;
+    throw new Error(
+      errorData.message || `An error occurred: ${response.status}`
+    );
   }
 
   return await response.json();

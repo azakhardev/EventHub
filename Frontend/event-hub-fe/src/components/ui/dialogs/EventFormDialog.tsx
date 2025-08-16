@@ -83,6 +83,9 @@ export default function EventFormDialog(props: EventFormDialogProps) {
     mutate(newEvent);
   }
 
+  console.log("START TIME:", formatForDatetimeLocal(event?.startTime));
+  console.log("ENDF TIME:", formatForDatetimeLocal(event?.endTime));
+
   return (
     <Dialog
       title={props.submitMethod === "POST" ? "Create Event" : "Edit Event"}
@@ -119,6 +122,7 @@ export default function EventFormDialog(props: EventFormDialogProps) {
                 name="place"
                 placeholder="Enter event place"
                 defaultValue={event?.place}
+                error={fieldErrors.place}
               />
             </Field>
             <Field className="flex-1 flex flex-col gap-1">
@@ -138,6 +142,7 @@ export default function EventFormDialog(props: EventFormDialogProps) {
                 defaultValue={formatForDatetimeLocal(event?.startTime)}
                 type="datetime-local"
                 error={fieldErrors.startTime}
+                step={1}
               />
             </Field>
             <Field className="flex-1 flex flex-col gap-1">
@@ -146,7 +151,8 @@ export default function EventFormDialog(props: EventFormDialogProps) {
                 name="endTime"
                 defaultValue={formatForDatetimeLocal(event?.endTime)}
                 type="datetime-local"
-                error={fieldErrors.endTime}
+                error={fieldErrors.endTimeAfterStartTime}
+                step={1}
               />
             </Field>
           </div>

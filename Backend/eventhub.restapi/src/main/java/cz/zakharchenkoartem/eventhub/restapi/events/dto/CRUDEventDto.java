@@ -30,6 +30,7 @@ public class CRUDEventDto {
     @NotNull
     private OffsetDateTime endTime;
 
+    @NotBlank
     private String place;
 
     private String category;
@@ -43,12 +44,20 @@ public class CRUDEventDto {
     @Future
     private OffsetDateTime recurrenceEndDate;
 
-    @AssertTrue(message = "Recurrence End Date must be in the future and not null when recurrence is not 'once'")
+    @AssertTrue(message = "Recurrence End Date must be in the future and not empty when recurrence is not 'once'")
     public boolean isRecurrenceEndDateValid() {
         if (recurrence == null || recurrence == Event.RecurrenceType.once) {
             return true;
         }
         return recurrenceEndDate != null && recurrenceEndDate.isAfter(OffsetDateTime.now());
+    }
+
+    @AssertTrue(message = "End time must be after start time")
+    public boolean isEndTimeAfterStartTime() {
+        if (startTime == null || endTime == null) {
+            return true;
+        }
+        return endTime.isAfter(startTime);
     }
 
     public String getTitle() {

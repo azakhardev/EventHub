@@ -89,7 +89,9 @@ public class EventService {
 
         eventsParticipantsDataSource.save(new EventParticipantRelation(new EventParticipantId(owner.getId(), e.getId()), owner, e, true, false));
 
-        //TODO: Add notifications to db about the change
+        if(e.isPublic()) {
+            notificationService.notifyCreation(owner, newEvent);
+        }
 
         return e;
     }
@@ -107,7 +109,7 @@ public class EventService {
         existingEvent.setRecurrence(event.getRecurrence());
         existingEvent.setRecurrenceEndDate(event.getRecurrenceEndDate());
 
-        //TODO: Add notifications to db about the change
+        notificationService.notifyEdit(existingEvent);
 
         return eventsDataSource.save(existingEvent);
     }

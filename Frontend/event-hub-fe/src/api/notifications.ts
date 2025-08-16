@@ -1,6 +1,6 @@
 const api = import.meta.env.VITE_API_URL;
 
-export async function updateStatus(notificationIds: number[], token: string) {
+export async function updateStatus(token: string, notificationIds: number[]) {
   const response = await fetch(`${api}/notifications/update-status`, {
     method: "PUT",
     headers: {
@@ -11,9 +11,14 @@ export async function updateStatus(notificationIds: number[], token: string) {
   });
 
   if (!response.ok) {
-    const errorData = await response.json();
+    let errorData: any;
+    try {
+      errorData = await response.json();
+    } catch {
+      throw new Error(`An error occurred: ${response.status}`);
+    }
     throw new Error(
-      errorData.message || `An error occured: ${response.status}`
+      errorData.message || `An error occurred: ${response.status}`
     );
   }
 
@@ -37,10 +42,39 @@ export async function acceptInvitation(token: string, notificationId: number) {
     try {
       errorData = await response.json();
     } catch {
-      throw { general: `An error occurred: ${response.status}` };
+      throw new Error(`An error occurred: ${response.status}`);
     }
-    throw errorData;
+    throw new Error(
+      errorData.message || `An error occurred: ${response.status}`
+    );
   }
 
   return await response.json();
+}
+
+export async function deleteNotification(
+  token: string,
+  notificationId: number
+) {
+  const response = await fetch(`${api}/notifications/${notificationId}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!response.ok) {
+    let errorData: any;
+    try {
+      errorData = await response.json();
+    } catch {
+      throw new Error(`An error occurred: ${response.status}`);
+    }
+    throw new Error(
+      errorData.message || `An error occurred: ${response.status}`
+    );
+  }
+
+  return { success: true };
 }

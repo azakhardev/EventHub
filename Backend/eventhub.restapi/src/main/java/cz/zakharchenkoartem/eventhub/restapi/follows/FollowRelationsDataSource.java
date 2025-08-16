@@ -13,6 +13,8 @@ import java.util.Optional;
 public interface FollowRelationsDataSource extends JpaRepository<FollowRelation, FollowRelationId> {
     Page<FollowRelation> findByFollower(User owner, Pageable pageable);
 
+    List<FollowRelation> findAllByFollowedUser(User owner);
+
     @Query("SELECT fr FROM FollowRelation fr WHERE fr.follower = :owner AND LOWER(fr.followedUser.username) LIKE LOWER(CONCAT('%', :expression, '%'))")
     Page<FollowRelation> findByFollowerAndUsernameLike(@Param("owner") User owner, @Param("expression") String expression, Pageable pageable);
 

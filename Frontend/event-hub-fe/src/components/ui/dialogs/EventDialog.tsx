@@ -131,9 +131,11 @@ export default function EventDialog({
                     </p>
                   </div>
                   <div>
-                    <div className="bg-surface text-onSurface rounded-full px-2 py-1 capitalize">
-                      {event?.category}
-                    </div>
+                    {event.category && (
+                      <div className="bg-surface text-onSurface rounded-full px-2 py-1 capitalize">
+                        {event.category}
+                      </div>
+                    )}
                   </div>
                 </div>
                 <div className="flex flex-row items-center gap-2">
