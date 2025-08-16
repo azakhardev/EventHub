@@ -1,5 +1,6 @@
 import { Search } from "lucide-react";
-import { useFilterStore, type Filter } from "../../store/store";
+import { useFilterStore } from "../../store/store";
+import type { Filter } from "../../types/filter";
 import Checkbox from "./forms/Checkbox";
 import Input from "./forms/Input";
 import { Field, Label, Select } from "@headlessui/react";

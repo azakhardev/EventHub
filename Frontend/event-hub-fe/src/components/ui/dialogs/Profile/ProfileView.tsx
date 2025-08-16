@@ -7,10 +7,16 @@ import { SyncLoader } from "react-spinners";
 import { useInView } from "react-intersection-observer";
 import EmptyArray from "../../alerts/EmptyArray";
 import { useEffect } from "react";
-import { useInfiniteQuery } from "@tanstack/react-query";
-import { getFollowers } from "../../../../api/users";
+import { useInfiniteQuery, useMutation } from "@tanstack/react-query";
+import { generateFollowToken, getFollowers } from "../../../../api/users";
 import type { Page } from "../../../../types/page";
 import type { User } from "../../../../types/user";
+import { toast } from "react-toastify";
+import { queryClient } from "../../../../main";
+
+import { useState } from "react";
+import Tooltip from "../../Tooltip";
+import { RefreshCcw } from "lucide-react";
 
 interface ProfileViewProps {
   user: User;
@@ -40,6 +46,16 @@ export default function ProfileView({
         ? lastPage.pageInfo.page + 1
         : undefined,
     initialPageParam: 1,
+  });
+
+  const { mutate: mutateToken } = useMutation({
+    mutationFn: () => generateFollowToken(userId, token),
+    onSuccess: (data: string) => {
+      queryClient.invalidateQueries({ queryKey: ["profile"] });
+    },
+    onError: (e) => {
+      toast.error("Failed to generate new token: " + e.message);
+    },
   });
 
   useEffect(() => {
@@ -102,18 +118,23 @@ export default function ProfileView({
               >
                 {user.followToken}
               </div>
+              <Tooltip text="Generate new token">
+                <RefreshCcw
+                  className="text-primary hover:scale-110 cursor-pointer"
+                  onClick={() => mutateToken()}
+                />
+              </Tooltip>
             </div>
           </div>
           <div className="flex-[2] flex flex-col gap-4">
             <h3 className="text-center">Your followers</h3>
-            <div className="flex flex-col gap-2 max-h-[28vh] overflow-y-scroll scrollbar-hide">
-              {!followersQuery.isFetchingNextPage &&
+            <div className="flex flex-col gap-2 max-h-[28vh] overflow-y-scroll scrollbar-hide p-2">
+              {followersQuery.isSuccess &&
                 followersQuery.data?.pages.map((page) =>
                   page.data.map((user) => (
                     <UserCard key={user.id} user={user} type="follower" />
                   ))
                 )}
-              {followersQuery.isFetchingNextPage && <SyncLoader />}
               {!followersQuery.isFetching &&
                 followersQuery.data?.pages.flatMap((page) => page.data)
                   .length === 0 && (
@@ -122,6 +143,7 @@ export default function ProfileView({
               {followersQuery.isError && (
                 <ErrorAlert error={followersQuery.error.message} />
               )}
+              {followersQuery.isFetching && <SyncLoader />}
               <div className="h-4" ref={ref}></div>
             </div>
           </div>

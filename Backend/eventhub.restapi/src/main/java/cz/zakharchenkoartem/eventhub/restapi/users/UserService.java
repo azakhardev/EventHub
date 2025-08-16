@@ -250,5 +250,14 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(changePassword.getNewPassword()));
     }
 
+    @Transactional
+    public UUID generateToken(Long userId){
+        User user = getUser(userId);
+
+        UUID newToken = UUID.randomUUID();
+        user.setFollowToken(newToken);
+
+        return newToken;
+    }
     //TODO: Function for populating Events with upcoming events
 }

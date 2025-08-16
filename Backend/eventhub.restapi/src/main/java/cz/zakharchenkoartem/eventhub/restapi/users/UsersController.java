@@ -24,6 +24,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/users")
@@ -190,5 +191,17 @@ public class UsersController {
 
         userService.changePassword(id, changePassword);
         return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("{id}/generate-token")
+    public ResponseEntity<UUID> generateToken(@RequestHeader("Authorization") String authHeader, @PathVariable Long id) {
+        Long userId = jwtService.extractUserId(authHeader.replace("Bearer ", ""));
+        if (!Objects.equals(userId, id)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access denied");
+        }
+
+        UUID newToken = userService.generateToken(id);
+
+        return ResponseEntity.ok(newToken);
     }
 }
