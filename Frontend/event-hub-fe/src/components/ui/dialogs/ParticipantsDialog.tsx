@@ -214,7 +214,7 @@ export default function ParticipantsDialog({
                       .length === 0 && <EmptyArray />}
                   {participantsQuery.isLoading && <BounceLoader />}
                   {participantsQuery.hasNextPage && (
-                    <div ref={participantsRef} className="h-4"></div>
+                    <div ref={participantsRef} className="min-h-[10px]"></div>
                   )}
                 </div>
               )}
@@ -249,7 +249,7 @@ export default function ParticipantsDialog({
                   )}
                   {friendsQuery.isLoading && <BounceLoader />}
                   {friendsQuery.hasNextPage && (
-                    <div ref={friendsRef} className="h-4"></div>
+                    <div ref={friendsRef} className="min-h-[10px]"></div>
                   )}
                 </div>
               )}
