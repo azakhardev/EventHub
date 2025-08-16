@@ -165,11 +165,7 @@ VALUES
 -- CREATE NOTIFICATIONS
 INSERT INTO notifications (user_id, event_id, type, message)
 VALUES
-  (1, 1, 'invitation', 'You have been invited to: Morning Run in the Park'),
-  (3, 1, 'invitation', 'You have been invited to: Morning Run in the Park'),
-
-  (2, 2, 'reminder', 'Don’t forget the Cybersecurity Talk today!'),
-  (3, 2, 'reminder', 'Cybersecurity Talk starts today at 6:00 PM!'),
-
-  (1, 3, 'invitation', 'Carol invited you to The Beatflowers Concert'),
-  (2, 3, 'invitation', 'Carol invited you to The Beatflowers Concert');
+  (1, 1, 'invite', 'You are invited to Morning Run in the Park'),
+  (3, 1, 'invite', 'You are invited to Morning Run in the Park'),
+  (1, 3, 'invite', 'You are invited to The Beatflowers Concert'),
+  (2, 3, 'invite', 'You are invited to The Beatflowers Concert');

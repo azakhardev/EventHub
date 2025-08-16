@@ -2,7 +2,7 @@ const api = import.meta.env.VITE_API_URL;
 
 export async function updateStatus(notificationIds: number[], token: string) {
   const response = await fetch(`${api}/notifications/update-status`, {
-    method: "POST",
+    method: "PUT",
     headers: {
       Authorization: `Bearer ${token}`,
       "Content-Type": "application/json",
@@ -18,4 +18,29 @@ export async function updateStatus(notificationIds: number[], token: string) {
   }
 
   return { success: true };
+}
+
+export async function acceptInvitation(token: string, notificationId: number) {
+  const response = await fetch(
+    `${api}/notifications/${notificationId}/accept`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  if (!response.ok) {
+    let errorData: any;
+    try {
+      errorData = await response.json();
+    } catch {
+      throw { general: `An error occurred: ${response.status}` };
+    }
+    throw errorData;
+  }
+
+  return await response.json();
 }

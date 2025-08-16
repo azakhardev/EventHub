@@ -16,10 +16,7 @@ import cz.zakharchenkoartem.eventhub.restapi.users.dto.FollowedUser;
 import cz.zakharchenkoartem.eventhub.restapi.users.dto.FriendRequest;
 import cz.zakharchenkoartem.eventhub.restapi.users.dto.UserEditProfile;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -119,7 +116,7 @@ public class UserService {
     public Page<Notification> getNotifications(Long id, int page, int pageSize) {
         User user = getUser(id);
 
-        Pageable pageable = PageRequest.of(page, pageSize);
+        Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.ASC, "timestamp"));
 
         return notificationsDataSource.findByUser(user, pageable);
     }

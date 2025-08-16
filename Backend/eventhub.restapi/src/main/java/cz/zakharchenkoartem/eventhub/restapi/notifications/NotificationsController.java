@@ -1,11 +1,9 @@
 package cz.zakharchenkoartem.eventhub.restapi.notifications;
 
+import cz.zakharchenkoartem.eventhub.restapi.events.dto.EventDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -19,6 +17,13 @@ public class NotificationsController {
     @Autowired
     public NotificationsController(NotificationService notificationService) {
         this.notificationService = notificationService;
+    }
+
+    @PostMapping("/{id}/accept")
+    public ResponseEntity<EventDto> acceptInvitation(@PathVariable Long id){
+        EventDto event = notificationService.acceptInvitation(id);
+
+        return ResponseEntity.ok(event);
     }
 
     @PutMapping("/update-status")

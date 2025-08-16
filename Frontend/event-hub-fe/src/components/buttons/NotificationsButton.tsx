@@ -1,20 +1,39 @@
-import { useInfiniteQuery, useMutation } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { Bell } from "lucide-react";
 import { getNotifications } from "../../api/users";
 import { useUserStore } from "../../store/store";
 import type { Page } from "../../types/page";
 import type { Notification } from "../../types/notification";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import { SyncLoader } from "../ui/loaders/SyncLoader";
 import ErrorAlert from "../ui/alerts/ErrorAlert";
 import NotificationCard from "../ui/NotificationCard";
 import Tooltip from "../ui/Tooltip";
+import { queryClient } from "../../main";
 
 export default function NotificationsButton() {
   const { token, userId } = useUserStore();
   const [opened, setIsOpened] = useState(false);
   const [ref, inView] = useInView({ triggerOnce: false, threshold: 0 });
+  const notificationsRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        notificationsRef.current &&
+        !notificationsRef.current.contains(event.target as Node)
+      ) {
+        setIsOpened(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const notificationsQuery = useInfiniteQuery<Page<Notification>>({
     queryKey: ["notifications"],
@@ -28,16 +47,9 @@ export default function NotificationsButton() {
     enabled: opened,
   });
 
-  const { mutate: updateStatus } = useMutation({
-    mutationFn: async () => {},
-    onSuccess: () => {},
-    onError: () => {},
-  });
-
-  //TODO: Dispay notifications and set them as viewed (except invites)
   async function handleOnBellClick() {
-    updateStatus();
-    setIsOpened((old) => !old);
+    queryClient.invalidateQueries({ queryKey: ["notifications"] });
+    setIsOpened(true);
   }
 
   useEffect(() => {
@@ -65,7 +77,10 @@ export default function NotificationsButton() {
         </div>
       </Tooltip>
       {opened && (
-        <div className="absolute top-[90px] right-[28px] flex flex-col z-50 bg-dialog py-4 px-2 rounded-md border-2 border-primary">
+        <div
+          ref={notificationsRef}
+          className="absolute top-[90px] right-[28px] flex flex-col z-50 bg-dialog py-4 px-2 rounded-md border-2 border-primary"
+        >
           {notificationsQuery.isSuccess &&
             notificationsQuery.data.pages
               .flatMap((p) => p.data)

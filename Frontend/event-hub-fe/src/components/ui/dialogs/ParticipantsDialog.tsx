@@ -13,6 +13,7 @@ import type { Page } from "../../../types/page";
 import { getFriends, getParticipants } from "../../../api/users";
 import { inviteFriends } from "../../../api/events";
 import { useInView } from "react-intersection-observer";
+import { toast } from "react-toastify";
 
 interface ParticipantsDialogProps {
   isOpen: boolean;
@@ -120,6 +121,10 @@ export default function ParticipantsDialog({
       setSelectedFriends([]);
       setExpression("");
       setIsOpen(false);
+      toast.success("Friends invited");
+    },
+    onError: (e) => {
+      toast.error("Failed to invite friends: " + e.message);
     },
   });
 

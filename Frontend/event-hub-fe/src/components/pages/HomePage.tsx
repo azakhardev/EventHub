@@ -24,7 +24,7 @@ export default function HomePage() {
     queryKey: ["events", "upcoming", userId],
     queryFn: () =>
       fetch(
-        `${api}/users/${userId}/my-events?page=1&pageSize=100&from=${new Date().toISOString()}&to=${new Date(
+        `${api}/users/${userId}/my-events?page=1&pageSize=5&from=${new Date().toISOString()}&to=${new Date(
           new Date().setDate(new Date().getDate() + 7)
         ).toISOString()}`,
         {

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import cz.zakharchenkoartem.eventhub.restapi.events.Event;
 import cz.zakharchenkoartem.eventhub.restapi.users.User;
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -29,7 +30,7 @@ public class Notification {
     @Column(columnDefinition = "TEXT")
     private String message;
 
-    @Column(name = "created_at")
+    @Column(name = "created_at", updatable = false, insertable = false)
     private LocalDateTime timestamp;
 
     @Column(name = "is_read")

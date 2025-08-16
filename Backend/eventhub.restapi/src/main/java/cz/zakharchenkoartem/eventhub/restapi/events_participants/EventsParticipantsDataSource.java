@@ -21,6 +21,7 @@ public interface EventsParticipantsDataSource extends JpaRepository<EventPartici
                 SELECT rel FROM EventParticipantRelation rel
                 JOIN rel.event e
                 WHERE rel.user = :user
+                  AND rel.accepted = TRUE
                   AND (:important IS NULL OR rel.important = :important)
                   AND (:owned IS NULL OR
                        (:owned = TRUE AND e.owner.id = rel.user.id) OR
