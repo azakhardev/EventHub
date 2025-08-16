@@ -19,4 +19,7 @@ public interface NotificationsDataSource extends JpaRepository<Notification, Lon
     @Modifying
     @Query("UPDATE Notification n SET n.isRead = true WHERE n.id IN :ids")
     void markAsRead(@Param("ids") List<Long> ids);
+
+    @Query("SELECT count(n) FROM Notification n WHERE n.user.id = :userId AND n.isRead = FALSE")
+    Long getCountByUserId(@Param("userId") Long userId);
 }

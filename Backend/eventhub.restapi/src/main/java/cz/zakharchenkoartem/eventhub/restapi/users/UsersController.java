@@ -9,6 +9,7 @@ import cz.zakharchenkoartem.eventhub.restapi.events.dto.EventFilter;
 import cz.zakharchenkoartem.eventhub.restapi.follows.dto.PinFollowerRequest;
 import cz.zakharchenkoartem.eventhub.restapi.login.JwtService;
 import cz.zakharchenkoartem.eventhub.restapi.notifications.Notification;
+import cz.zakharchenkoartem.eventhub.restapi.notifications.NotificationService;
 import cz.zakharchenkoartem.eventhub.restapi.users.dto.ChangePassword;
 import cz.zakharchenkoartem.eventhub.restapi.users.dto.FollowedUser;
 import cz.zakharchenkoartem.eventhub.restapi.users.dto.FriendRequest;
@@ -21,7 +22,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
@@ -31,11 +31,13 @@ public class UsersController {
 
     private final UserService userService;
     private final JwtService jwtService;
+    private final NotificationService notificationService;
 
     @Autowired
-    public UsersController(UserService userService, JwtService jwtService) {
+    public UsersController(UserService userService, JwtService jwtService, NotificationService notificationService) {
         this.userService = userService;
         this.jwtService = jwtService;
+        this.notificationService = notificationService;
     }
 
     @GetMapping
@@ -101,6 +103,11 @@ public class UsersController {
         PageInfo pageInfo = new PageInfo(page, pageSize, pageResult.getTotalPages(), pageResult.getTotalElements());
 
         return new PaginatedResponse<Notification>(pageResult.getContent(), pageInfo);
+    }
+
+    @GetMapping("/{id}/new-notifications")
+    public Long getNewNotifications(@PathVariable Long id) {
+        return notificationService.getNotificationsCount(id);
     }
 
     //TODO: Endpoint for upcoming events

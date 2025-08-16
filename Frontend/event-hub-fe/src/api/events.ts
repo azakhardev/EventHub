@@ -54,15 +54,13 @@ export async function getMyEvents(
   );
 
   if (!response.ok) {
-    let errorMessage: string;
+    let errorData: any;
     try {
-      const errorData = await response.json();
-      errorMessage =
-        errorData.message || `An error occured: ${response.status}`;
+      errorData = await response.json();
     } catch {
-      errorMessage = `An error occured: ${response.status}`;
+      throw { general: `An error occurred: ${response.status}` };
     }
-    throw new Error(errorMessage);
+    throw errorData;
   }
 
   return await response.json();
@@ -121,11 +119,9 @@ export async function createEvent(token: string, userId: number, event: Event) {
     try {
       errorData = await response.json();
     } catch {
-      throw new Error(`An error occurred: ${response.status}`);
+      throw { general: `An error occurred: ${response.status}` };
     }
-    throw new Error(
-      errorData.message || `An error occurred: ${response.status}`
-    );
+    throw errorData;
   }
 
   return await response.json();

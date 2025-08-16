@@ -9,7 +9,7 @@ import {
 } from "../../api/notifications";
 import { useUserStore } from "../../store/store";
 import { toast } from "react-toastify";
-import { queryClient } from "../../main";
+import { queryClient } from "../../main.tsx";
 import { useState } from "react";
 import PulsingDot from "./loaders/PulsingDot";
 
@@ -30,7 +30,12 @@ export default function NotificationCard({
     mutationFn: async () => acceptInvitation(token, notification.id),
     onSuccess: () => {
       setIsRead(true);
-      queryClient.invalidateQueries({ queryKey: ["events"] });
+      queryClient.invalidateQueries({
+        queryKey: ["events"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["notifications-count"],
+      });
       toast.success("You accepted the invitation");
     },
     onError: (e) => {
@@ -39,9 +44,10 @@ export default function NotificationCard({
   });
 
   const { mutate: mutateStatus } = useMutation({
-    mutationFn: async () => updateStatus([notification.id], token),
+    mutationFn: async () => updateStatus(token, [notification.id]),
     onSuccess: () => {
       setIsRead(true);
+      queryClient.invalidateQueries({ queryKey: ["notifications-count"] });
     },
   });
 
@@ -49,6 +55,7 @@ export default function NotificationCard({
     mutationFn: async () => deleteNotification(token, notification.id),
     onSuccess: () => {
       setIsDismissed(true);
+      queryClient.invalidateQueries({ queryKey: ["notifications-count"] });
     },
     onError: (e) => {
       toast.error("Failed to dissmis notification: " + e.message);

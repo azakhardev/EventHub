@@ -14,9 +14,9 @@ export default function Filter(props: FilterProps) {
 
   return (
     <div className="w-full flex flex-row justify-between mt-1">
-      <div className="flex flex-row flex-1 gap-4">
+      <div className="flex flex-row flex-1 gap-4 justify-start mr-16">
         <Input
-          className="w-2/5"
+          className="w-4/5"
           icon={<Search />}
           placeholder="Search by name"
           onChange={(e) => {

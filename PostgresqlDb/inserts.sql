@@ -165,7 +165,4 @@ VALUES
 -- CREATE NOTIFICATIONS
 INSERT INTO notifications (user_id, event_id, type, message)
 VALUES
-  (1, 1, 'invite', 'You are invited to Morning Run in the Park'),
-  (3, 1, 'invite', 'You are invited to Morning Run in the Park'),
-  (1, 3, 'invite', 'You are invited to The Beatflowers Concert'),
-  (2, 3, 'invite', 'You are invited to The Beatflowers Concert');
+  (1, 1, 'DELETE', 'User Bob deleted event Midnight Party');

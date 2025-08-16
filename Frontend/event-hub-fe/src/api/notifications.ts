@@ -78,3 +78,27 @@ export async function deleteNotification(
 
   return { success: true };
 }
+
+export async function notificationsCount(token: string, userId: number) {
+  const response = await fetch(`${api}/users/${userId}/new-notifications`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!response.ok) {
+    let errorData: any;
+    try {
+      errorData = await response.json();
+    } catch {
+      throw new Error(`An error occurred: ${response.status}`);
+    }
+    throw new Error(
+      errorData.message || `An error occurred: ${response.status}`
+    );
+  }
+
+  return await response.json();
+}
