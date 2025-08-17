@@ -1,4 +1,4 @@
-import { Calendar, Home, LogOut, Settings, User, Users } from "lucide-react";
+import { Calendar, Home, LogOut, Settings, User } from "lucide-react";
 import IconButton from "../ui/IconButton";
 import { usePageStore } from "../../store/store";
 import { useState } from "react";

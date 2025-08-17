@@ -1,5 +1,3 @@
-import type { Event } from "../types/event";
-
 export function combineString(strings: (string | undefined)[]) {
   return strings.join(" ");
 }
@@ -14,16 +12,6 @@ export function isTokenExpired(token: string): boolean {
   } catch (e) {
     return true;
   }
-}
-
-export function populateWithReccurenceEvents(
-  eventsResponse: Event[] | undefined,
-  startDate: Date,
-  endDate: Date
-): Event[] {
-  if (!eventsResponse) return [];
-
-  return eventsResponse;
 }
 
 export function formatForDatetimeLocal(
