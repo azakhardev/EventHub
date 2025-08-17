@@ -95,11 +95,13 @@ export default function ReminderProvider() {
   }, [data, isSuccess]);
 
   return (
-    <ReminderContainer
-      reminders={remindAbout}
-      onRemove={(i) =>
-        setRemindAbout((old) => old.filter((_, index) => index !== i))
-      }
-    />
+    remindAbout.length !== 0 && (
+      <ReminderContainer
+        reminders={remindAbout}
+        onRemove={(i) =>
+          setRemindAbout((old) => old.filter((_, index) => index !== i))
+        }
+      />
+    )
   );
 }

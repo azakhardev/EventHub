@@ -11,7 +11,7 @@ public class EventDto extends Event {
     private boolean important;
     private boolean participates;
 
-    public EventDto(Event event, boolean important,  boolean participates) {
+    public EventDto(Event event, boolean important, boolean participates) {
         super(event.getId(), event.getTitle(), event.getBody(), event.getOwner(), event.getCreationDate(), event.getStartTime(), event.getEndTime(), event.getPlace(), event.getCategory(), event.getColor(), event.isPublic(), event.getLinkToken(), event.getRecurrence(), event.getRecurrenceEndDate());
         this.important = important;
         this.participates = participates;
@@ -21,6 +21,12 @@ public class EventDto extends Event {
         super(id, title, null, owner, null, startTime, endTime, null, null, color, false, null, null, null);
         this.important = important;
         this.participates = participates;
+    }
+
+    public EventDto(EventDto other, OffsetDateTime startTime, OffsetDateTime endTime) {
+        super(other.getId(), other.getTitle(), other.getBody(), other.getOwner(), other.getCreationDate(), startTime, endTime, other.getPlace(), other.getCategory(), other.getColor(), other.isPublic(), other.getLinkToken(), other.getRecurrence(), other.getRecurrenceEndDate());
+        this.important = other.isImportant();
+        this.participates = other.isParticipates();
     }
 
     public boolean isImportant() {

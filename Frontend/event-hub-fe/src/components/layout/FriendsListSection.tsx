@@ -105,7 +105,7 @@ export default function FriendsListSection() {
               )}
               {error && <ErrorAlert error={error.message} />}
               {data?.pages.flatMap((page) => page.data).length === 0 && (
-                <EmptyArray />
+                <EmptyArray message="You don't follow anyone" />
               )}
             </div>
           </div>

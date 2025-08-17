@@ -1,6 +1,7 @@
 package cz.zakharchenkoartem.eventhub.restapi.users;
 
 import cz.zakharchenkoartem.eventhub.restapi.events.Event;
+import cz.zakharchenkoartem.eventhub.restapi.events.services.RecurrenceGenerator;
 import cz.zakharchenkoartem.eventhub.restapi.events.dto.EventDto;
 import cz.zakharchenkoartem.eventhub.restapi.events_participants.EventParticipantRelation;
 import cz.zakharchenkoartem.eventhub.restapi.events_participants.EventsParticipantsDataSource;
@@ -23,7 +24,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.*;
@@ -37,19 +37,21 @@ public class UserService {
     private final EventsParticipantsDataSource eventsParticipantsDataSource;
     private final FollowRelationsDataSource followRelationsDataSource;
     private final PasswordEncoder passwordEncoder;
+    private final RecurrenceGenerator recurrenceGenerator;
 
     @Autowired
     public UserService(
             UsersDataSource usersDataSource,
             FollowRelationsDataSource followersDataSource,
             NotificationsDataSource notificationsDataSource,
-            EventsParticipantsDataSource eventsParticipantsDataSource, FollowRelationsDataSource followRelationsDataSource, PasswordEncoder passwordEncoder) {
+            EventsParticipantsDataSource eventsParticipantsDataSource, FollowRelationsDataSource followRelationsDataSource, PasswordEncoder passwordEncoder, RecurrenceGenerator recurrenceGenerator) {
         this.usersDataSource = usersDataSource;
         this.followersDataSource = followersDataSource;
         this.notificationsDataSource = notificationsDataSource;
         this.eventsParticipantsDataSource = eventsParticipantsDataSource;
         this.followRelationsDataSource = followRelationsDataSource;
         this.passwordEncoder = passwordEncoder;
+        this.recurrenceGenerator = recurrenceGenerator;
     }
 
     @Transactional(readOnly = true)
@@ -122,11 +124,11 @@ public class UserService {
     }
 
     @Transactional
-    public List<EventDto> getUpcomingEvents(Long userId){
+    public List<EventDto> getUpcomingEvents(Long userId) {
         OffsetDateTime now = OffsetDateTime.now();
         OffsetDateTime nextWeek = now.plusDays(7);
 
-        List<EventParticipantRelation> participantRelations = eventsParticipantsDataSource.findUpcoming(userId, now, nextWeek );
+        List<EventParticipantRelation> participantRelations = eventsParticipantsDataSource.findUpcoming(userId, now, nextWeek);
 
         List<EventDto> events = new ArrayList<>();
 
@@ -136,6 +138,7 @@ public class UserService {
 
         return events;
     }
+
     @Transactional(readOnly = true)
     public Page<EventDto> getMyEvents(Long id, int page, int pageSize, Boolean important, Boolean owned, Boolean isPrivate, OffsetDateTime from, OffsetDateTime to, String expression, String order) {
         User user = getUser(id);
@@ -150,7 +153,24 @@ public class UserService {
             events.add(new EventDto(relation.getEvent(), relation.isImportant(), true));
         }
 
-        return new PageImpl<EventDto>(events, pageable, participantRelations.getTotalElements());
+        List<EventDto> populatedEvents = new ArrayList<>();
+
+        for (EventDto event : events) {
+            var newInstances = recurrenceGenerator.generateInstances(event, from, to);
+            populatedEvents.addAll(newInstances);
+        }
+
+        Comparator<EventDto> comparator = Comparator
+                .comparing(EventDto::getStartTime)
+                .thenComparing(EventDto::getEndTime);
+
+        if ("desc".equalsIgnoreCase(order)) {
+            comparator = comparator.reversed();
+        }
+
+        populatedEvents.sort(comparator);
+
+        return new PageImpl<EventDto>(populatedEvents, pageable, participantRelations.getTotalElements());
     }
 
     @Transactional(readOnly = true)
@@ -172,7 +192,19 @@ public class UserService {
             }
         }
 
-        return new PageImpl<EventDto>(events, pageable, participantRelations.getTotalElements());
+        List<EventDto> populatedEvents = new ArrayList<>();
+
+        for (EventDto event : events) {
+            var newInstances = recurrenceGenerator.generateInstances(event, OffsetDateTime.now(), OffsetDateTime.now().plusYears(1));
+            populatedEvents.addAll(newInstances);
+        }
+
+        populatedEvents.sort(
+                Comparator.comparing(EventDto::getStartTime)
+                        .thenComparing(EventDto::getEndTime)
+        );
+
+        return new PageImpl<EventDto>(populatedEvents, pageable, participantRelations.getTotalElements());
     }
 
     @Transactional
@@ -266,7 +298,7 @@ public class UserService {
     }
 
     @Transactional
-    public UUID generateToken(Long userId){
+    public UUID generateToken(Long userId) {
         User user = getUser(userId);
 
         UUID newToken = UUID.randomUUID();
@@ -274,5 +306,4 @@ public class UserService {
 
         return newToken;
     }
-    //TODO: Function for populating Events with upcoming events
 }

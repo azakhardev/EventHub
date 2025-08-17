@@ -123,7 +123,6 @@ public class UsersController {
 
         return ResponseEntity.ok(events);
     }
-    //TODO: Endpoint for upcoming events
 
     @GetMapping("/{id}/my-events")
     public PaginatedResponse<EventDto> getMyEvents(@RequestHeader("Authorization") String authHeader, @PathVariable Long id, @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "20") int pageSize, EventFilter filter) {

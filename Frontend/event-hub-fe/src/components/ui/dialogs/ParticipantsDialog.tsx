@@ -211,7 +211,9 @@ export default function ParticipantsDialog({
                       ))}
                   {participantsQuery.isSuccess &&
                     participantsQuery.data.pages.flatMap((page) => page.data)
-                      .length === 0 && <EmptyArray />}
+                      .length === 0 && (
+                      <EmptyArray message="There are no participants in this event" />
+                    )}
                   {participantsQuery.isLoading && <BounceLoader />}
                   {participantsQuery.hasNextPage && (
                     <div ref={participantsRef} className="min-h-[10px]"></div>

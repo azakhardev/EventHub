@@ -150,7 +150,7 @@ export default function AddFriendButton() {
               </div>
             )}
             {data?.pages.flatMap((page) => page.data).length === 0 && (
-              <EmptyArray />
+              <EmptyArray message="This user doesn't exist" />
             )}
           </div>
         )}

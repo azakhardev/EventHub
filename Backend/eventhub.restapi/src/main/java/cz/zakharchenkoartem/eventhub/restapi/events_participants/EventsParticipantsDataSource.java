@@ -30,7 +30,9 @@ public interface EventsParticipantsDataSource extends JpaRepository<EventPartici
                        (:private = TRUE AND e.isPublic = FALSE) OR
                        (:private = FALSE AND e.isPublic = TRUE))
                   AND (:expression IS NULL OR :expression = '' OR LOWER(e.title) LIKE LOWER(CONCAT('%', :expression, '%')))
-                  AND e.startTime >= :from
+                  AND (
+                        e.recurrence <> 'once'
+                        OR e.startTime >= :from)
                   AND e.startTime <= :to
                 ORDER BY
                       CASE WHEN :order = 'desc' THEN e.startTime END DESC,

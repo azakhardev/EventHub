@@ -21,7 +21,6 @@ export type Event = {
 
 export const EventRecurrence = {
   ONCE: "once",
-  DAILY: "daily",
   WEEKLY: "weekly",
   BI_WEEKLY: "biweekly",
   MONTHLY: "monthly",

@@ -118,7 +118,9 @@ export default function FriendDetailDialog({
               {foreignEventsQuery.isFetching && <BounceLoader />}
               {!foreignEventsQuery.isFetching &&
                 foreignEventsQuery.data?.pages.flatMap((page) => page.data)
-                  .length === 0 && <EmptyArray />}
+                  .length === 0 && (
+                  <EmptyArray message="Your friend does not participate in any events" />
+                )}
             </div>
           </div>
         </div>

@@ -19,14 +19,14 @@ export default function HomePage() {
 
   const [viewedEvent, setViewedEvent] = useState<Event | null>(null);
   const [editedEvent, setEditedEvent] = useState<Event | null>(null);
-
+  const nextWeek = new Date(
+    new Date().setDate(new Date().getDate() + 7)
+  ).toISOString();
   const upcomingEventsQuery = useQuery<Page<Event>>({
     queryKey: ["events", "upcoming", userId],
     queryFn: () =>
       fetch(
-        `${api}/users/${userId}/my-events?page=1&pageSize=5&from=${new Date().toISOString()}&to=${new Date(
-          new Date().setDate(new Date().getDate() + 7)
-        ).toISOString()}`,
+        `${api}/users/${userId}/my-events?page=1&pageSize=5&from=${new Date().toISOString()}&to=${nextWeek}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -43,7 +43,7 @@ export default function HomePage() {
     queryKey: ["events", "important", userId],
     queryFn: () =>
       fetch(
-        `${api}/users/${userId}/my-events?page=1&pageSize=5&important=true`,
+        `${api}/users/${userId}/my-events?page=1&pageSize=5&important=true&from=${new Date().toISOString()}&to=${nextWeek}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -59,12 +59,15 @@ export default function HomePage() {
   const ownEventsQuery = useQuery<Page<Event>>({
     queryKey: ["events", "own", userId],
     queryFn: () =>
-      fetch(`${api}/users/${userId}/my-events?page=1&pageSize=5&owned=true`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      }).then((res) => res.json()),
+      fetch(
+        `${api}/users/${userId}/my-events?page=1&pageSize=5&owned=true&from=${new Date().toISOString()}&to=${nextWeek}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      ).then((res) => res.json()),
     enabled: !!token && !!userId,
     staleTime: 0,
     refetchOnMount: true,
@@ -72,6 +75,7 @@ export default function HomePage() {
 
   return (
     <div className="flex flex-col w-full py-4">
+      <h2 className="text-text-on-light text-center">Week overview</h2>
       <div className="flex flex-row items-center justify-between">
         <h3 className="text-text-on-light">Upcoming Events</h3>
         <CreateEventButton />
@@ -82,7 +86,7 @@ export default function HomePage() {
           {upcomingEventsQuery.data.data.map((event) => (
             <EventListCard
               event={event}
-              key={event.id}
+              key={`${event.id}_${event.startTime}`}
               onClick={() => setViewedEvent(event)}
               onEditClick={setEditedEvent}
             />
@@ -106,8 +110,8 @@ export default function HomePage() {
         <div className="flex flex-col gap-2">
           {importantEventsQuery.data.data.map((event) => (
             <EventListCard
+              key={`${event.id}_${event.startTime}`}
               event={event}
-              key={event.id}
               onClick={() => setViewedEvent(event)}
               onEditClick={setEditedEvent}
             />
@@ -132,7 +136,7 @@ export default function HomePage() {
           {ownEventsQuery.data.data.map((event) => (
             <EventListCard
               event={event}
-              key={event.id}
+              key={`${event.id}_${event.startTime}`}
               onClick={() => setViewedEvent(event)}
               onEditClick={setEditedEvent}
             />

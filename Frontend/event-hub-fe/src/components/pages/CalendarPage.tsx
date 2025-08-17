@@ -59,9 +59,9 @@ export default function CalendarPage() {
           {eventsQuery.isSuccess &&
             eventsQuery.data.pages
               .flatMap((p) => p.data)
-              .map((event, i) => (
+              .map((event) => (
                 <EventListCard
-                  key={`${i}_${event.id}`}
+                  key={`${event.id}_${event.startTime}`}
                   event={event}
                   onClick={() => setViewedEvent(event)}
                   onEditClick={setEditedEvent}
@@ -74,7 +74,7 @@ export default function CalendarPage() {
         {eventsQuery.isFetching && <SyncLoader />}
         {eventsQuery.isSuccess &&
           eventsQuery.data.pages.flatMap((p) => p.data).length === 0 && (
-            <EmptyArray />
+            <EmptyArray message="You don't participate in any events yet" />
           )}
         <div className="min-h-[10px]" ref={ref}></div>
       </div>

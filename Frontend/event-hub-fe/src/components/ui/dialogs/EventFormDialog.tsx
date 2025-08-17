@@ -13,6 +13,7 @@ import Button from "../forms/Button";
 import ColorPickerField from "../forms/ColorPicker";
 import { useState } from "react";
 import { queryClient } from "../../../main.tsx";
+import { useEffect } from "react";
 
 import { formatForDatetimeLocal } from "../../../utils/utils.ts";
 
@@ -28,10 +29,15 @@ export default function EventFormDialog(props: EventFormDialogProps) {
 
   const { token, userId } = useUserStore();
   const [isPublic, setIsPublic] = useState(event?.public ?? true);
-  const [selectedRecurrence, setSelectedRecurrence] = useState<EventRecurrence>(
-    event?.recurrence || "once"
-  );
+  const [selectedRecurrence, setSelectedRecurrence] =
+    useState<EventRecurrence>("once");
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+
+  useEffect(() => {
+    if (event?.recurrence) {
+      setSelectedRecurrence(event.recurrence);
+    }
+  }, [event]);
 
   const { mutate } = useMutation({
     mutationFn: async (eventData: Event) => {
@@ -173,7 +179,9 @@ export default function EventFormDialog(props: EventFormDialogProps) {
             <div className="flex-1 flex flex-row">
               <Input
                 name="recurrenceEndDate"
-                defaultValue={formatForDatetimeLocal(event?.recurrenceEndDate)}
+                defaultValue={formatForDatetimeLocal(
+                  event?.recurrenceEndDate
+                ).slice(0, 10)}
                 type="date"
                 className="flex-1"
                 error={fieldErrors.recurrenceEndDate}
