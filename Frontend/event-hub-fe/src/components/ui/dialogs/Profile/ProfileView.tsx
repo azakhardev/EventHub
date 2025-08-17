@@ -3,7 +3,7 @@ import { BounceLoader } from "../../loaders/BounceLoader";
 import UserCard from "../../UeserCard";
 import Description from "../../Description";
 import ErrorAlert from "../../alerts/ErrorAlert";
-import { SyncLoader } from "react-spinners";
+import { SyncLoader } from "../../loaders/SyncLoader";
 import { useInView } from "react-intersection-observer";
 import EmptyArray from "../../alerts/EmptyArray";
 import { useEffect } from "react";

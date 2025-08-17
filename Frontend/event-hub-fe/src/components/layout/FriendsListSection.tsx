@@ -98,14 +98,14 @@ export default function FriendsListSection() {
                     ))}
                 <div className="min-h-[10px]" ref={ref}></div>
               </>
+              {error && <ErrorAlert error={error.message} />}
+              {data?.pages.flatMap((page) => page.data).length === 0 && (
+                <EmptyArray message="You don't follow anyone" />
+              )}
               {isFetching && (
                 <div className="mb-2">
                   <SyncLoader />
                 </div>
-              )}
-              {error && <ErrorAlert error={error.message} />}
-              {data?.pages.flatMap((page) => page.data).length === 0 && (
-                <EmptyArray message="You don't follow anyone" />
               )}
             </div>
           </div>

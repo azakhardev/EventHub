@@ -4,9 +4,14 @@ import { useState } from "react";
 interface TooltipProps {
   children: React.ReactNode;
   text: string;
+  destructive?: boolean;
 }
 
-export default function Tooltip({ children, text }: TooltipProps) {
+export default function Tooltip({
+  children,
+  destructive = false,
+  text,
+}: TooltipProps) {
   const [showTooltip, setShowTooltip] = useState(false);
 
   return (
@@ -19,7 +24,9 @@ export default function Tooltip({ children, text }: TooltipProps) {
       <AnimatePresence>
         {showTooltip && (
           <motion.div
-            className="absolute bottom-full mb-2 z-50 whitespace-nowrap rounded bg-primary px-3 py-1 text-sm text-white shadow-md"
+            className={`absolute bottom-full mb-2 z-50 whitespace-nowrap rounded ${
+              destructive ? "bg-red-500" : "bg-primary"
+            } px-3 py-1 text-sm text-white shadow-md`}
             initial={{ opacity: 0, y: 5 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 5 }}

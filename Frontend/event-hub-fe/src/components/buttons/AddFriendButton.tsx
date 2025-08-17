@@ -13,6 +13,7 @@ import { addFriend } from "../../api/users";
 import EmptyArray from "../ui/alerts/EmptyArray";
 import type { Page } from "../../types/page";
 import { useInView } from "react-intersection-observer";
+import Tooltip from "../ui/Tooltip.tsx";
 
 export default function AddFriendButton() {
   const [isOpen, setIsOpen] = useState(false);
@@ -40,7 +41,7 @@ export default function AddFriendButton() {
       toast.success("Friend added successfully");
     },
     onError: (error) => {
-      toast.error("Failed : " + error.message);
+      toast.error("Failed: " + error.message);
     },
   });
 
@@ -79,14 +80,16 @@ export default function AddFriendButton() {
 
   return (
     <>
-      <div
-        className="rounded-full bg-primary p-2 cursor-pointer hover:bg-button-hover"
-        onClick={() => {
-          setIsOpen(true);
-        }}
-      >
-        <UserPlus size={28} className="text-onSurface" />
-      </div>
+      <Tooltip text="Add friend">
+        <div
+          className="rounded-full bg-primary p-2 cursor-pointer hover:bg-button-hover"
+          onClick={() => {
+            setIsOpen(true);
+          }}
+        >
+          <UserPlus size={28} className="text-onSurface" />
+        </div>
+      </Tooltip>
       <Dialog
         title="Add Friend"
         description="Find a user and use his link token to add him as a friend"
@@ -110,13 +113,14 @@ export default function AddFriendButton() {
         }
       >
         {!selectedUser && (
-          <div className="w-full my-2 flex flex-col items-center ">
-            <Input
-              placeholder="Enter user's username"
-              icon={<Search size={24} />}
-              className="w-2/3"
-              onChange={(e) => setSearch(e.target.value)}
-            />
+          <div className="w-full my-2 flex flex-col items-center">
+            <div className="flex w-2/3 flex-row justify-center">
+              <Input
+                placeholder="Enter user's username"
+                icon={<Search size={24} />}
+                onChange={(e) => setSearch(e.target.value)}
+              />
+            </div>
             {isLoadingUsers ? (
               <SyncLoader />
             ) : (

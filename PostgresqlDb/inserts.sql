@@ -8,10 +8,25 @@ TRUNCATE TABLE users RESTART IDENTITY CASCADE;
 --CREATE USERS
 INSERT INTO users (username, password, nickname, profile_picture_url, proffesion, email, about)
 VALUES 
-  ('alice', '$2a$12$ERUZ3IHsyPuV/phmYnZU7e.6FmB0Is9RDqP5gcdceMo.3vj6zIDHO', 'Alice', 'https://i.redd.it/guys-do-you-think-this-is-an-improvement-to-my-pfp-first-v0-cdsukhn39xef1.jpg?width=1700&format=pjpg&auto=webp&s=d141b6bca0bd278915501359476e95b2e129dd3f', 'scientis', 'alice@gmail.com', 'I love order and organizing my day.'),
-  ('bob', '$2a$12$ERUZ3IHsyPuV/phmYnZU7e.6FmB0Is9RDqP5gcdceMo.3vj6zIDHO', 'Bobby', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSAATF5rUkFKY0Iqw0oNQxdZQmY3xRZ2Wss-g&s', 'plumber', 'bob@gmail.com','Runner and event enthusiast.'),
-  ('carol', '$2a$12$ERUZ3IHsyPuV/phmYnZU7e.6FmB0Is9RDqP5gcdceMo.3vj6zIDHO', 'Carol', 'https://i.pinimg.com/736x/a8/a0/cd/a8a0cd3cbb13ff96d5bfca73b011a07d.jpg', 'OnlyFans model', 'carol@gmail.com','Concert lover and social butterfly.'),
-  ('guest', '$2a$12$ERUZ3IHsyPuV/phmYnZU7e.6FmB0Is9RDqP5gcdceMo.3vj6zIDHO', 'Test user', 'https://unchainedcrypto.com/wp-content/uploads/2023/07/pfp-nft.png', 'Tester', 'guest@gmail.com','Introvert who prefers quiet, well-planned days.'),
+  ('alice', '$2a$12$ERUZ3IHsyPuV/phmYnZU7e.6FmB0Is9RDqP5gcdceMo.3vj6zIDHO', 'Alice', 
+   'https://i.redd.it/guys-do-you-think-this-is-an-improvement-to-my-pfp-first-v0-cdsukhn39xef1.jpg?width=1700&format=pjpg&auto=webp&s=d141b6bca0bd278915501359476e95b2e129dd3f', 
+   'scientist', 'alice@gmail.com', 
+   'Alice is a passionate scientist who thrives on curiosity and constant discovery. She enjoys structuring her day with precision and believes that every detail matters when it comes to research and personal life. Outside the lab, she loves organizing community meetups, attending intellectual talks, and sharing her knowledge with others in a way that inspires them. Her calm and focused personality makes her a reliable friend and colleague who always finds solutions to problems.'),
+  
+  ('bob', '$2a$12$ERUZ3IHsyPuV/phmYnZU7e.6FmB0Is9RDqP5gcdceMo.3vj6zIDHO', 'Bobby', 
+   'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSAATF5rUkFKY0Iqw0oNQxdZQmY3xRZ2Wss-g&s', 
+   'plumber', 'bob@gmail.com',
+   'Bob is a hardworking plumber with a big heart and an even bigger sense of humor. Known among his friends as Bobby, he brings positive energy to every situation. When he isn’t fixing pipes, he enjoys running in the park, meeting new people at local events, and cheering for his favorite football team. His practical mindset and hands-on skills make him the kind of person who can always be counted on in everyday life. He believes that hard work and laughter are the best combinations for a fulfilling life.'),
+
+  ('carol', '$2a$12$ERUZ3IHsyPuV/phmYnZU7e.6FmB0Is9RDqP5gcdceMo.3vj6zIDHO', 'Carol', 
+   'https://i.pinimg.com/736x/a8/a0/cd/a8a0cd3cbb13ff96d5bfca73b011a07d.jpg', 
+   'OnlyFans model', 'carol@gmail.com',
+   'Carol is an outgoing and social personality who loves being in the spotlight. She has built a career as an online creator and model, sharing her confidence and creativity with a wide audience. Music festivals, concerts, and parties are her natural habitat, where she connects with people and spreads her vibrant energy. Carol balances her glamorous side with genuine friendships and meaningful conversations, proving that she’s more than just a pretty face—she’s a true social butterfly who knows how to light up any room.'),
+
+  ('guest', '$2a$12$ERUZ3IHsyPuV/phmYnZU7e.6FmB0Is9RDqP5gcdceMo.3vj6zIDHO', 'Test user', 
+   'https://unchainedcrypto.com/wp-content/uploads/2023/07/pfp-nft.png', 
+   'Tester', 'guest@gmail.com',
+   'This guest profile represents an introverted personality who values peace, order, and predictability in daily life. Unlike those who thrive in the spotlight, the guest prefers quiet evenings, reading, and carefully planned activities. They approach challenges with patience and precision, making them a dependable team member in projects that require accuracy. While they may not always seek social gatherings, they truly appreciate deep conversations and the comfort of a small, close-knit circle of friends.'),
   ('user5', '$2a$12$ERUZ3IHsyPuV/phmYnZU7e.6FmB0Is9RDqP5gcdceMo.3vj6zIDHO', 'User5', 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png', 'developer', 'user5@example.com', 'Hello, I''m User5.'),
   ('user6', '$2a$12$ERUZ3IHsyPuV/phmYnZU7e.6FmB0Is9RDqP5gcdceMo.3vj6zIDHO', 'User6', 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png', 'developer', 'user6@example.com', 'Hello, I''m User6.'),
   ('user7', '$2a$12$ERUZ3IHsyPuV/phmYnZU7e.6FmB0Is9RDqP5gcdceMo.3vj6zIDHO', 'User7', 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png', 'developer', 'user7@example.com', 'Hello, I''m User7.'),
@@ -59,68 +74,64 @@ VALUES
   (1, 22),(1, 23), (1, 24), 
   (1, 25), (1, 26), (1, 27), 
   (1, 28), (1, 29), (1, 30),
-  (1, 31), (1, 32), (1, 33), (1, 34); --Alice follows everybody
+  (1, 31), (1, 32), (1, 33), (1, 34); --Alice follows everyone
 
   --CREATE EVENTS
 INSERT INTO events (title, body, owner_id, start_time, end_time, place, category, color, public, recurrence, recurrence_end_date)
-VALUES 
--- Události různorodé, většinou user 1
-('Morning Run in the Park', 'Meet at the main entrance of Stromovka.', 2,
- '2025-07-26 07:00:00', '2025-07-26 08:00:00', 'Stromovka Park, Prague', 'sports', '#00FF00', TRUE, 'weekly', '2026-07-26'),
-('Cybersecurity Talk', 'An online session for everyone interested in IT security.', 1,
- '2025-07-27 18:00:00', '2025-07-27 19:30:00', 'Zoom', 'education', '#0000FF', TRUE, 'once', NULL),
-('The Beatflowers Concert', 'A famous indie band performing live.', 1,
- '2025-08-01 20:00:00', '2025-08-01 23:00:00', 'Lucerna Music Bar, Prague', 'music', '#FF00FF', FALSE, 'once', NULL),
-('Weekly Coding Meetup', 'Regular coding session with snacks.', 1,
- '2025-08-03 17:00:00', '2025-08-03 20:00:00', 'Campus Library, Prague', 'education', '#FFA500', TRUE, 'weekly', '2026-08-03'),
-('Startup Pitch Night', 'Local startups pitch to investors.', 1,
- '2025-08-10 19:00:00', '2025-08-10 21:00:00', 'Impact Hub, Prague', 'business', '#FF6347', TRUE, 'once', NULL),
--- Community Meetups 6–29 (vše user 1)
-('Community Meetup 6', 'Description for event 6.', 1, '2025-09-01 10:00:00', '2025-09-01 12:00:00', 'Brno', 'education', '#33FF57', TRUE, 'once', NULL),
-('Community Meetup 7', 'Description for event 7.', 1, '2025-09-08 10:00:00', '2025-09-08 12:00:00', 'Brno', 'education', '#33CC33', FALSE, 'once', NULL),
-('Community Meetup 8', 'Description for event 8.', 1, '2025-09-15 14:00:00', '2025-09-15 16:00:00', 'Ostrava', 'education', '#339933', TRUE, 'once', NULL),
-('Community Meetup 9', 'Description for event 9.', 1, '2025-09-22 14:00:00', '2025-09-22 16:00:00', 'Ostrava', 'education', '#33FFAA', FALSE, 'once', NULL),
-('Community Meetup 10', 'Description for event 10.', 1, '2025-09-29 14:00:00', '2025-09-29 16:00:00', 'Ostrava', 'education', '#33FFDD', TRUE, 'monthly', '2026-09-29'),
-('Community Meetup 11', 'Description for event 11.', 1, '2025-10-06 10:00:00', '2025-10-06 12:00:00', 'Olomouc', 'education', '#77FF77', TRUE, 'once', NULL),
-('Community Meetup 12', 'Description for event 12.', 1, '2025-10-13 10:00:00', '2025-10-13 12:00:00', 'Olomouc', 'education', '#55FF88', TRUE, 'once', NULL),
-('Community Meetup 13', 'Description for event 13.', 1, '2025-10-20 10:00:00', '2025-10-20 12:00:00', 'Olomouc', 'education', '#44DD88', FALSE, 'once', NULL),
-('Community Meetup 14', 'Description for event 14.', 1, '2025-10-27 10:00:00', '2025-10-27 12:00:00', 'Zlín', 'education', '#33AA88', TRUE, 'once', NULL),
-('Community Meetup 15', 'Description for event 15.', 1, '2025-11-03 10:00:00', '2025-11-03 12:00:00', 'Zlín', 'education', '#33AA99', FALSE, 'once', NULL),
-('Community Meetup 16', 'Description for event 16.', 1, '2025-11-10 10:00:00', '2025-11-10 12:00:00', 'Zlín', 'education', '#33AAAA', TRUE, 'once', NULL),
-('Community Meetup 17', 'Description for event 17.', 1, '2025-11-17 10:00:00', '2025-11-17 12:00:00', 'Plzeň', 'education', '#33AABB', TRUE, 'once', NULL),
-('Community Meetup 18', 'Description for event 18.', 1, '2025-11-24 10:00:00', '2025-11-24 12:00:00', 'Plzeň', 'education', '#33AACC', FALSE, 'once', NULL),
-('Community Meetup 19', 'Description for event 19.', 1, '2025-12-01 10:00:00', '2025-12-01 12:00:00', 'Plzeň', 'education', '#33AADD', TRUE, 'once', NULL),
-('Community Meetup 20', 'Description for event 20.', 1, '2025-12-08 10:00:00', '2025-12-08 12:00:00', 'Praha', 'education', '#33AAEE', TRUE, 'once', NULL),
-('Community Meetup 21', 'Description for event 21.', 1, '2025-12-15 10:00:00', '2025-12-15 12:00:00', 'Praha', 'education', '#33AAFF', FALSE, 'once', NULL),
-('Community Meetup 22', 'Description for event 22.', 1, '2025-12-22 10:00:00', '2025-12-22 12:00:00', 'Praha', 'education', '#3399FF', TRUE, 'once', NULL),
-('Community Meetup 23', 'Description for event 23.', 1, '2025-12-29 10:00:00', '2025-12-29 12:00:00', 'Praha', 'education', '#3388FF', TRUE, 'once', NULL),
-('Community Meetup 24', 'Description for event 24.', 1, '2026-01-05 10:00:00', '2026-01-05 12:00:00', 'Praha', 'education', '#3377FF', TRUE, 'once', NULL),
-('Community Meetup 25', 'Description for event 25.', 1, '2026-01-12 10:00:00', '2026-01-12 12:00:00', 'Praha', 'education', '#3366FF', FALSE, 'once', NULL),
-('Community Meetup 26', 'Description for event 26.', 1, '2026-01-19 10:00:00', '2026-01-19 12:00:00', 'Praha', 'education', '#3355FF', TRUE, 'once', NULL),
-('Community Meetup 27', 'Description for event 27.', 1, '2026-01-26 10:00:00', '2026-01-26 12:00:00', 'Praha', 'education', '#3344FF', TRUE, 'once', NULL),
-('Community Meetup 28', 'Description for event 28.', 1, '2026-02-02 10:00:00', '2026-02-02 12:00:00', 'Praha', 'education', '#3333FF', FALSE, 'once', NULL),
-('Community Meetup 29', 'Description for event 29.', 1, '2026-02-09 10:00:00', '2026-02-09 12:00:00', 'Praha', 'education', '#3322FF', TRUE, 'once', NULL),
--- Posledních 5 pro user 2 (jak chceš)
-('Community Meetup 30', 'Description for event 30.', 2, '2026-02-16 10:00:00', '2026-02-16 12:00:00', 'Brno', 'education', '#3311FF', TRUE, 'once', NULL),
-('Community Meetup 31', 'Description for event 31.', 2, '2026-02-23 10:00:00', '2026-02-23 12:00:00', 'Brno', 'education', '#3300FF', FALSE, 'once', NULL),
-('Community Meetup 32', 'Description for event 32.', 2, '2026-03-01 10:00:00', '2026-03-01 12:00:00', 'Brno', 'education', '#2299FF', TRUE, 'once', NULL),
-('Community Meetup 33', 'Description for event 33.', 2, '2026-03-08 10:00:00', '2026-03-08 12:00:00', 'Brno', 'education', '#11AAFF', TRUE, 'weekly', '2026-06-08'),
-('Community Meetup 34', 'Description for event 34.', 2, '2026-03-15 10:00:00', '2026-03-15 12:00:00', 'Brno', 'education', '#00BBFF', FALSE, 'once', NULL);
+VALUES
+-- Alice Events
+('Morning Run', 'Join us for a refreshing run in the park to start the day with energy.', 2, NOW() + INTERVAL '0 day' + INTERVAL '7 hour', NOW() + INTERVAL '0 day' + INTERVAL '9 hour', 'Central Park', 'sport', '#FF5733', true, 'monthly', NOW() + INTERVAL '180 day'),
+('Tech Conference', 'A gathering of developers and tech enthusiasts to discuss the latest trends.', 1, NOW() + INTERVAL '1 day' + INTERVAL '10 hour', NOW() + INTERVAL '1 day' + INTERVAL '18 hour', 'Prague Congress Centre', 'tech', '#33C1FF', true, 'once', NULL),
+('Music Festival', 'Live performances from popular bands and artists across multiple stages.', 1, NOW() + INTERVAL '2 day' + INTERVAL '14 hour', NOW() + INTERVAL '2 day' + INTERVAL '23 hour', 'Old Town Square', 'music', '#9B59B6', true, 'once', NULL),
+('Startup Pitch Night', 'Watch entrepreneurs pitch their ideas to investors and industry experts.', 1, NOW() + INTERVAL '3 day' + INTERVAL '18 hour', NOW() + INTERVAL '3 day' + INTERVAL '22 hour', 'Impact Hub Prague', 'tech', '#27AE60', true, 'weekly', NOW() + INTERVAL '60 day'),
+('Art Exhibition', 'A showcase of contemporary art from emerging local artists.', 1, NOW() + INTERVAL '4 day' + INTERVAL '11 hour', NOW() + INTERVAL '4 day' + INTERVAL '17 hour', 'DOX Centre for Contemporary Art', 'art', '#F1C40F', false, 'once', NULL),
+('Cooking Workshop', 'Learn to cook delicious Italian dishes with a professional chef.', 1, NOW() + INTERVAL '5 day' + INTERVAL '16 hour', NOW() + INTERVAL '5 day' + INTERVAL '19 hour', 'Culinary Studio Praha', 'education', '#E67E22', true, 'once', NULL),
+('Yoga in the Park', 'Outdoor yoga class to relax and recharge body and mind.', 1, NOW() + INTERVAL '6 day' + INTERVAL '8 hour', NOW() + INTERVAL '6 day' + INTERVAL '10 hour', 'Stromovka Park', 'sport', '#2ECC71', true, 'weekly', NOW() + INTERVAL '120 day'),
+('Wine Tasting Evening', 'Experience fine wines with a professional sommelier.', 1, NOW() + INTERVAL '7 day' + INTERVAL '19 hour', NOW() + INTERVAL '7 day' + INTERVAL '22 hour', 'Wine Cellar Vinohrady', 'social', '#8E44AD', false, 'once', NULL),
+('Photography Walk', 'Explore the city while learning street photography techniques.', 1, NOW() + INTERVAL '8 day' + INTERVAL '13 hour', NOW() + INTERVAL '8 day' + INTERVAL '16 hour', 'Charles Bridge', 'art', '#3498DB', true, 'once', NULL),
+('Book Club Meeting', 'Discuss the monthly book with fellow literature enthusiasts.', 1, NOW() + INTERVAL '9 day' + INTERVAL '18 hour', NOW() + INTERVAL '9 day' + INTERVAL '21 hour', 'Municipal Library Prague', 'education', '#16A085', true, 'once', NULL),
+('Marathon Training', 'Join our group for a long-distance run in preparation for the city marathon.', 1, NOW() + INTERVAL '10 day' + INTERVAL '7 hour', NOW() + INTERVAL '10 day' + INTERVAL '11 hour', 'Letná Park', 'sport', '#E74C3C', true, 'once', NULL),
+('Board Game Night', 'Play modern board games with other enthusiasts.', 1, NOW() + INTERVAL '11 day' + INTERVAL '18 hour', NOW() + INTERVAL '11 day' + INTERVAL '23 hour', 'Board Game Café', 'social', '#34495E', false, 'weekly', NOW() + INTERVAL '60 day'),
+('Film Screening', 'Watch a classic movie under the stars.', 1, NOW() + INTERVAL '12 day' + INTERVAL '20 hour', NOW() + INTERVAL '12 day' + INTERVAL '23 hour', 'Riegrovy Sady', 'art', '#1ABC9C', true, 'once', NULL),
+('Charity Gala', 'Support a good cause at this formal evening event.', 1, NOW() + INTERVAL '13 day' + INTERVAL '19 hour', NOW() + INTERVAL '13 day' + INTERVAL '23 hour', 'Žofín Palace', 'social', '#C0392B', true, 'once', NULL),
+('Hackathon Weekend', 'Develop innovative solutions in teams during a 48-hour hackathon.', 1, NOW() + INTERVAL '14 day' + INTERVAL '9 hour', NOW() + INTERVAL '16 day' + INTERVAL '9 hour', 'Czech Technical University', 'tech', '#2980B9', true, 'once', NULL),
+('Stand-up Comedy Night', 'Enjoy performances from local comedians.', 1, NOW() + INTERVAL '15 day' + INTERVAL '20 hour', NOW() + INTERVAL '15 day' + INTERVAL '23 hour', 'Comedy Club Praha', 'art', '#F39C12', false, 'weekly', NOW() + INTERVAL '60 day'),
+('Craft Fair', 'Discover handmade goods and meet local artisans.', 1, NOW() + INTERVAL '16 day' + INTERVAL '10 hour', NOW() + INTERVAL '16 day' + INTERVAL '17 hour', 'Náplavka', 'art', '#7D3C98', true, 'once', NULL),
+('Jazz Concert', 'Live jazz music from top Czech and international performers.', 1, NOW() + INTERVAL '17 day' + INTERVAL '19 hour', NOW() + INTERVAL '17 day' + INTERVAL '22 hour', 'Jazz Dock', 'music', '#2C3E50', true, 'once', NULL),
+('Startup Networking', 'Connect with entrepreneurs, investors and innovators.', 1, NOW() + INTERVAL '18 day' + INTERVAL '18 hour', NOW() + INTERVAL '18 day' + INTERVAL '21 hour', 'WeWork Prague', 'tech', '#D35400', true, 'once', NULL),
+('Coding Bootcamp', 'Intensive one-day coding bootcamp for beginners.', 1, NOW() + INTERVAL '19 day' + INTERVAL '9 hour', NOW() + INTERVAL '19 day' + INTERVAL '17 hour', 'Campus Prague', 'education', '#BDC3C7', true, 'once', NULL),
+('Street Food Festival', 'Taste food from around the world at this open-air festival.', 1, NOW() + INTERVAL '20 day' + INTERVAL '11 hour', NOW() + INTERVAL '20 day' + INTERVAL '20 hour', 'Holešovická tržnice', 'social', '#A93226', true, 'once', NULL),
+('Career Fair', 'Meet employers and explore job opportunities.', 1, NOW() + INTERVAL '21 day' + INTERVAL '10 hour', NOW() + INTERVAL '21 day' + INTERVAL '15 hour', 'Prague Exhibition Grounds', 'education', '#229954', true, 'once', NULL),
+('Meditation Retreat', 'A day of mindfulness, meditation, and relaxation.', 1, NOW() + INTERVAL '22 day' + INTERVAL '8 hour', NOW() + INTERVAL '22 day' + INTERVAL '18 hour', 'Monastery Gardens', 'sport', '#AF7AC5', false, 'once', NULL),
+('Fashion Show', 'Experience the latest fashion trends from local designers.', 1, NOW() + INTERVAL '23 day' + INTERVAL '19 hour', NOW() + INTERVAL '23 day' + INTERVAL '22 hour', 'Fashion Hall', 'art', '#5DADE2', true, 'once', NULL),
+('Science Fair', 'Engaging experiments and demonstrations for all ages.', 1, NOW() + INTERVAL '24 day' + INTERVAL '9 hour', NOW() + INTERVAL '24 day' + INTERVAL '16 hour', 'National Technical Museum', 'education', '#58D68D', true, 'once', NULL),
+('Dance Workshop', 'Learn salsa and bachata with professional instructors.', 1, NOW() + INTERVAL '25 day' + INTERVAL '17 hour', NOW() + INTERVAL '25 day' + INTERVAL '20 hour', 'Dance Studio Praha', 'art', '#F1948A', false, 'weekly', NOW() + INTERVAL '60 day'),
+('Football Match', 'Local teams compete in a thrilling football game.', 1, NOW() + INTERVAL '26 day' + INTERVAL '16 hour', NOW() + INTERVAL '26 day' + INTERVAL '18 hour', 'Eden Arena', 'sport', '#117A65', true, 'once', NULL),
+('History Lecture', 'Educational talk on Czech medieval history.', 1, NOW() + INTERVAL '27 day' + INTERVAL '15 hour', NOW() + INTERVAL '27 day' + INTERVAL '17 hour', 'Charles University', 'education', '#2471A3', true, 'once', NULL),
+('History Lecture 2', 'Educational talk on Czech medieval history.', 1, NOW() + INTERVAL '27 day' + INTERVAL '15 hour', NOW() + INTERVAL '27 day' + INTERVAL '17 hour', 'Charles University', 'education', '#2471A3', true, 'once', NULL),
+
+-- 5 Bobs Events
+('Startup Demo Day', 'Startups present their products to the public and investors.', 2, NOW() + INTERVAL '28 day' + INTERVAL '13 hour', NOW() + INTERVAL '28 day' + INTERVAL '18 hour', 'CAMP Praha', 'tech', '#884EA0', true, 'once', NULL),
+('Charity Run', 'Participate in a 5K charity run supporting local hospitals.', 2, NOW() + INTERVAL '29 day' + INTERVAL '9 hour', NOW() + INTERVAL '29 day' + INTERVAL '12 hour', 'Stromovka Park', 'sport', '#F5B041', true, 'once', NULL),
+('Outdoor Theater', 'Watch a Shakespeare play performed in the open air.', 2, NOW() + INTERVAL '30 day' + INTERVAL '20 hour', NOW() + INTERVAL '30 day' + INTERVAL '23 hour', 'Vyšehrad', 'art', '#1F618D', false, 'once', NULL),
+('Networking Breakfast', 'Morning networking session with coffee and croissants.', 2, NOW() + INTERVAL '31 day' + INTERVAL '8 hour', NOW() + INTERVAL '31 day' + INTERVAL '10 hour', 'Business Café Praha', 'social', '#52BE80', true, 'weekly', NOW() + INTERVAL '365 day'),
+('New Year Celebration', 'Celebrate the New Year with music, food, and fireworks.', 2, NOW() + INTERVAL '35 day' + INTERVAL '21 hour', NOW() + INTERVAL '36 day' + INTERVAL '2 hour', 'Prague Castle', 'social', '#F39C12', true, 'once', NULL);
+
 
 -- ADD USER EVENTS
 INSERT INTO events_participants (user_id, event_id, accepted, important)
 VALUES 
-  (1, 1, FALSE, FALSE),  -- Alice is invited to Bob’s run
-  (1, 2, TRUE, TRUE),  -- Alice is participant of her own event
-  (3, 1, FALSE, FALSE),  -- Carol is invited too
-
-  (2, 2, TRUE, FALSE), -- Bob joins Alice’s cybersecurity talk
-  (2, 1, TRUE, TRUE),  -- Bob is participant of his own event
-  (3, 2, TRUE, FALSE), -- Carol joins too
-
-  (1, 3, FALSE, FALSE),  -- Alice is invited to the concert
-  (2, 3, FALSE, FALSE),  -- Bob is invited as well
-  (3, 3, TRUE, FALSE),  -- Carol is participant of her own event
+  (1, 1, FALSE, FALSE),  
+  (1, 2, TRUE, TRUE),  
+  (3, 1, FALSE, FALSE),
+  (2, 2, TRUE, FALSE), 
+  (2, 1, TRUE, TRUE),  
+  (2, 4, TRUE, TRUE),  
+  (3, 4, TRUE, TRUE),  
+  (3, 2, TRUE, FALSE), 
+  (1, 3, FALSE, FALSE),  
+  (2, 3, FALSE, FALSE),  
+  (3, 3, TRUE, FALSE),  
   (1, 4, TRUE, TRUE),
   (1, 5, TRUE, FALSE),
   (1, 6, TRUE, FALSE),  
@@ -160,7 +171,7 @@ VALUES
   (13, 2, TRUE, FALSE),
   (14, 2, FALSE, TRUE),
   (15, 2, TRUE, FALSE),
-  (16, 2, TRUE, FALSE); -- THere are 11 participants for Alice event
+  (16, 2, TRUE, FALSE); -- There are 11 participants for Alice event
 
 -- CREATE NOTIFICATIONS
 INSERT INTO notifications (user_id, event_id, type, message)

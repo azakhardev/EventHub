@@ -62,7 +62,7 @@ export default function EventListCard({
                   <Pencil className="text-primary" size={32} />
                 </Button>
               </Tooltip>
-              <Tooltip text="Delete event">
+              <Tooltip text="Delete event" destructive>
                 <Button
                   className="bg-transparent hover:bg-transparent hover:scale-[1.03] px-4 py-6 border-2 border-red-300 rounded-md"
                   onClick={() => {
