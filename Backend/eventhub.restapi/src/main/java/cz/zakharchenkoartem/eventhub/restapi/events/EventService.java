@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -76,8 +77,8 @@ public class EventService {
     }
 
     @Transactional
-    public void deleteExpiredEvents() {
-        LocalDateTime now = LocalDateTime.now();
+    public void deleteOldEvents() {
+        OffsetDateTime now = OffsetDateTime.now();
         eventsDataSource.deleteOldEvents(now);
     }
 

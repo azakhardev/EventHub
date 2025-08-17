@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 @Repository
 public interface EventsDataSource extends JpaRepository<Event, Long> {
@@ -17,7 +18,7 @@ public interface EventsDataSource extends JpaRepository<Event, Long> {
     @Query("DELETE FROM Event e WHERE " +
             "(e.recurrence = 'ONCE' AND e.endTime < :now) OR " +
             "(e.recurrence <> 'ONCE' AND e.recurrenceEndDate < :now)")
-    void deleteOldEvents(@Param("now") LocalDateTime now);
+    void deleteOldEvents(@Param("now") OffsetDateTime now);
 
     Page<Event> findAllByOwnerId(@Param("ownerId") long ownerId, Pageable pageable);
 }
