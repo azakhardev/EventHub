@@ -1,0 +1,32 @@
+version: '3.9'
+
+services:
+  frontend:
+    build: ./Frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+
+  backend:
+    build: ./Backend      
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/eventhub
+      SPRING_DATASOURCE_USERNAME: admin
+      SPRING_DATASOURCE_PASSWORD: 123456Ab
+    depends_on:
+      - db
+
+  db:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_DB: eventhub
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: 123456Ab
+    volumes:
+      - ./PostgresqlDb:/docker-entrypoint-initdb.d/
+    ports:
+      - "5432:5432"

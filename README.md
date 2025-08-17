@@ -53,7 +53,7 @@ services:
   frontend:
     build: ./Frontend
     ports:
-      - "3000:3000"
+      - "80:80"
     depends_on:
       - backend
 
@@ -62,10 +62,9 @@ services:
     ports:
       - "8080:8080"
     environment:
-      - DB_HOST=db
-      - DB_PORT=5432
-      - DB_USER=admin
-      - DB_PASSWORD=secret
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/eventhub
+      SPRING_DATASOURCE_USERNAME: admin
+      SPRING_DATASOURCE_PASSWORD: 123456Ab
     depends_on:
       - db
 
@@ -75,7 +74,7 @@ services:
     environment:
       POSTGRES_DB: eventhub
       POSTGRES_USER: admin
-      POSTGRES_PASSWORD: secret
+      POSTGRES_PASSWORD: 123456Ab
     volumes:
       - ./PostgresqlDb:/docker-entrypoint-initdb.d/
     ports:
@@ -87,10 +86,13 @@ services:
 ```properties
 spring.application.name=eventhub.restapi
 spring.datasource.url=jdbc:postgresql://localhost:5432/EventHub
-spring.datasource.username=postgres
+spring.datasource.username=admin
 spring.datasource.password=123456Ab
 spring.datasource.driver-class-name=org.postgresql.Driver
+spring.security.user.name=artem
+spring.security.user.password=secret1234!
 
+spring.jpa.properties.hibernate.format_sql=true
 spring.jpa.hibernate.ddl-auto=update
 spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
 spring.jpa.show-sql=true
