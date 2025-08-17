@@ -42,12 +42,6 @@ public class UsersController {
         this.notificationService = notificationService;
     }
 
-    @GetMapping
-    @JsonView(Views.Public.class)
-    public List<User> getUsers() {
-        return userService.getUsers();
-    }
-
     @GetMapping("/{id}")
     @JsonView(Views.Owner.class)
     public User getUser(@PathVariable Long id, @RequestHeader("Authorization") String authHeader) {
