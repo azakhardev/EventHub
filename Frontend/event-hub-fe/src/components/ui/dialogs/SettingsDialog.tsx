@@ -9,22 +9,18 @@ import Dialog from "./Dialog";
 import { useThemeStore } from "../../../store/store";
 import { useEffect, useState } from "react";
 import { Check, ChevronDown } from "lucide-react";
+import type { Interval } from "../../../types/helpers";
 
 interface SettingsDialogProps {
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
 }
 
-type Option = {
-  id: number;
-  value: string;
-};
-
-const options: Option[] = [
-  { id: 1, value: "Week" },
-  { id: 2, value: "Day" },
-  { id: 3, value: "Hour" },
-  { id: 4, value: "10 min" },
+const options: Interval[] = [
+  { id: 1, value: "Week", interval: 1000 * 60 * 60 * 24 * 7 },
+  { id: 2, value: "Day", interval: 1000 * 60 * 60 * 24 },
+  { id: 3, value: "Hour", interval: 1000 * 60 * 60 },
+  { id: 4, value: "10 min", interval: 1000 * 60 * 10 },
 ];
 
 export default function SettingsDialog({
@@ -43,7 +39,7 @@ export default function SettingsDialog({
     setSelectedReminders(reminders);
   }, []);
 
-  function selectReminders(reminders: Option[]) {
+  function selectReminders(reminders: Interval[]) {
     localStorage.setItem("reminders-interval", JSON.stringify(reminders));
     setSelectedReminders(reminders);
   }

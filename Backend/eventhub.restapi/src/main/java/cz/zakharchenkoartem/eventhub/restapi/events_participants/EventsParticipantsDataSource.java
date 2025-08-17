@@ -48,6 +48,18 @@ public interface EventsParticipantsDataSource extends JpaRepository<EventPartici
             Pageable pageable
     );
 
+    @Query("""
+                SELECT rel FROM EventParticipantRelation rel JOIN rel.event e
+                WHERE rel.user.id = :userId
+                  AND rel.accepted = TRUE
+                  AND e.recurrence = 'once'
+                  AND e.startTime BETWEEN :now AND :nextWeek
+           \s""")
+    List<EventParticipantRelation> findUpcoming(
+            @Param("userId") Long userId,
+            @Param("now") OffsetDateTime now,
+            @Param("nextWeek") OffsetDateTime nextWeek);
+
     boolean existsByUserAndEvent(User user, Event event);
 
     List<EventParticipantRelation> findByEvent(Event event);

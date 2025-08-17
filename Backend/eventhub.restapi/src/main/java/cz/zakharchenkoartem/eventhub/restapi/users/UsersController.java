@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import cz.zakharchenkoartem.eventhub.restapi.dto.PageInfo;
 import cz.zakharchenkoartem.eventhub.restapi.dto.PaginatedResponse;
 import cz.zakharchenkoartem.eventhub.restapi.dto.Views;
+import cz.zakharchenkoartem.eventhub.restapi.events.Event;
 import cz.zakharchenkoartem.eventhub.restapi.events.dto.EventDto;
 import cz.zakharchenkoartem.eventhub.restapi.events.dto.EventFilter;
 import cz.zakharchenkoartem.eventhub.restapi.follows.dto.PinFollowerRequest;
@@ -111,6 +112,17 @@ public class UsersController {
         return notificationService.getNotificationsCount(id);
     }
 
+    @GetMapping("/{id}/upcoming")
+    public ResponseEntity<List<EventDto>> getUpcomingEvents(@RequestHeader("Authorization") String authHeader, @PathVariable Long id) {
+        Long userId = jwtService.extractUserId(authHeader.replace("Bearer ", ""));
+        if (!Objects.equals(userId, id)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access denied");
+        }
+
+        List<EventDto> events = userService.getUpcomingEvents(id);
+
+        return ResponseEntity.ok(events);
+    }
     //TODO: Endpoint for upcoming events
 
     @GetMapping("/{id}/my-events")

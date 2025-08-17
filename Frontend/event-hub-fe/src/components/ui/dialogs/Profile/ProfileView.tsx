@@ -14,7 +14,6 @@ import type { User } from "../../../../types/user";
 import { toast } from "react-toastify";
 import { queryClient } from "../../../../main";
 
-import { useState } from "react";
 import Tooltip from "../../Tooltip";
 import { RefreshCcw } from "lucide-react";
 
@@ -50,7 +49,7 @@ export default function ProfileView({
 
   const { mutate: mutateToken } = useMutation({
     mutationFn: () => generateFollowToken(userId, token),
-    onSuccess: (data: string) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["profile"] });
     },
     onError: (e) => {

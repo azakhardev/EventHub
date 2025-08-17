@@ -121,6 +121,21 @@ public class UserService {
         return notificationsDataSource.findByUser(user, pageable);
     }
 
+    @Transactional
+    public List<EventDto> getUpcomingEvents(Long userId){
+        OffsetDateTime now = OffsetDateTime.now();
+        OffsetDateTime nextWeek = now.plusDays(7);
+
+        List<EventParticipantRelation> participantRelations = eventsParticipantsDataSource.findUpcoming(userId, now, nextWeek );
+
+        List<EventDto> events = new ArrayList<>();
+
+        for (EventParticipantRelation relation : participantRelations) {
+            events.add(new EventDto(relation.getEvent(), relation.isImportant(), true));
+        }
+
+        return events;
+    }
     @Transactional(readOnly = true)
     public Page<EventDto> getMyEvents(Long id, int page, int pageSize, Boolean important, Boolean owned, Boolean isPrivate, OffsetDateTime from, OffsetDateTime to, String expression, String order) {
         User user = getUser(id);

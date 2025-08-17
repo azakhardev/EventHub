@@ -26,6 +26,27 @@ export async function inviteFriends(
   return response.json();
 }
 
+export async function getUpcomingEvents(token: string, userId: number) {
+  const response = await fetch(`${api}/users/${userId}/upcoming`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    let errorData: any;
+    try {
+      errorData = await response.json();
+    } catch {
+      throw { general: response.status };
+    }
+    throw errorData;
+  }
+
+  return await response.json();
+}
+
 export async function getMyEvents(
   token: string,
   userId: number,

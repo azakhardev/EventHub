@@ -9,6 +9,8 @@ import { useThemeStore, useUserStore } from "./store/store";
 import DeleteDialog from "./components/ui/dialogs/DeleteDialog";
 import { ToastContainer } from "react-toastify";
 
+import ReminderProvider from "./components/layout/ReminderProvider";
+
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const { setUserId, setToken } = useUserStore();
@@ -55,6 +57,7 @@ function App() {
         closeOnClick={true}
         pauseOnHover={true}
       />
+      <ReminderProvider />
     </div>
   );
 }
