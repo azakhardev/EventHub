@@ -96,6 +96,12 @@ spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
 spring.jpa.show-sql=true
 ```
 
-### Databázové schéma:
+### 🛢️Databázové schéma:
 <img width="832" height="774" alt="{E574B28B-76D9-4A96-BE7B-320D4D735387}" src="https://github.com/user-attachments/assets/276a5bd9-4ff2-40d5-9e1a-ede41acea497" />
 
+### ✨Případné vylepšení v budoucnu (podle nálady):
+- Přidat Redis pro cacheování nadcházejících eventů a přátel
+- Spouštět připomínky i pro eventy s opakováním
+- Přidat responzivitu
+- Upload profilových fotek do Cloudu + ukládání URL do db
+- Možnost upravit jednotlivé instance opakujících se eventů (ne všechny)
