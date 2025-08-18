@@ -1,4 +1,5 @@
 # EventHub
+
 EventHub je desktopová aplikace vytvořená během letních prázdnin 2025. Aplikace umožňuje uživatelům vytvářet, sdílet a sledovat události s automatickými notifikacemi před jejich začátkem. Aplikace zároveň podporuje sledování uživatelů, opakování událostí, soukromé i veřejné eventy a reaktivní upozornění na změny v kalendáři. Pokud si chcete aplikaci vyzkoušet, jsou pro ní připraveny Image na DockerHub - stačí se jen řídit pokyny z kroku 🚀 Zprovoznění aplikace
 
 ## 🔧 Shrnutí celkových funkcí (kompletní)
@@ -44,7 +45,9 @@ EventHub/
 ```
 
 ## 🚀Zprovoznění aplikace
+
 - Pro spuštění aplikace z dockeru je třeba mít nainstalovaný a spuštěný Docker nebo Docker Desktop (doporučeno)
+
 1. Vytvořte si soubor `docker-compose.yml` a vložte do něj tento kód:
 
 ```yaml
@@ -102,7 +105,9 @@ spring.jpa.hibernate.ddl-auto=update
 spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
 spring.jpa.show-sql=true
 ```
+
 **`.env` soubor pro FE :**
+
 ```
 VITE_API_URL=http://localhost:8080
 ```
@@ -112,6 +117,7 @@ VITE_API_URL=http://localhost:8080
 <img width="832" height="774" alt="{E574B28B-76D9-4A96-BE7B-320D4D735387}" src="https://github.com/user-attachments/assets/276a5bd9-4ff2-40d5-9e1a-ede41acea497" />
 
 ### 🛠 Tech stack
+
 - **Frontend (FE):** React 19, TypeScript, Vite
 - **Styling & UI:** TailwindCSS, Framer Motion, Lucide React, React Toastify, React Spinners
 - **State & Data:** React Query, Zustand
@@ -126,3 +132,4 @@ VITE_API_URL=http://localhost:8080
 - Přidat responzivitu
 - Upload profilových fotek do Cloudu + ukládání URL do db
 - Možnost upravit jednotlivé instance opakujících se eventů (ne všechny)
+- Implementovat Axios na Fe

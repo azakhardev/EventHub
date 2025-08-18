@@ -70,7 +70,7 @@ export default function NotificationCard({
 
   return (
     <div
-      className="relative flex flex-col gap-1 px-4 min-w-[300px]"
+      className="relative flex flex-col gap-1 px-4 w-[300px]"
       onMouseOverCapture={handleMouseOver}
       {...props}
     >

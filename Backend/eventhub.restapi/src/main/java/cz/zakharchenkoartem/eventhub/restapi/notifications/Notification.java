@@ -21,8 +21,8 @@ public class Notification {
     @JsonIgnore
     private User user;
 
-    @ManyToOne
-    @JoinColumn(name = "event_id", nullable = false, foreignKey = @ForeignKey(name = "fk_event_id"))
+    @ManyToOne(optional = true)
+    @JoinColumn(name = "event_id", foreignKey = @ForeignKey(name = "fk_event_id"))
     private Event event;
 
     private String type;

@@ -126,8 +126,9 @@ public class NotificationService {
     public void notifyDeletion(Event event) {
         List<EventParticipantRelation> relations = eventsParticipantsDataSource.findByEvent(event);
 
-        List<Notification> notifications = relations.stream()
-                .map(rel -> new Notification(rel.getUser(), event, "DELETE", "Event " + event.getTitle() + " was deleted"))
+        List<Notification> notifications = relations.stream().map(EventParticipantRelation::getUser)
+                .filter(user -> !Objects.equals(user.getId(), event.getOwner().getId()))
+                .map(rel -> new Notification(rel, null, "DELETE", "Event " + event.getTitle() + " was deleted"))
                 .collect(Collectors.toList());
 
         notificationsDataSource.saveAll(notifications);
