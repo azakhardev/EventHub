@@ -42,21 +42,21 @@ EventHub/
 └── README.md
 ```
 
-**Obsah `docker-compose.yml`**
+## Jak spustit aplikaci?
+
+1. Vytvořte si soubor `docker-compose.yml` a vložte do něj tento kód:
 
 ```yaml
-version: "3.9"
-
 services:
   frontend:
-    build: ./Frontend
+    image: artemzach/eventhub:frontend-latest
     ports:
       - "80:80"
     depends_on:
       - backend
 
   backend:
-    build: ./Backend
+    image: artemzach/eventhub:backend-latest
     ports:
       - "8080:8080"
     environment:
@@ -67,17 +67,23 @@ services:
       - db
 
   db:
-    image: postgres:15
+    image: artemzach/eventhub:db-latest
     restart: always
     environment:
       POSTGRES_DB: eventhub
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: 123456Ab
-    volumes:
-      - ./PostgresqlDb:/docker-entrypoint-initdb.d/
     ports:
       - "5432:5432"
 ```
+
+2. Ve složce se souborem `docker-compose.yml` otevřete příkazový řádek a spusťte příkaz `docker compose up -d`
+3. Docker si automaticky stáhne a spustí moje image z DockerHubu
+4. Aplikace se spustí a pak:
+
+- Frontend na http://localhost:80 => toto otevřít v prohlížeči
+- Backend na http://localhost:8080
+- Databáze na localhost:5432
 
 **Databázové napojení `application.properties`:**
 
@@ -97,9 +103,11 @@ spring.jpa.show-sql=true
 ```
 
 ### 🛢️Databázové schéma:
+
 <img width="832" height="774" alt="{E574B28B-76D9-4A96-BE7B-320D4D735387}" src="https://github.com/user-attachments/assets/276a5bd9-4ff2-40d5-9e1a-ede41acea497" />
 
 ### ✨Případné vylepšení v budoucnu (podle nálady):
+
 - Přidat Redis pro cacheování nadcházejících eventů a přátel
 - Spouštět připomínky i pro eventy s opakováním
 - Přidat responzivitu

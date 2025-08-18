@@ -74,7 +74,7 @@ export default function ReminderProvider() {
     if (isSuccess) {
       setUpcomingEvents(data);
 
-      const now = new Date();
+      const now = new Date(0);
       const newReminders = data
         .filter((d) => !storedReminders.some((r) => r.eventId === d.id))
         .map((d) => ({

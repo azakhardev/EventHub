@@ -6,7 +6,7 @@ import { getForeignEvents } from "../../../api/events";
 import { useUserStore } from "../../../store/store";
 import type { Page } from "../../../types/page";
 import type { Event } from "../../../types/event";
-import { BounceLoader } from "react-spinners";
+import { BounceLoader } from "../loaders/BounceLoader";
 import { useInView } from "react-intersection-observer";
 import { useEffect, useState } from "react";
 import EmptyArray from "../alerts/EmptyArray";

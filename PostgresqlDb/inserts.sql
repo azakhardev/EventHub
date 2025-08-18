@@ -80,8 +80,8 @@ VALUES
 INSERT INTO events (title, body, owner_id, start_time, end_time, place, category, color, public, recurrence, recurrence_end_date)
 VALUES
 -- Alice Events
-('Morning Run', 'Join us for a refreshing run in the park to start the day with energy.', 2, NOW() + INTERVAL '0 day' + INTERVAL '7 hour', NOW() + INTERVAL '0 day' + INTERVAL '9 hour', 'Central Park', 'sport', '#FF5733', true, 'monthly', NOW() + INTERVAL '180 day'),
-('Tech Conference', 'A gathering of developers and tech enthusiasts to discuss the latest trends.', 1, NOW() + INTERVAL '1 day' + INTERVAL '10 hour', NOW() + INTERVAL '1 day' + INTERVAL '18 hour', 'Prague Congress Centre', 'tech', '#33C1FF', true, 'once', NULL),
+('Morning Run',  'Join us for a refreshing run in the park to start the day with energy.',  2,  NOW() + INTERVAL '20 minutes', NOW() + INTERVAL '2 hours 20 minutes', 'Central Park',  'sport',  '#FF5733',  true,  'monthly',  NOW() + INTERVAL '180 days'),
+('Tech Conference',  'A gathering of developers and tech enthusiasts to discuss the latest trends.',  1,  NOW() + INTERVAL '1 day 10 minutes', NOW() + INTERVAL '1 day 8 hours 10 minutes', 'Prague Congress Centre', 'tech', '#33C1FF', true, 'once',  NULL),
 ('Music Festival', 'Live performances from popular bands and artists across multiple stages.', 1, NOW() + INTERVAL '2 day' + INTERVAL '14 hour', NOW() + INTERVAL '2 day' + INTERVAL '23 hour', 'Old Town Square', 'music', '#9B59B6', true, 'once', NULL),
 ('Startup Pitch Night', 'Watch entrepreneurs pitch their ideas to investors and industry experts.', 1, NOW() + INTERVAL '3 day' + INTERVAL '18 hour', NOW() + INTERVAL '3 day' + INTERVAL '22 hour', 'Impact Hub Prague', 'tech', '#27AE60', true, 'weekly', NOW() + INTERVAL '60 day'),
 ('Art Exhibition', 'A showcase of contemporary art from emerging local artists.', 1, NOW() + INTERVAL '4 day' + INTERVAL '11 hour', NOW() + INTERVAL '4 day' + INTERVAL '17 hour', 'DOX Centre for Contemporary Art', 'art', '#F1C40F', false, 'once', NULL),
@@ -107,8 +107,8 @@ VALUES
 ('Science Fair', 'Engaging experiments and demonstrations for all ages.', 1, NOW() + INTERVAL '24 day' + INTERVAL '9 hour', NOW() + INTERVAL '24 day' + INTERVAL '16 hour', 'National Technical Museum', 'education', '#58D68D', true, 'once', NULL),
 ('Dance Workshop', 'Learn salsa and bachata with professional instructors.', 1, NOW() + INTERVAL '25 day' + INTERVAL '17 hour', NOW() + INTERVAL '25 day' + INTERVAL '20 hour', 'Dance Studio Praha', 'art', '#F1948A', false, 'weekly', NOW() + INTERVAL '60 day'),
 ('Football Match', 'Local teams compete in a thrilling football game.', 1, NOW() + INTERVAL '26 day' + INTERVAL '16 hour', NOW() + INTERVAL '26 day' + INTERVAL '18 hour', 'Eden Arena', 'sport', '#117A65', true, 'once', NULL),
-('History Lecture', 'Educational talk on Czech medieval history.', 1, NOW() + INTERVAL '27 day' + INTERVAL '15 hour', NOW() + INTERVAL '27 day' + INTERVAL '17 hour', 'Charles University', 'education', '#2471A3', true, 'once', NULL),
-('History Lecture 2', 'Educational talk on Czech medieval history.', 1, NOW() + INTERVAL '27 day' + INTERVAL '15 hour', NOW() + INTERVAL '27 day' + INTERVAL '17 hour', 'Charles University', 'education', '#2471A3', true, 'once', NULL),
+('History Lecture', 'Educational talk on Czech medieval history.', 2, NOW() + INTERVAL '27 day' + INTERVAL '15 hour', NOW() + INTERVAL '27 day' + INTERVAL '17 hour', 'Charles University', 'education', '#2471A3', false, 'once', NULL),
+('History Lecture 2', 'Educational talk on Czech medieval history.', 3, NOW() + INTERVAL '27 day' + INTERVAL '15 hour', NOW() + INTERVAL '27 day' + INTERVAL '17 hour', 'Charles University', 'education', '#2471A3', false, 'once', NULL),
 
 -- 5 Bobs Events
 ('Startup Demo Day', 'Startups present their products to the public and investors.', 2, NOW() + INTERVAL '28 day' + INTERVAL '13 hour', NOW() + INTERVAL '28 day' + INTERVAL '18 hour', 'CAMP Praha', 'tech', '#884EA0', true, 'once', NULL),
@@ -121,16 +121,18 @@ VALUES
 -- ADD USER EVENTS
 INSERT INTO events_participants (user_id, event_id, accepted, important)
 VALUES 
-  (1, 1, FALSE, FALSE),  
+  (1, 1, TRUE, FALSE),  
+  (2, 28, TRUE, FALSE),  
+  (3, 29, TRUE, FALSE),  
   (1, 2, TRUE, TRUE),  
-  (3, 1, FALSE, FALSE),
+  (3, 1, TRUE, FALSE),
   (2, 2, TRUE, FALSE), 
   (2, 1, TRUE, TRUE),  
   (2, 4, TRUE, TRUE),  
   (3, 4, TRUE, TRUE),  
   (3, 2, TRUE, FALSE), 
-  (1, 3, FALSE, FALSE),  
-  (2, 3, FALSE, FALSE),  
+  (1, 3, TRUE, FALSE),  
+  (2, 3, TRUE, FALSE),  
   (3, 3, TRUE, FALSE),  
   (1, 4, TRUE, TRUE),
   (1, 5, TRUE, FALSE),
@@ -155,23 +157,21 @@ VALUES
   (1, 24, TRUE, TRUE),
   (1, 25, TRUE, TRUE),
   (1, 26, TRUE, FALSE),
-  (1, 27, TRUE, FALSE),
-  (1, 28, TRUE, FALSE),
-  (1, 29, TRUE, FALSE),
+  (1, 27, TRUE, FALSE),  
   (1, 30, TRUE, FALSE),
   (1, 31, TRUE, FALSE),
-  (1, 32, TRUE, FALSE), --Alice has 30 events
+  (1, 32, TRUE, FALSE),
   (6, 2, TRUE, FALSE),
-  (7, 2, FALSE, TRUE),
-  (8, 2, FALSE, TRUE),
-  (9, 2, FALSE, TRUE),
+  (7, 2, TRUE, TRUE),
+  (8, 2, TRUE, TRUE),
+  (9, 2, TRUE, TRUE),
   (10, 2, TRUE, TRUE),
   (11, 2, TRUE, FALSE),
   (12, 2, TRUE, FALSE),
   (13, 2, TRUE, FALSE),
-  (14, 2, FALSE, TRUE),
+  (14, 2, TRUE, TRUE),
   (15, 2, TRUE, FALSE),
-  (16, 2, TRUE, FALSE); -- There are 11 participants for Alice event
+  (16, 2, TRUE, FALSE);
 
 -- CREATE NOTIFICATIONS
 INSERT INTO notifications (user_id, event_id, type, message)

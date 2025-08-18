@@ -192,19 +192,7 @@ public class UserService {
             }
         }
 
-        List<EventDto> populatedEvents = new ArrayList<>();
-
-        for (EventDto event : events) {
-            var newInstances = recurrenceGenerator.generateInstances(event, OffsetDateTime.now(), OffsetDateTime.now().plusYears(1));
-            populatedEvents.addAll(newInstances);
-        }
-
-        populatedEvents.sort(
-                Comparator.comparing(EventDto::getStartTime)
-                        .thenComparing(EventDto::getEndTime)
-        );
-
-        return new PageImpl<EventDto>(populatedEvents, pageable, participantRelations.getTotalElements());
+        return new PageImpl<EventDto>(events, pageable, participantRelations.getTotalElements());
     }
 
     @Transactional
