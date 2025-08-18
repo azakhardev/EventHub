@@ -14,7 +14,6 @@ import type { Page } from "../../types/page.ts";
 import { useInView } from "react-intersection-observer";
 import { getFriends } from "../../api/users.ts";
 import FriendDetailDialog from "../ui/dialogs/FriendDetailDialog.tsx";
-import Tooltip from "../ui/Tooltip.tsx";
 
 export default function FriendsListSection() {
   const { selectedPage } = usePageStore();
@@ -59,16 +58,14 @@ export default function FriendsListSection() {
     <>
       {selectedPage !== "friends" && (
         <>
-          <div className="flex flex-row items-center justify-between w-full pr-8 pl-6 mt-10 max-h-[7vh]">
+          <div className="flex flex-row items-center justify-between w-full pr-8 pl-6 mt-10 max-h-[6vh]">
             <h3 className="text-text-on-light">Friends</h3>
             <div className="flex flex-row gap-2">
-              <Tooltip text="Add friend">
-                <AddFriendButton />
-              </Tooltip>
+              <AddFriendButton />
               <NotificationsButton />
             </div>
           </div>
-          <div className="flex flex-col gap-2 items-center border-l-2 max-h-[93vh] overflow-y-scroll scrollbar-hide">
+          <div className="flex flex-col gap-2 items-center border-l-2 max-h-[92vh] overflow-y-scroll scrollbar-hide">
             <div className="w-full px-1 lg:w-2/3 lg:px-4 my-2">
               <Input
                 placeholder="Search for a friend"
