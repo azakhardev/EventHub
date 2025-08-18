@@ -1,4 +1,4 @@
-EventHub je letní projekt, který umožňuje uživatelům vytvářet, sdílet a sledovat události s automatickými notifikacemi před jejich začátkem. Aplikace zároveň podporuje sledování uživatelů, opakování událostí, soukromé i veřejné eventy a reaktivní upozornění na změny v kalendáři.
+EventHub je desktopová aplikace vytvořená během letních prázdnin 2025. Aplikace umožňuje uživatelům vytvářet, sdílet a sledovat události s automatickými notifikacemi před jejich začátkem. Aplikace zároveň podporuje sledování uživatelů, opakování událostí, soukromé i veřejné eventy a reaktivní upozornění na změny v kalendáři. Pokud si chcete aplikaci vyzkoušet, jsou pro ní připraveny Image na DockerHub - stačí se jen řídit pokyny z kroku 🚀 Zprovoznění aplikace
 
 ## 🔧 Shrnutí celkových funkcí (kompletní)
 
@@ -18,12 +18,12 @@ EventHub je letní projekt, který umožňuje uživatelům vytvářet, sdílet a
 ### 🔔 Notifikace
 
 - Když někdo, koho sleduji, vytvoří/smaže/urpaví událost
-- **Tyden, den, hodinu a 10 minut před událostí**, dle nastavení uživatele
+- **Týden, den, hodinu a 10 minut před událostí**, dle nastavení uživatele
 
 ### 🌐 Sdílení
 
-- Pozvánka přes event
-- Přpojení přes token/přijmutí pozvánky
+- Pozvání přátel na událost z menu události
+- Připojení přes token/přijmutí pozvánky na soukromý event nebo bez autorizace na veřejný
 
 ## 📁Struktura Projektu
 
@@ -42,8 +42,8 @@ EventHub/
 └── README.md
 ```
 
-## Jak spustit aplikaci?
-
+## 🚀Zprovoznění aplikace
+- Pro spuštění aplikace z dockeru je třeba mít nainstalovaný a spuštěný Docker nebo Docker Desktop (doporučeno)
 1. Vytvořte si soubor `docker-compose.yml` a vložte do něj tento kód:
 
 ```yaml
@@ -85,7 +85,7 @@ services:
 - Backend na http://localhost:8080
 - Databáze na localhost:5432
 
-**Databázové napojení `application.properties`:**
+**Databázové napojení `application.properties` pro vývojářské prostředí:**
 
 ```properties
 spring.application.name=eventhub.restapi
@@ -100,6 +100,10 @@ spring.jpa.properties.hibernate.format_sql=true
 spring.jpa.hibernate.ddl-auto=update
 spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
 spring.jpa.show-sql=true
+```
+**`.env` soubor pro FE :**
+```
+VITE_API_URL=http://localhost:8080
 ```
 
 ### 🛢️Databázové schéma:
