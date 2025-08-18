@@ -4,7 +4,7 @@ EventHub je letní projekt, který umožňuje uživatelům vytvářet, sdílet a
 
 ### 🧑‍🤝‍🧑 Uživatelé
 
-- Registrace / přihlášení (JWT)
+- Přihlášení (JWT)
 - Profil uživatele
 - Sledování jiných uživatelů
 - Přehled sledovaných událostí
@@ -12,20 +12,18 @@ EventHub je letní projekt, který umožňuje uživatelům vytvářet, sdílet a
 ### 📅 Události
 
 - Tvorba/editace/mazání události
-- Atributy: název, popis, čas, místo, odkaz, kategorie (ikonka), sdílený link
-- Automatické přidání události přes pozvánkový link
-- (Volitelně) obrázek události
+- Atributy: název, popis, čas, místo, kategorie (label), barva, sdílený link
+- Připojení k privátním eventům pomoci tokenu eventu
 
 ### 🔔 Notifikace
 
 - Když někdo, koho sleduji, vytvoří/smaže/urpaví událost
-- **15 a 5 minut před událostí**
-- Možno rozšířit o přehled "nadcházející události"
+- **Tyden, den, hodinu a 10 minut před událostí**, dle nastavení uživatele
 
 ### 🌐 Sdílení
 
-- Pozvánka přes URL
-- Přidání do seznamu kliknutím
+- Pozvánka přes event
+- Přpojení přes token/přijmutí pozvánky
 
 ## 📁Struktura Projektu
 
