@@ -1,3 +1,4 @@
+# EventHub
 EventHub je desktopová aplikace vytvořená během letních prázdnin 2025. Aplikace umožňuje uživatelům vytvářet, sdílet a sledovat události s automatickými notifikacemi před jejich začátkem. Aplikace zároveň podporuje sledování uživatelů, opakování událostí, soukromé i veřejné eventy a reaktivní upozornění na změny v kalendáři. Pokud si chcete aplikaci vyzkoušet, jsou pro ní připraveny Image na DockerHub - stačí se jen řídit pokyny z kroku 🚀 Zprovoznění aplikace
 
 ## 🔧 Shrnutí celkových funkcí (kompletní)
@@ -109,6 +110,14 @@ VITE_API_URL=http://localhost:8080
 ### 🛢️Databázové schéma:
 
 <img width="832" height="774" alt="{E574B28B-76D9-4A96-BE7B-320D4D735387}" src="https://github.com/user-attachments/assets/276a5bd9-4ff2-40d5-9e1a-ede41acea497" />
+
+### 🛠 Tech stack
+- **Frontend (FE):** React 19, TypeScript, Vite
+- **Styling & UI:** TailwindCSS, Framer Motion, Lucide React, React Toastify, React Spinners
+- **State & Data:** React Query, Zustand
+- **Backend (BE):** Java 21, Spring Boot 3.5, Spring Data JPA, Spring Web, Spring Security, Spring Validation, JWT (jjwt)
+- **Databáze:** PostgreSQL
+- **DevOps / Build:** Docker, Docker Hub, Maven, ESLint
 
 ### ✨Případné vylepšení v budoucnu (podle nálady):
 
