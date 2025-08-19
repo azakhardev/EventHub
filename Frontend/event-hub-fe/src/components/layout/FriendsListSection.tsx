@@ -58,7 +58,7 @@ export default function FriendsListSection() {
     <>
       {selectedPage !== "friends" && (
         <>
-          <div className="flex flex-row items-center justify-between w-full pr-8 pl-6 mt-10 max-h-[6vh]">
+          <div className="flex flex-row items-center justify-between w-full pr-8 pl-6 mt-[2vh] h-[6vh]">
             <h3 className="text-text-on-light">Friends</h3>
             <div className="flex flex-row gap-2">
               <AddFriendButton />
